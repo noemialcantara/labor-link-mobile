@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/firebase_options.dart';
 import 'package:labor_link_mobile/screens/AuthRedirector.dart';
+import 'package:labor_link_mobile/screens/SplashScreen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +38,9 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: false,
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {TargetPlatform.android: CupertinoPageTransitionsBuilder(),}),
       ),
-      home: AuthRedirector(),
+      home: const SplashScreen(),
     );
   }
 }
