@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "842766684888",
+    "project_id": "labor-link-f9424",
+    "storage_bucket": "labor-link-f9424.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842766684888:android:011dd0cc8b4a663ae53dad",
+        "android_client_info": {
+          "package_name": "com.example.labor_link_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy7lgp3RSE-ykeHTpwnEBpe-uW9deV90E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
