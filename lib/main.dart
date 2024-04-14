@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/firebase_options.dart';
-import 'package:labor_link_mobile/screens/AuthRedirector.dart';
 import 'package:labor_link_mobile/screens/SplashScreen.dart';
 
 void main() async{
