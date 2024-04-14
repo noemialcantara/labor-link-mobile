@@ -62,6 +62,7 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   @override
   Widget build(BuildContext context) {
+    //Noemi TODO: Enhance this navigation screen to redirect to different screens
     return Container(
       color: Theme.of(context).colorScheme.background,
       child:
@@ -133,19 +134,6 @@ class _NavigationScreenState extends State<NavigationScreen>
         Text("Recommended Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 20)),
         JobList()
       ],))
-      //  ListView(
-      //   children: [
-      //     SizedBox(height: 64),
-      //     Center(
-      //       child: CircularRevealAnimation(
-      //         animation: animation,
-      //         centerOffset: Offset(80, 80),
-      //         maxRadius: MediaQuery.of(context).size.longestSide * 1.1,
-      //         child: Text("NOW IS ${widget.bottomNavIndex}")
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

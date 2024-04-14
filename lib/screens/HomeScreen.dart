@@ -104,6 +104,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onNotification: onScrollNotification,
         child: NavigationScreen(_bottomNavIndex),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: signOut,
+        child: Icon(Icons.logout),
+      ),
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: iconList.length,
         tabBuilder: (int index, bool isActive) {
