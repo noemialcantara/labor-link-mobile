@@ -37,6 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      //query the user here to get user info and user type id
+      //create another class setter getter method
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);

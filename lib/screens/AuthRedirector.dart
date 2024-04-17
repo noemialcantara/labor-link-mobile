@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:labor_link_mobile/screens/HomeScreen.dart';
+import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:labor_link_mobile/screens/LoginOrRegistrationScreen.dart';
 
 class AuthRedirector extends StatelessWidget {
@@ -13,7 +13,7 @@ class AuthRedirector extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomeScreen();
+            return MainNavigationHandler();
           } else {
             return LoginOrRegistration();
           }

@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class MainNavigationHandler extends StatefulWidget {
+  const MainNavigationHandler({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _MainNavigationHandlerState createState() => _MainNavigationHandlerState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class _MainNavigationHandlerState extends State<MainNavigationHandler> with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
   final autoSizeGroup = AutoSizeGroup();
   var _bottomNavIndex = 0;
@@ -71,6 +71,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Duration(seconds: 1),
       () => _borderRadiusAnimationController.forward(),
     );
+  }
+
+  @override
+  void dispose() {
+    _hideBottomBarAnimationController.dispose();
+    _fabAnimationController.dispose();
+    _borderRadiusAnimationController.dispose();
+    borderRadiusCurve.dispose();
+    fabCurve.dispose();
+    
+    super.dispose();
   }
 
   bool onScrollNotification(ScrollNotification notification) {
