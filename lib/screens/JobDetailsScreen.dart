@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/screens/widgets/IconText.dart';
 
 class JobDetailsScreen extends StatefulWidget {
-  JobDetailsScreen(this.job, {Key? key}) : super(key: key);
+  const JobDetailsScreen(this.job, {super.key});
 
   final Job job;
 
@@ -157,8 +157,7 @@ class _JobDetailState extends State<JobDetailsScreen> {
                   width: double.maxFinite,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        primary: Theme.of(context).primaryColor,
+                        elevation: 0, backgroundColor: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20))),
                     onPressed: () {
