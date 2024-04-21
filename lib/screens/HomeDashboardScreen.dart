@@ -17,14 +17,14 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.background,
+      color: Color(0xffFAFAFD),
       child:
       Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        SizedBox(height: 80),
+        SizedBox(height: 50),
         Text("Welcome ${user?.email}!", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, color: Color(0xff95969D))),
         Text("Discover Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 25)),
         SizedBox(height:30),
