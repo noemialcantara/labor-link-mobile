@@ -109,6 +109,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
 
   void signOut() {
     FirebaseChatApi.auth.signOut().then((value) async {
+      FirebaseChatApi.updateActiveStatus(false);
       FirebaseAuth.instance.signOut();
     });
   }
