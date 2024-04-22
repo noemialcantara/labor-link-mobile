@@ -143,8 +143,6 @@ class FirebaseChatApi {
         //for setting user status to active
         FirebaseChatApi.updateActiveStatus(true);
         log('My Data: ${user.data()}');
-      } else {
-        await createUser("Unknown user").then((value) => getSelfInfo());
       }
     });
   }
