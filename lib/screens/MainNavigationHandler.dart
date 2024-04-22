@@ -1,8 +1,12 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
 
 class MainNavigationHandler extends StatefulWidget {
@@ -104,7 +108,105 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   }
 
   void signOut() {
-    FirebaseAuth.instance.signOut();
+    FirebaseChatApi.auth.signOut().then((value) async {
+      FirebaseAuth.instance.signOut();
+    });
+  }
+
+  Widget _drawer() {
+    return Drawer(
+      backgroundColor: Colors.white,
+        child: ListView( 
+          padding: EdgeInsets.zero, 
+          children: [ 
+            const DrawerHeader( 
+              decoration: BoxDecoration( 
+                color: Colors.white, 
+              ), 
+              child: Text( 
+                '', 
+                style: TextStyle(fontSize: 20), 
+              ), 
+            ), 
+            ClipRRect(
+                  borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height * .25),
+                  child: CachedNetworkImage(
+                    width: 30,
+                    height: 50,
+                    fit: BoxFit.cover,
+                    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR__2IIAULCR-xberpmuxf-9Jx3cJZLJgLm4tSb9cDwRQ&s",
+                    errorWidget: (context, url, error) =>
+                        const CircleAvatar(child: Icon(CupertinoIcons.person)),
+                  ),
+                ),
+              
+            Text('John Doe',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
+            SizedBox(height:5),
+            Text('Electrician',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            SizedBox(height:10),
+            Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
+            SizedBox(height:40),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Icon(Icons.person),
+               SizedBox(width: 20,),
+               Text('Personal Info', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],)),
+            SizedBox(height:30),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Icon(Icons.person),
+               SizedBox(width: 20,),
+               Text('Applications', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],)),
+             SizedBox(height:30),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Icon(Icons.person),
+               SizedBox(width: 20,),
+               Expanded(child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18),)), 
+
+            ],)),
+            SizedBox(height:30),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Icon(Icons.person),
+               SizedBox(width: 20,),
+               Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],)),
+            SizedBox(height:30),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Icon(Icons.person),
+               SizedBox(width: 20,),
+               Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],)),
+             SizedBox(height:30),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Icon(Icons.person),
+               SizedBox(width: 20,),
+               Text('Logout', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],)),
+          ], 
+        ));
   }
 
   @override
@@ -119,6 +221,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         onPressed: signOut,
         child: Icon(Icons.logout),
       ),
+      drawer: _drawer(),
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: iconList.length,
         tabBuilder: (int index, bool isActive) {

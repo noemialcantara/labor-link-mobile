@@ -7,7 +7,6 @@ import 'package:labor_link_mobile/main.dart';
 import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/models/Message.dart';
 import 'package:labor_link_mobile/screens/ChatScreen.dart';
-import 'package:labor_link_mobile/screens/widgets/dialogs/ProfileDialog.dart';
 
 
 //card to represent a single user in home screen
@@ -49,13 +48,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
 
               return ListTile(
                 //user profile picture
-                leading: InkWell(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) => ProfileDialog(user: widget.user));
-                  },
-                  child: ClipRRect(
+                leading: ClipRRect(
                     borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height * .03),
                     child: CachedNetworkImage(
                       width: MediaQuery.sizeOf(context).height * .055,
@@ -65,7 +58,6 @@ class _ChatUserCardState extends State<ChatUserCard> {
                           child: Icon(CupertinoIcons.person)),
                     ),
                   ),
-                ),
 
                 //user name
                 title: Text(widget.user.name),

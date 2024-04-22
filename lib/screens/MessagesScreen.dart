@@ -9,7 +9,6 @@ import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/helper/dialogs.dart';
 import 'package:labor_link_mobile/main.dart';
 import 'package:labor_link_mobile/models/ChatUser.dart';
-import 'package:labor_link_mobile/screens/ChatProfileScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/ChatUserCard.dart';
 
 class MessagesScreen extends StatefulWidget {
@@ -102,7 +101,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                         await FirebaseChatApi.addChatUser(email).then((value) {
                           if (!value) {
                             Dialogs.showSnackbar(
-                                context, 'User does not Exists!');
+                                context, 'User does not exists!');
                           }
                         });
                       }

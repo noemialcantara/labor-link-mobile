@@ -11,7 +11,6 @@ import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/helper/MyDateUtil.dart';
 import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/models/Message.dart';
-import 'package:labor_link_mobile/screens/ChatProfileScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/MessageCard.dart';
 
 import '../main.dart';
@@ -139,14 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // app bar widget
   Widget _appBar() {
-    return InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ChatProfileScreen(user: widget.user)));
-        },
-        child: StreamBuilder(
+    return StreamBuilder(
             stream: FirebaseChatApi.getUserInfo(widget.user),
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
@@ -209,7 +201,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   )
                 ],
               );
-            }));
+            });
   }
 
   // bottom chat input field
