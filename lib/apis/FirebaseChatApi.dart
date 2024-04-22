@@ -251,6 +251,7 @@ class FirebaseChatApi {
       'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
       'push_token': me.pushToken,
     });
+    log("Successful logout offline status of ${user.uid}");
   }
 
   ///************** Chat Screen Related APIs **************
