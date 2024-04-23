@@ -14,21 +14,20 @@ class _MessagesScreenState extends State<MessagesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // Reverse the order of children to position search icon on right
+          // Reverse children order for right-aligned search icon
           children: [
             Expanded(
-            child: Text(
-              'Messages',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+              child: Text(
+                'Messages',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
-            ),
-            const SizedBox(width:185), // Add spacing between text and icon
-            const Icon(Icons.search, color: Colors.blue,),
+            const SizedBox(width: 185), // Spacing between text and icon
+            const Icon(Icons.search, color: Colors.blue),
           ],
         ),
         backgroundColor: Colors.white,
@@ -39,12 +38,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
           child: Column(
             children: [
               //Employer Message Section (Can be replaced with your message list)
-              const SizedBox(height: 10),
+              const SizedBox(height: 100),
               TextField(
                 decoration: InputDecoration(
-                  //icon: const Icon(Icons.search), // Leading search icon
+                  icon: const Icon(Icons.search), // Leading search icon (not needed)
                   hintText: "Search a chat or message",
-                  hintStyle: const TextStyle(color: Colors.grey), // Hint text color
+                  hintStyle: const TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
