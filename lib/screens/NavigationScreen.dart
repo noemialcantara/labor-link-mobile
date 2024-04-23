@@ -4,6 +4,8 @@ import 'package:labor_link_mobile/screens/HomeDashboardScreen.dart';
 import 'package:labor_link_mobile/screens/MessagesScreen.dart';
 import 'package:labor_link_mobile/screens/NotificationsScreen.dart';
 import 'package:labor_link_mobile/screens/SavedJobsScreen.dart';
+import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
+
 
 class NavigationScreen extends StatefulWidget {
   final int bottomNavIndex;

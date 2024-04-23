@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/components/SquareTile.dart';
+import 'package:labor_link_mobile/screens/AuthRedirector.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -39,12 +40,25 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       //query the user here to get user info and user type id
       //create another class setter getter method
-      Navigator.pop(context);
+      Navigator.push(
+        context,
+        fadeTransitionBuilder(child:  const AuthRedirector())
+      );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //wrong Email
       showmessage(e.message.toString());
     }
+  }
+
+  PageRouteBuilder fadeTransitionBuilder({required Widget child}) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final _scale = animation.drive(Tween<double>(begin: 0, end: 1));
+
+          return ScaleTransition(scale: _scale, child: child);
+        });
   }
 
   @override

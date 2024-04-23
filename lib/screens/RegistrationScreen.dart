@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/components/SquareTile.dart';
@@ -44,6 +45,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text, password: _passwordController.text);
+
+      await FirebaseChatApi.createUser(_fullNameController.text);
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);

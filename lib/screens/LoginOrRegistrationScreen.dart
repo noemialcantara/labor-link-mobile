@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/screens/LoginScreen.dart';
 import 'package:labor_link_mobile/screens/RegistrationScreen.dart';
