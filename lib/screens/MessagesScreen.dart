@@ -117,34 +117,45 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
-    return  GestureDetector(
-      //for hiding keyboard when a tap is detected on screen
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: WillPopScope(
-        //if search is on & back button is pressed then close search
-        //or else simple close current screen on back button click
-        onWillPop: () {
-          if (_isSearching) {
-            setState(() {
-              _isSearching = !_isSearching;
-            });
-            return Future.value(false);
-          } else {
-            return Future.value(true);
-          }
-        },
-        child: Scaffold(
-          backgroundColor: Color(0xffFAFAFD),
-          //floating button to add new user
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 60),
-            child: FloatingActionButton(
-              backgroundColor: Color(0xff356899),
-                onPressed: () {
-                  _addChatUserDialog();
-                },
-                child: const Icon(Icons.add_comment_rounded,)),
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          // Reverse children order for right-aligned search icon
+          children: [
+            Expanded(
+              child: Text(
+                'Messages',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(width: 185), // Spacing between text and icon
+            const Icon(Icons.search, color: Colors.blue),
+          ],
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              //Employer Message Section (Can be replaced with your message list)
+              const SizedBox(height: 100),
+              TextField(
+                decoration: InputDecoration(
+                  icon: const Icon(Icons.search), // Leading search icon (not needed)
+                  hintText: "Search a chat or message",
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,

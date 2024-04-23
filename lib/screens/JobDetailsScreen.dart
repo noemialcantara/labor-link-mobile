@@ -1,4 +1,4 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/screens/widgets/IconText.dart';
 

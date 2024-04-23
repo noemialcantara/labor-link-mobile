@@ -8,6 +8,8 @@ class Job {
   final List<String> req;
   Job(this.company, this.logoUrl, this.isMark, this.title, this.location,
       this.time, this.req);
+
+  get salary => null;
   static List<Job> generateJobs() {
     return [
       Job(
