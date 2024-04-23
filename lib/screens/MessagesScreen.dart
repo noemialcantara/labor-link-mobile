@@ -117,47 +117,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          // Reverse children order for right-aligned search icon
-          children: [
-            Expanded(
-              child: Text(
-                'Messages',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 185), // Spacing between text and icon
-            const Icon(Icons.search, color: Colors.blue),
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              //Employer Message Section (Can be replaced with your message list)
-              const SizedBox(height: 100),
-              TextField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.search), // Leading search icon (not needed)
-                  hintText: "Search a chat or message",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          body: Column(
+    return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -252,8 +212,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
             },
           ),
             )
-        ])),
-      ),
-    );
+        ]);
   }
 }
