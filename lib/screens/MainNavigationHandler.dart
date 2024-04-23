@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
+import 'package:labor_link_mobile/screens/ResumesCertificationsScreen.dart';
 import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
 import 'package:labor_link_mobile/screens/UserProfileScreen.dart';
 import 'package:random_avatar/random_avatar.dart';
@@ -169,7 +170,11 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
 
             ],)),
              SizedBox(height:30),
-            Padding(
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
+              },
+              child:  Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
@@ -177,7 +182,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
                SizedBox(width: 20,),
                Expanded(child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18),)), 
 
-            ],)),
+            ],))),
             SizedBox(height:30),
             GestureDetector(
               onTap: () => {

@@ -51,6 +51,8 @@ dependencies:
   flutter_notification_channel: ^2.0.0
   google_sign_in: ^6.1.5
   random_avatar: ^0.0.8
+  desktop_drop: ^0.4.4
+  mobkit_dashed_border: ^0.0.6
 
 dev_dependencies:
   flutter_test:
