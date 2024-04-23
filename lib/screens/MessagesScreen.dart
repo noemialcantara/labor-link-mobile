@@ -138,12 +138,13 @@ class _MessagesScreenState extends State<MessagesScreen> {
           backgroundColor: Color(0xffFAFAFD),
           //floating button to add new user
           floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 130),
+            padding: const EdgeInsets.only(bottom: 60),
             child: FloatingActionButton(
+              backgroundColor: Color(0xff356899),
                 onPressed: () {
                   _addChatUserDialog();
                 },
-                child: const Icon(Icons.add_comment_rounded)),
+                child: const Icon(Icons.add_comment_rounded,)),
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,

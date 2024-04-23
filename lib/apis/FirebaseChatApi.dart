@@ -96,7 +96,7 @@ class FirebaseChatApi {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
   }
 
-  static Future<bool> getCurrentUserData(String email) async {
+  static Future<String> getCurrentUserData(String email) async {
     final data = await firestore
         .collection('users')
         .where('email', isEqualTo: email)

@@ -34,23 +34,19 @@ class NotificationsScreen extends StatelessWidget {
       ],
     };
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Notifications', style: GoogleFonts.poppins()),
-      ),
-      body: ListView(
+    return  ListView(
         children: notifications.entries.map((entry) {
           return ExpansionTile(
+            initiallyExpanded: true,
             title: Text(entry.key, style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
             children: entry.value.map((notification) {
               return ListTile(
-                title: Text(notification['title']!, style: GoogleFonts.poppins()),
+                title: Text(notification['title']!, style: GoogleFonts.poppins(color: Colors.black)),
                 subtitle: Text(notification['time']!),
               );
             }).toList(),
           );
         }).toList(),
-      ),
-    );
+      );
   }
 }

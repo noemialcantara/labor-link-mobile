@@ -8,6 +8,9 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
+import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
+import 'package:labor_link_mobile/screens/UserProfileScreen.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 class MainNavigationHandler extends StatefulWidget {
   const MainNavigationHandler({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   final user = FirebaseAuth.instance.currentUser;
   final autoSizeGroup = AutoSizeGroup();
   var _bottomNavIndex = 0;
+  String userName = "";
 
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -67,6 +71,8 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
       vsync: this,
     );
 
+   _fetchUserData();
+   
     Future.delayed(
       Duration(seconds: 1),
       () => _fabAnimationController.forward(),
@@ -86,6 +92,14 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     fabCurve.dispose();
     
     super.dispose();
+  }
+
+  void _fetchUserData() async{
+   
+    userName =   await FirebaseChatApi.getCurrentUserData(FirebaseAuth.instance.currentUser!.email ?? "");
+    setState(() {
+      
+    });
   }
 
   bool onScrollNotification(ScrollNotification notification) {
@@ -115,51 +129,41 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   Widget _drawer() {
     return Drawer(
       backgroundColor: Colors.white,
-        child: ListView( 
-          padding: EdgeInsets.zero, 
+        child: Column(
           children: [ 
-            const DrawerHeader( 
-              decoration: BoxDecoration( 
-                color: Colors.white, 
-              ), 
-              child: Text( 
-                '', 
-                style: TextStyle(fontSize: 20), 
-              ), 
-            ), 
-            ClipRRect(
-                  borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height * .25),
-                  child: CachedNetworkImage(
-                    width: 30,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR__2IIAULCR-xberpmuxf-9Jx3cJZLJgLm4tSb9cDwRQ&s",
-                    errorWidget: (context, url, error) =>
-                        const CircleAvatar(child: Icon(CupertinoIcons.person)),
-                  ),
-                ),
-              
-            Text('John Doe',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
-            SizedBox(height:5),
-            Text('Electrician',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            SizedBox(height:50),
+            RandomAvatar(userName, trBackground: true, height: 130, width: 130),
             SizedBox(height:10),
-            Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
+            Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
+            SizedBox(height:5),
+            Text('No profession yet',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            SizedBox(height:10),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+              },
+              child: Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
+            ),
             SizedBox(height:40),
-            Padding(
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+              },
+              child: Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Icon(Icons.person),
+               Image.asset("assets/icons/personal_info_icon.png"),
                SizedBox(width: 20,),
                Text('Personal Info', style: GoogleFonts.poppins(fontSize: 18),), 
 
-            ],)),
+            ],))),
             SizedBox(height:30),
             Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Icon(Icons.person),
+               Image.asset("assets/icons/applications_icon.png"),
                SizedBox(width: 20,),
                Text('Applications', style: GoogleFonts.poppins(fontSize: 18),), 
 
@@ -169,41 +173,47 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Icon(Icons.person),
+               Image.asset("assets/icons/resumes_certifications_icon.png"),
                SizedBox(width: 20,),
                Expanded(child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18),)), 
 
             ],)),
             SizedBox(height:30),
-            Padding(
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UploadIDScreen())),
+              },
+              child: Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Icon(Icons.person),
+               Image.asset("assets/icons/id_verifications_icon.png"),
                SizedBox(width: 20,),
                Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18),), 
 
-            ],)),
+            ],))),
             SizedBox(height:30),
             Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Icon(Icons.person),
+               Image.asset("assets/icons/chat_support_icon.png"),
                SizedBox(width: 20,),
                Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),), 
 
             ],)),
              SizedBox(height:30),
-            Padding(
+            GestureDetector(
+              onTap: signOut,
+              child: Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Icon(Icons.person),
+               Image.asset("assets/icons/logout_icon.png"),
                SizedBox(width: 20,),
-               Text('Logout', style: GoogleFonts.poppins(fontSize: 18),), 
+               Text('Logout', style: GoogleFonts.poppins(fontSize: 18,color: Color(0xffE30000)),), 
 
-            ],)),
+            ],)))
           ], 
         ));
   }
@@ -215,10 +225,6 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
       body: NotificationListener<ScrollNotification>(
         onNotification: onScrollNotification,
         child: NavigationScreen(_bottomNavIndex),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: signOut,
-        child: Icon(Icons.logout),
       ),
       drawer: _drawer(),
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
