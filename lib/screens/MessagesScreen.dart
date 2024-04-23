@@ -63,7 +63,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 children: [
                   Icon(
                     Icons.person_add,
-                    color: Colors.blue,
+                    color: Color(0xff356899),
                     size: 28,
                   ),
                   Text('  Message a user')
@@ -76,7 +76,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 onChanged: (value) => email = value,
                 decoration: InputDecoration(
                     hintText: 'Enter the email address',
-                    prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                    prefixIcon: const Icon(Icons.email, color: Color(0xff356899)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
               ),
@@ -90,7 +90,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel',
-                        style: TextStyle(color: Colors.blue, fontSize: 16))),
+                        style: TextStyle(color: Color(0xf356899), fontSize: 16))),
 
                 //add button
                 MaterialButton(
@@ -108,7 +108,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     },
                     child: const Text(
                       'Add',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Color(0xff356899), fontSize: 16),
                     ))
               ],
             ));
@@ -117,7 +117,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+      backgroundColor: Color(0xffFAFAFD),
+      floatingActionButton: Padding(padding: const EdgeInsets.only(bottom: 60), child: FloatingActionButton(backgroundColor: Color(0xff356899), onPressed: (){ 
+        _addChatUserDialog();
+      }, child: const Icon(Icons.add_comment_rounded,),),),
+      body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -212,6 +217,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
             },
           ),
             )
-        ]);
+        ]),
+      
+    );
   }
 }
