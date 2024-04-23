@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
+import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
 import 'package:labor_link_mobile/screens/ResumesCertificationsScreen.dart';
 import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
@@ -186,7 +187,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
             SizedBox(height:30),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UploadIDScreen())),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> IDVerificationScreen())),
               },
               child: Padding(
               padding: EdgeInsets.only(left:50),

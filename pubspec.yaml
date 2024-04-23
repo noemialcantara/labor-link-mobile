@@ -53,6 +53,7 @@ dependencies:
   random_avatar: ^0.0.8
   desktop_drop: ^0.4.4
   mobkit_dashed_border: ^0.0.6
+  url_launcher: ^6.1.7
 
 dev_dependencies:
   flutter_test:
