@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/screens/SearchListScreen.dart';
+import 'package:labor_link_mobile/screens/widgets/JobCategoryList.dart';
 import 'package:labor_link_mobile/screens/widgets/JobList.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
@@ -16,9 +17,8 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xffFAFAFD),
-      child:
+    return SingleChildScrollView(
+      child: 
       Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: Column(
@@ -84,10 +84,14 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
               ],
             ),
         ),
-        SizedBox(height: 30),
+        SizedBox(height: 20),
+        Text("Categories", style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 20)),
+        JobCategoryList(),
+        SizedBox(height:20),
         Text("Recommended Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 20)),
-        JobList()
-      ],))
-    );
+        JobList(),
+        SizedBox(height:60),
+      ],)));
+    
   }
 }

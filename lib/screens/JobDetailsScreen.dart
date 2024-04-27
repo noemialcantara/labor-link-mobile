@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/models/Job.dart';
+import 'package:labor_link_mobile/screens/JobApplicationScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/IconText.dart';
 
 class JobDetailsScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _JobDetailState extends State<JobDetailsScreen> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(25),
-      height: 550,
+      height: 700,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -161,7 +162,24 @@ class _JobDetailState extends State<JobDetailsScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20))),
                     onPressed: () {
-                      Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => JobApplicationScreen(job:  Job(
+        'Google LLC',
+        'assets/images/google_logo.png',
+        false,
+        'Sr. Software Engineer',
+        '123 Marion , New York\nUnited States',
+        'Full Time',
+        [
+          'Bachelors degree in industrial design, manufacturing, engineering, or a related field.',
+          'A creative eye, good imagination, and vision.',
+          'A firm grasp of market trends and consumer preferences.',
+          'Practical experience using computer-aided design software.',
+          'Good technical and IT skills.'
+        ],
+      ),)));
                     },
                     child: Text('Apply Now'),
                   ),

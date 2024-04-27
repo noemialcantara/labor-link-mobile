@@ -14,8 +14,8 @@ class JobApplicationScreen extends StatefulWidget {
 }
 
 class _JobApplicationScreenState extends State<JobApplicationScreen> {
-  String _selectedProfile = ''; // Initialize selected profile
-  String _selectedResume = ''; // Initialize selected resume
+  String _selectedProfile = 'John Doe'; // Initialize selected profile
+  String _selectedResume = 'John Doe Resume'; // Initialize selected resume
   bool _coverLetter = false; // Initialize cover letter checkbox
   final TextEditingController _coverLetterController = TextEditingController(); // Cover letter text field controller
 
@@ -49,7 +49,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
             SizedBox(height: 8.0),
             Row(
               children: [
-                IconText(icon: Icons.attach_money, text: job.salary),
+                IconText(icon: Icons.attach_money, text: "32"),
                 SizedBox(width: 16.0),
                 IconText(icon: Icons.location_on, text: job.location),
               ],
