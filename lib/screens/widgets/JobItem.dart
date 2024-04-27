@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/screens/widgets/IconText.dart';
 
@@ -17,7 +18,7 @@ class _JobItemState extends State<JobItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 250,
+      width: 280,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -29,7 +30,9 @@ class _JobItemState extends State<JobItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Padding(
+                padding: EdgeInsets.only(left:20,right:20),
+                child: Row(
                 children: [
                   Container(
                     width: 40,
@@ -47,51 +50,39 @@ class _JobItemState extends State<JobItem> {
                   Text(
                     widget.job.company,
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis),
                   ),
                 ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    widget.job.isMark = !widget.job.isMark;
-                    // if(selected = true)
-                    //   selected=false;
-                  });
-                },
-                child: Container(
-                  child: Icon(
-                      widget.job.isMark == false
-                          ? Icons.bookmark_outline_sharp
-                          : Icons.bookmark,
-                      color: widget.job.isMark == false
-                          ? Colors.grey
-                          : Theme.of(context).primaryColor),
-                ),
-              ),
+              )),
             ],
           ),
           SizedBox(
             height: 15,
           ),
-          Text(
-            widget.job.title,
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Padding(
+                padding: EdgeInsets.only(left:20,right:20),
+                child: Text(
+                  widget.job.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
           ),
           SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconText(
-                  icon: Icons.location_on_outlined, text: widget.job.location),
-              if (widget.showTime)
-                IconText(
-                    icon: Icons.access_time_outlined, text: widget.job.time)
-            ],
-          ),
+          Flexible(child: Padding(
+              padding: EdgeInsets.only(left:15,right:15),
+              child:
+                  Row(
+                  children: [
+                    Icon(Icons.location_on_outlined),
+                    SizedBox(width: 10,),
+                    Text(widget.job.location,overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins( fontSize: 15),)
+                    
+                  ],
+                ),
+          )),
         ],
       ),
     );

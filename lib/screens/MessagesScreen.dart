@@ -63,7 +63,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 children: [
                   Icon(
                     Icons.person_add,
-                    color: Colors.blue,
+                    color: Color(0xff356899),
                     size: 28,
                   ),
                   Text('  Message a user')
@@ -76,7 +76,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 onChanged: (value) => email = value,
                 decoration: InputDecoration(
                     hintText: 'Enter the email address',
-                    prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                    prefixIcon: const Icon(Icons.email, color: Color(0xff356899)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
               ),
@@ -90,7 +90,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel',
-                        style: TextStyle(color: Colors.blue, fontSize: 16))),
+                        style: TextStyle(color: Color(0xf356899), fontSize: 16))),
 
                 //add button
                 MaterialButton(
@@ -108,7 +108,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     },
                     child: const Text(
                       'Add',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Color(0xff356899), fontSize: 16),
                     ))
               ],
             ));
@@ -118,46 +118,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          // Reverse children order for right-aligned search icon
-          children: [
-            Expanded(
-              child: Text(
-                'Messages',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 185), // Spacing between text and icon
-            const Icon(Icons.search, color: Colors.blue),
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              //Employer Message Section (Can be replaced with your message list)
-              const SizedBox(height: 100),
-              TextField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.search), // Leading search icon (not needed)
-                  hintText: "Search a chat or message",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          body: Column(
+      backgroundColor: Color(0xffFAFAFD),
+      floatingActionButton: Padding(padding: const EdgeInsets.only(bottom: 60), child: FloatingActionButton(backgroundColor: Color(0xff356899), onPressed: (){ 
+        _addChatUserDialog();
+      }, child: const Icon(Icons.add_comment_rounded,),),),
+      body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -252,8 +217,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
             },
           ),
             )
-        ])),
-      ),
+        ]),
+      
     );
   }
 }

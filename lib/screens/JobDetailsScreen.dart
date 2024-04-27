@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/models/Job.dart';
+import 'package:labor_link_mobile/screens/JobAppScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/IconText.dart';
 
 class JobDetailsScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _JobDetailState extends State<JobDetailsScreen> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(25),
-      height: 550,
+      height: 700,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -161,7 +162,10 @@ class _JobDetailState extends State<JobDetailsScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20))),
                     onPressed: () {
-                      Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => JobAppScreen()));
                     },
                     child: Text('Apply Now'),
                   ),

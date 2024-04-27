@@ -13,7 +13,7 @@ class JobList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
-      height: 160,
+      height: 180,
       child: ListView.separated(
           padding: EdgeInsets.symmetric(horizontal: 0),
           scrollDirection: Axis.horizontal,
