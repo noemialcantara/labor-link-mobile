@@ -53,13 +53,13 @@ class _JobDetailState extends State<JobDetailsScreen> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.grey.withOpacity(0.1),
                           ),
-                          child: Image.asset(widget.job.logoUrl),
+                          child: Image.network(widget.job.companyLogo),
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          widget.job.company,
+                          widget.job.companyName,
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -69,20 +69,22 @@ class _JobDetailState extends State<JobDetailsScreen> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              widget.job.isMark = !widget.job.isMark;
+                              // widget.job.isMark = !widget.job.isMark;
                               // if(selected = true)
                               //   selected=false;
                             });
                           },
                           child: Container(
                             child: Icon(
-                                widget.job.isMark == false
-                                    ? Icons.bookmark_outline_sharp
-                                    : Icons.bookmark,
-                                color: widget.job.isMark == false
-                                    ? Colors.grey
-                                    : Theme.of(context).primaryColor),
-                          ),
+                              Icons.bookmark,
+                                // widget.job.isMark == false
+                                //     ? Icons.bookmark_outline_sharp
+                                //     : Icons.bookmark,
+                                color: Colors.grey
+                                // widget.job.isMark == false
+                                //     ? Colors.grey
+                                //     : Theme.of(context).primaryColor),
+                          )),
                         ),
                         Icon(Icons.more_horiz_outlined),
                       ],
@@ -93,7 +95,7 @@ class _JobDetailState extends State<JobDetailsScreen> {
                   height: 20,
                 ),
                 Text(
-                  widget.job.title,
+                  widget.job.jobName,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
                 ),
                 SizedBox(
@@ -104,10 +106,8 @@ class _JobDetailState extends State<JobDetailsScreen> {
                   children: [
                     IconText(
                         icon: Icons.location_on_outlined,
-                        text: widget.job.location),
-                    IconText(
-                        icon: Icons.access_time_outlined,
-                        text: widget.job.time),
+                        text: widget.job.jobCityLocation + ", "+ widget.job.jobStateLocation),
+                   
                   ],
                 ),
                 SizedBox(
@@ -123,7 +123,7 @@ class _JobDetailState extends State<JobDetailsScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                ...widget.job.req
+                ...widget.job.jobRequirements
                     .map(
                       (e) => Container(
                     margin: EdgeInsets.symmetric(vertical: 5),
