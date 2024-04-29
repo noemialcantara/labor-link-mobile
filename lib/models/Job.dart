@@ -26,7 +26,7 @@ class Job {
     jobRequirements = json['job_requirements'] ?? [];
     jobResponsibilities = json['job_responsibilities'] ?? [];
     jobCategories = json['job_categories'] ?? [];
-    jobLevels = json['job_Levels'] ?? '';
+    jobLevels = json['job_levels'] ?? '';
     employmentType = json['employment_type'] ?? '';
     minimumSalary = json['min_salary'] ?? 0.00;
     maximumSalary = json['max_salary'] ?? 0.00;
