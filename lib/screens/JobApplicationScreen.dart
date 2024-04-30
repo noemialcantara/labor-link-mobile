@@ -42,7 +42,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   void submitApplication(){
     String coverLetter = coverLetterTextEditingController.text;
     if(selectedResume != ""){
-      JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId);
+      JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId, userEmail);
       JobApplicationApi.submitApplication(payload.toJson());
       Navigator.push(
                   context,
@@ -242,7 +242,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                 padding: EdgeInsets.only(left:20, right: 20),
                 child: TextFormField(
                   controller: coverLetterTextEditingController,
-                   style:  GoogleFonts.poppins(color: Colors.white, fontSize: 18),
+                   style:  GoogleFonts.poppins(color: Colors.black, fontSize: 18),
                   minLines: 6,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -251,6 +251,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20),)),
                   labelText: 'Write a cover letter...',
+                  labelStyle: GoogleFonts.poppins(color: Colors.black),
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),

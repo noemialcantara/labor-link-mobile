@@ -3,9 +3,10 @@ class JobApplication {
   late String resumeLink;
   late String coverLetter;
   late String jobId;
+  late String applicantEmail;
   
   
-  JobApplication(this.applicantName, this.resumeLink, this.coverLetter, this.jobId);
+  JobApplication(this.applicantName, this.resumeLink, this.coverLetter, this.jobId, this.applicantEmail);
 
 
   JobApplication.fromJson(Map<String, dynamic> json) {
@@ -13,6 +14,7 @@ class JobApplication {
     resumeLink = json['resume_link'] ?? '';
     coverLetter = json['cover_letter'] ?? '';
     jobId = json['job_id'] ?? 0;
+    applicantEmail = json['applicant_email'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,6 +23,7 @@ class JobApplication {
       'resume_link' : resumeLink,
       'cover_letter': coverLetter,
       'job_id': jobId,
+      'applicant_email': applicantEmail
     };
   }
 }
