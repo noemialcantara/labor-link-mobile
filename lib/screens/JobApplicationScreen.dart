@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:labor_link_mobile/apis/CompanyApi.dart';
+import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
+import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Job.dart';
-import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
-import 'package:random_avatar/random_avatar.dart';
+import 'package:labor_link_mobile/models/JobApplication.dart';
+import 'package:labor_link_mobile/screens/JobApplicationSuccessScreen.dart';
 
 class JobApplicationScreen extends StatefulWidget {
   final Job jobDetails;
@@ -16,177 +20,283 @@ class JobApplicationScreen extends StatefulWidget {
 }
 
 class _JobApplicationScreenState extends State<JobApplicationScreen> {
+  Options options = Options(format: Format.rgb, luminosity: Luminosity.dark);
+  TextEditingController coverLetterTextEditingController = TextEditingController();
+  String userEmail = "test@gmail.com";
+  String selectedResume = "";
+  String selectedResumeProfileName = "";
+  List<bool> isResumeCheckedList = [] ;
 
+  @override
+  void initState() {
+    super.initState();
+    _getUserEmail();
+  }
 
+  void _getUserEmail(){
+    setState(() {
+       userEmail =  FirebaseAuth.instance.currentUser!.email ?? "test@gmail.com";
+    });
+  }
+
+  void submitApplication(){
+    String coverLetter = coverLetterTextEditingController.text;
+    if(selectedResume != ""){
+      JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId);
+      JobApplicationApi.submitApplication(payload.toJson());
+      Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => JobApplicationSuccessScreen(jobDetails: widget.jobDetails)));
+    }else{
+      showAlertDialog(context);
+    }
+   
+  }
+
+  showAlertDialog(BuildContext context) {
+        Widget okButton = TextButton(
+          child: Text("Okay", style: GoogleFonts.poppins(color: Colors.black),),
+          onPressed: () { 
+            Navigator.pop(context);
+          },
+        );
+        AlertDialog alert = AlertDialog(
+          title: Text("Alert!",style: GoogleFonts.poppins()),
+          content: Text("Please select a resume first", style: GoogleFonts.poppins()),
+          actions: [
+            okButton,
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+
+  Widget resumeList(){
+      return 
+          StreamBuilder(
+          stream:  ResumeApi.getResumeByUser( userEmail),
+          builder: (context, snapshot) {
+            var streamDataLength = snapshot.data?.docs.length ?? 0;
+            
+            if(streamDataLength > 0){
+             for(int i = 0; i < snapshot.data!.docs.length;i++){
+              isResumeCheckedList.add(false);
+             }
+            }
+
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+              case ConnectionState.none:
+              case ConnectionState.active:
+              case ConnectionState.done: 
+              if(streamDataLength > 0)
+                return 
+                  ListView.builder(scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (ctx, index) =>
+                    Container(
+                      margin: EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(20.0)
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15, right: 15, top:10, bottom: 10),
+                            child: Row(children: [
+                              Transform.scale(
+                                scale: 1.3,
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                    unselectedWidgetColor: Color(0xffCACBCE),
+                                  ), child : Checkbox(
+
+                                checkColor: Colors.white,
+                                fillColor: MaterialStateProperty.resolveWith((states) {
+                                
+                                  if(states.contains(MaterialState.selected))
+                                    return Color(0xff356899);
+                                  return Colors.white;
+                                }),
+                                value: isResumeCheckedList[index],
+                                shape: CircleBorder(),
+                                onChanged: (bool? value) {
+
+                                  print("THE SELECTED RESUME IS ${snapshot.data?.docs[index].get("link")}");
+                                  setState(() {
+                                    selectedResume = snapshot.data?.docs[index].get("link").toString() ?? "";
+                                    selectedResumeProfileName = snapshot.data?.docs[index].get("profile_name").toString() ?? "";
+                                    isResumeCheckedList = [];
+                                    for(int i = 0; i < snapshot.data!.docs.length;i++){
+                                      isResumeCheckedList.add(false);
+                                    }
+                                    isResumeCheckedList[index] = value!;
+                                  });
+                                },
+                              ))),
+                              SizedBox(width:15),
+                              Column(children: [
+                                SizedBox(height:8),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff356899),
+                                          border: Border.all(color:Color(0xff356899)),
+                                          borderRadius: BorderRadius.circular(15.0)
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left:10, right:10,top:5,bottom:5),
+                                          child: 
+                                            Text(snapshot.data?.docs[index].get("profile_job") ?? "", style: GoogleFonts.poppins(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w600)))),
+                                        SizedBox(height:10),
+                                      Text(snapshot.data?.docs[index].get("profile_name") ?? "", style: GoogleFonts.poppins(fontSize: 16, color: Color(0xff0D0D26)),)
+                            ])])))
+                );
+              
+              return Container();
+             }
+          });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(height:30),
               Padding(
                 padding: EdgeInsets.only(left:20, right: 20),
                 child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Icon(Icons.arrow_back, size: 30,)),
+                Text("Apply", style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 20,fontWeight: FontWeight.w600)),
+               Icon(
+                  Icons.bookmark_add_outlined,
+                  color: Color(0xff000000),
+                  size: 30,
+               )
               ],)),
-              Image.network(widget.jobDetails.companyLogo, height: 125, width: 125, alignment: Alignment.center),
-              Text(widget.jobDetails.jobName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 26,fontWeight: FontWeight.w700),), 
-              SizedBox(height:5),
-              Text(widget.jobDetails.companyName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 18),), 
-              SizedBox(height:25),
-              Padding(
-                padding: EdgeInsets.only(left:40,right:40),
-                child: Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffE4E5E7),
-                        border: Border.all(color: Color(0xffE4E5E7)),
-                        borderRadius: BorderRadius.circular(20.0)
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                        child: Text(widget.jobDetails.jobCategories[0], style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)))
-                      )
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffE4E5E7),
-                        border: Border.all(color: Color(0xffE4E5E7)),
-                        borderRadius: BorderRadius.circular(20.0)
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                        child: Text(widget.jobDetails.employmentType, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)))
-                      )
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffE4E5E7),
-                        border: Border.all(color: Color(0xffE4E5E7)),
-                        borderRadius: BorderRadius.circular(20.0)
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                        child: Text(widget.jobDetails.jobLevels, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)))
-                      )
-                  ),
-                  
-              ],)),
-              SizedBox(height:25),
-              Padding(
-                padding: EdgeInsets.only(left:30,right:30),
-                child: Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              SizedBox(height:20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RichText(
-                    text: TextSpan( text: 
-                           "₱", style: TextStyle(fontSize: 17.0,fontWeight: FontWeight.bold, color: Color(0xff0D0D26)),
-                            children: [
-                              TextSpan(text:  widget.jobDetails.minimumSalary.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')+"/month", style: GoogleFonts.poppins(fontSize: 17.0,
-                                fontWeight: FontWeight.w600, color: Color(0xff0D0D26))),
-                            ]
-                    ),
-                  ),
-                  Text(widget.jobDetails.jobCityLocation, style: GoogleFonts.poppins(fontSize: 17.0,fontWeight:FontWeight.w600,color: Color(0xff0D0D26))),
-                ])
-              ),
-              SizedBox(height:25),
-              Container(
-                height: MediaQuery.sizeOf(context).height - (MediaQuery.sizeOf(context).height * .60),
-                child: DefaultTabController(
-                  length: 3,
-                  child: Scaffold(
-                    appBar:  PreferredSize(
-                      preferredSize: Size.fromHeight(kToolbarHeight),
-                      child:  Container(
-                        color: Color(0xffFAFAFD),
-                        child: SafeArea(
-                          child: Column(
-                            children: <Widget>[
-                               SizedBox(height: 15,),
-                               TabBar(
-                                indicatorColor: Color(0xffFAFAFD),
-                                labelColor: Color(0xff000000),
-                                unselectedLabelColor: Color(0xff95969D),
-                                tabs: [
-                                  Text("Description", style: GoogleFonts.poppins( fontSize: 14, fontWeight: FontWeight.w600)), 
-                                  Text("Requirements", style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600)),
-                                  Text("About", style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600))
-                                ],
-                              ),
-                            ],
+                  Row(
+                    children: [
+                   Image.network(widget.jobDetails.companyLogo, height: 100, width: 100, alignment: Alignment.center),
+                  
+                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.jobName+"asdfafafasdfasfd", maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.companyName, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)),))
+                   ],)
+                  ],),
+                  Padding(
+                    padding: EdgeInsets.only(right:25),
+                    child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                     mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                     SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .73), child: RichText(
+                       overflow:TextOverflow.ellipsis,
+                       maxLines: 1,
+                          text: TextSpan( text: 
+                                "₱", style: TextStyle(fontSize: 15.0, color: Color(0xff0D0D26)),
+                                  children: [
+                                    TextSpan(text:  widget.jobDetails.minimumSalary.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')+"/mo", style: GoogleFonts.poppins(fontSize: 14.0,
+                                      fontWeight: FontWeight.w600, color: Color(0xff0D0D26))),
+                                  ]
                           ),
-                        ),
-                      ),),
-                    body: TabBarView(
-                      children: [
-                        SingleChildScrollView(child: Padding(
-                          padding: EdgeInsets.only(left:25,right:25,top:15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(widget.jobDetails.jobDescription , style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 15)),
-                            SizedBox(height:30),
-                            Text("Responsibilities" , style: GoogleFonts.poppins(color: Color(0xff494A50), fontSize: 15, fontWeight: FontWeight.w600)),
-                            SizedBox(height:10),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.jobDetails.jobResponsibilities.map((e) => Text("- "+e ,softWrap: true, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 15))).toList()
-                            )
-                          ],
-                        ))),
-                        SingleChildScrollView(child: Padding(
-                          padding: EdgeInsets.only(left:25,right:25,top:15),
-                          child:  Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.jobDetails.jobRequirements.map((e) => Text("- "+e ,softWrap: true, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 15))).toList()
-                            ))),
-                        SingleChildScrollView(child: Padding(
-                          padding: EdgeInsets.only(left:25,right:25,top:15),
-                          child:  Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StreamBuilder(
-                                    stream: CompanyApi.getCompanyDetailsByName(widget.jobDetails.companyName),
-                                    builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.waiting:
-                                        case ConnectionState.none:
-                                        case ConnectionState.active:
-                                        case ConnectionState.done:
-                                          
-                                          return Text(snapshot.data?.docs[0]["employer_about"].toString() ?? "About Us",softWrap: true, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 15));
-                                      }
-                                    })
-                              ]))),
-                       
-                      ],
-                    ),
-                  ),
-                )),
+                        )),
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .73), child: Text(widget.jobDetails.jobCityLocation,maxLines: 1,textAlign: TextAlign.right,  overflow:TextOverflow.ellipsis,style: GoogleFonts.poppins(fontSize: 14.0,color: Color(0xff0D0D26)))),
+                  ],))
+              ]),
               SizedBox(height:30),
               Padding(
-                padding: EdgeInsets.only(left:20,right:20,bottom: 30),
+                padding: EdgeInsets.only(left:20, right: 20),
+                child: Text("Select a resume", textAlign: TextAlign.left,  style: GoogleFonts.poppins(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xff0D0D26)))),
+              SizedBox(height:20),
+              Padding(
+                padding: EdgeInsets.only(left:20, right: 20),
+                child: SizedBox( height:100, child: resumeList() )),
+              SizedBox(height:30),
+              Padding(
+                padding: EdgeInsets.only(left:20, right: 20),
+                child: Row(children: [
+                Text("Cover letter", textAlign: TextAlign.left,  style: GoogleFonts.poppins(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xff0D0D26))),
+                Text(" (Optional)", textAlign: TextAlign.left,  style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w500, color: Color(0xff95969D)))
+              ])),
+              SizedBox(height:20),
+              Padding(
+                padding: EdgeInsets.only(left:20, right: 20),
+                child: TextFormField(
+                  controller: coverLetterTextEditingController,
+                   style:  GoogleFonts.poppins(color: Colors.white, fontSize: 18),
+                  minLines: 6,
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    filled: true,
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20),)),
+                  labelText: 'Write a cover letter...',
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                      width: 2.0,
+                    ),
+                  
+)
+                ),
+              )),
+              SizedBox(height:30),
+              Padding(
+                padding: EdgeInsets.only(left:10,right:10,bottom: 30),
                 child: CustomButton(
                 text: "Apply Now",
-                onTap: () => (){},
+                onTap: () =>  submitApplication(),
               )),
             ]
           )
       )
     );
+  }
+}
+
+class SampleData {
+  String id;
+  String title;
+
+  SampleData({required this.id, required this.title});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }

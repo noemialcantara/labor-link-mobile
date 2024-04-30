@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:labor_link_mobile/apis/JobApi.dart';
 import 'package:labor_link_mobile/models/Job.dart';
-import 'package:labor_link_mobile/screens/JobApplicationScreen.dart';
 import 'package:labor_link_mobile/screens/JobDetailsScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/JobItem.dart';
 
@@ -35,21 +34,10 @@ class JobList extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              // showModalBottomSheet(
-                              //   isScrollControlled: true,
-                              //   context: context,
-                              //   backgroundColor: Colors.transparent,
-                              //   builder: (context) => BackdropFilter(
-                              //     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              //     child: JobDetailsScreen(
-                              //       _jobList[index],
-                              //     ),
-                              //   ),
-                              // );
                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => JobApplicationScreen(jobDetails: _jobList[index])));
+                                        builder: (_) => JobDetailsScreen(jobDetails: _jobList[index])));
                             },
                             child: JobItem(
                               job: _jobList[index],

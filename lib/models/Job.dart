@@ -1,4 +1,5 @@
 class Job {
+  late String jobId;
   late String jobName;
   late String jobDescription;
   late List<dynamic> jobRequirements;
@@ -15,12 +16,13 @@ class Job {
   late String jobStateLocation;
   late String jobCityLocation;
   
-  Job(this.jobName, this.jobDescription, this.jobRequirements, this.jobResponsibilities, this.jobCategories,
+  Job(this.jobId, this.jobName, this.jobDescription, this.jobRequirements, this.jobResponsibilities, this.jobCategories,
       this.jobLevels, this.employmentType, this.minimumSalary, this.maximumSalary, this.isSalaryToBeDeclared, 
       this.isSalaryConfidential, this.companyName, this.companyLogo, this.jobStateLocation, this.jobCityLocation);
 
 
   Job.fromJson(Map<String, dynamic> json) {
+    jobId = json['job_id'] ?? '';
     jobName = json['job_name'] ?? '';
     jobDescription = json['job_description'] ?? '';
     jobRequirements = json['job_requirements'] ?? [];
