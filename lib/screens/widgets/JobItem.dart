@@ -30,33 +30,34 @@ class _JobItemState extends State<JobItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
+             Flexible(child: Padding(
                 padding: EdgeInsets.only(left:20,right:20),
-                child: Row(
+                child:  Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 50,
+                    height: 50,
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey.withOpacity(0.1),
                     ),
-                    child: Image.asset(widget.job.logoUrl),
+                    child: Image.network(widget.job.companyLogo),
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    widget.job.company,
+                  Flexible(child: Text(
+                    widget.job.companyName,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis),
-                  ),
+                  )),
                 ],
-              )),
+              ))),
             ],
           ),
           SizedBox(
@@ -65,7 +66,7 @@ class _JobItemState extends State<JobItem> {
           Padding(
                 padding: EdgeInsets.only(left:20,right:20),
                 child: Text(
-                  widget.job.title,
+                  widget.job.jobName,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
@@ -78,7 +79,7 @@ class _JobItemState extends State<JobItem> {
                   children: [
                     Icon(Icons.location_on_outlined),
                     SizedBox(width: 10,),
-                    Text(widget.job.location,overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins( fontSize: 15),)
+                    Flexible(child:Text(widget.job.jobCityLocation + ", "+ widget.job.jobStateLocation,overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins( fontSize: 15),))
                     
                   ],
                 ),

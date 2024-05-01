@@ -1,62 +1,42 @@
 class Job {
-  final String company;
-  final String logoUrl;
-  bool isMark;
-  final String title;
-  final String location;
-  final String time;
-  final List<String> req;
-  Job(this.company, this.logoUrl, this.isMark, this.title, this.location,
-      this.time, this.req);
+  late String jobId;
+  late String jobName;
+  late String jobDescription;
+  late List<dynamic> jobRequirements;
+  late List<dynamic> jobResponsibilities;
+  late List<dynamic> jobCategories;
+  late String jobLevels;
+  late String employmentType;
+  late double minimumSalary;
+  late double maximumSalary;
+  late bool isSalaryToBeDeclared;
+  late bool isSalaryConfidential;
+  late String companyName;
+  late String companyLogo;
+  late String jobStateLocation;
+  late String jobCityLocation;
+  
+  Job(this.jobId, this.jobName, this.jobDescription, this.jobRequirements, this.jobResponsibilities, this.jobCategories,
+      this.jobLevels, this.employmentType, this.minimumSalary, this.maximumSalary, this.isSalaryToBeDeclared, 
+      this.isSalaryConfidential, this.companyName, this.companyLogo, this.jobStateLocation, this.jobCityLocation);
 
-  get salary => null;
-  static List<Job> generateJobs() {
-    return [
-      Job(
-        'Google LLC',
-        'assets/images/google_logo.png',
-        false,
-        'Sr. Software Engineer',
-        '123 Marion , New York\nUnited States',
-        'Full Time',
-        [
-          'Bachelors degree in industrial design, manufacturing, engineering, or a related field.',
-          'A creative eye, good imagination, and vision.',
-          'A firm grasp of market trends and consumer preferences.',
-          'Practical experience using computer-aided design software.',
-          'Good technical and IT skills.'
-        ],
-      ),
-      Job(
-        'Airbnb Inc',
-        'assets/images/airbnb_logo.png',
-        false,
-        'UI/UX Designer',
-        '456 Marion , New York\nUnited States',
-        'Full Time',
-        [
-          'Bachelors degree in industrial design, manufacturing, engineering, or a related field',
-          'A creative eye, good imagination, and vision',
-          'A firm grasp of market trends and consumer preferences',
-          'Practical experience using computer-aided design software',
-          'Good technical and IT skills'
-        ],
-      ),
-      Job(
-        'Linkedin',
-        'assets/images/linkedin_logo.png',
-        false,
-        'Software Engineering Manager',
-        '789 Marion , New York\nUnited States',
-        'Full Time',
-        [
-          'Bachelors degree in industrial design, manufacturing, engineering, or a related field',
-          'A creative eye, good imagination, and vision',
-          'A firm grasp of market trends and consumer preferences',
-          'Practical experience using computer-aided design software',
-          'Good technical and IT skills'
-        ],
-      ),
-    ];
+
+  Job.fromJson(Map<String, dynamic> json) {
+    jobId = json['job_id'] ?? '';
+    jobName = json['job_name'] ?? '';
+    jobDescription = json['job_description'] ?? '';
+    jobRequirements = json['job_requirements'] ?? [];
+    jobResponsibilities = json['job_responsibilities'] ?? [];
+    jobCategories = json['job_categories'] ?? [];
+    jobLevels = json['job_levels'] ?? '';
+    employmentType = json['employment_type'] ?? '';
+    minimumSalary = json['min_salary'] ?? 0.00;
+    maximumSalary = json['max_salary'] ?? 0.00;
+    isSalaryToBeDeclared = json['is_salary_to_be_declared'] ?? false;
+    isSalaryConfidential = json['is_salary_confidential'] ?? false;
+    companyName = json['company_name'] ?? '';
+    companyLogo = json['company_logo_url'] ?? '';
+    jobCityLocation = json['job_city_location'] ?? '';
+    jobStateLocation = json['job_state_location'] ?? '';    
   }
 }

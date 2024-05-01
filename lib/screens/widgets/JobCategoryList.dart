@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/JobCategoryApi.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/JobCategory.dart';
-import 'package:labor_link_mobile/screens/JobDetailsScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/JobItem.dart';
 
 class JobCategoryList extends StatelessWidget {
