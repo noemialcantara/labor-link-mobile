@@ -126,7 +126,8 @@ class JobAppScreen extends StatelessWidget {
                     label: Text('Upload PDF', style: TextStyle(fontFamily: 'Poppins')),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.black
+),
                     ),
                   ),
                 ],
