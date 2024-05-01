@@ -55,6 +55,7 @@ dependencies:
   mobkit_dashed_border: ^0.0.6
   url_launcher: ^6.1.7
   flutter_randomcolor: ^1.0.15
+  file_picker: ^8.0.0+1
 
 dev_dependencies:
   flutter_test:
