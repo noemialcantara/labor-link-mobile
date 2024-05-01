@@ -33,13 +33,13 @@ class ResumeApi {
   }
 
   static deleteResumePerLinkId(String resumeLinkId) async{
+    firestore.collection('resumes').where("link", isEqualTo: resumeLinkId).snapshots().first.then((value) {
+      String id = value.docs.first.id.toString();
+      firestore
+          .collection('resumes').doc(id).delete();
+    });
+    FirebaseStorage.instance.refFromURL(resumeLinkId).delete();
 
-    final collection =firestore
-        .collection('resumes').where("link", isEqualTo: resumeLinkId).snapshots();
-
-        collection.first.then((value) => value.docChanges.remove(""));
-
-        
   }
 
 }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
+import 'package:labor_link_mobile/models/Resume.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:random_avatar/random_avatar.dart';
@@ -37,7 +39,7 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
     ResumeApi.uploadResume(file, profileJob, profileName, userEmail);
   }
 
-  Widget uploadedResumeList (){
+  Widget uploadedResumeList (BuildContext parentContext){
    return StreamBuilder(
           stream:  ResumeApi.getResumeByUser(userEmail),
           builder: (context, snapshot) {
@@ -84,7 +86,16 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                       GestureDetector(
                                         onTap: (){
                                          String linkId = snapshot.data?.docs[index].get("link");
-                                         
+                                         ResumeApi.deleteResumePerLinkId(linkId);
+                                         AwesomeDialog(
+                                            context: parentContext,
+                                            dialogType: DialogType.success,
+                                            animType: AnimType.rightSlide,
+                                            title: 'Alert!',
+                                            desc: 'Successfully deleted this resume',
+                                            btnOkOnPress: () {
+                                            },
+                                            )..show();
                                         },
                                         child: Icon(Icons.remove_circle)
                                       )
@@ -109,6 +120,7 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
   void initState() {
     super.initState();
     _getUserEmail();
+    
   }
 
   void _getUserEmail(){
@@ -151,7 +163,7 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                           SizedBox(height: 25),
                           Text("Uploaded Files",textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
                           SizedBox(height:10),
-                          uploadedResumeList(),
+                          uploadedResumeList(context),
                           SizedBox(height:10),
                           Padding(
                             padding: EdgeInsets.only(left:20,right:20),
@@ -171,13 +183,13 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Add reference to resume'),
+                                        title: const Text('Add reference to your resume'),
                                         content: Column(
                                            mainAxisSize: MainAxisSize.min,
                                           children: [
                                           TextField(
                                             controller: profileJobEditingController,
-                                            decoration: InputDecoration(hintText: "Enter your job title"),
+                                            decoration: InputDecoration(hintText: "Enter the job title"),
                                           ),
                                            TextField(
                                             controller: profileNameEditingController,
@@ -195,7 +207,18 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                             child: const Text('Submit'),
                                             onPressed: () {
                                               uploadResume(file,profileJobEditingController.text, profileNameEditingController.text );
-                                              Navigator.pop(context);
+                                              AwesomeDialog(
+                                                context: context,
+                                                dialogType: DialogType.success,
+                                                animType: AnimType.rightSlide,
+                                                title: 'Alert!',
+                                                desc: 'Successfully uploaded the resume',
+                                                btnOkOnPress: () {
+                                                   Navigator.pop(context);
+                                                },
+                                              )..show();
+                                             
+                                              
                                             },
                                           ),
                                         ],
