@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,7 +24,8 @@ class ResumesCertificationsScreen extends StatefulWidget {
 }
 
 class _ResumesCertificationsScreenState extends State<ResumesCertificationsScreen> {
-  final List<XFile> _resumeList = [];
+  TextEditingController profileJobEditingController  = TextEditingController();
+  TextEditingController profileNameEditingController  = TextEditingController();
   final List<XFile> _certificationsList = [];
   String userEmail = "test@gmail.com";
 
@@ -31,8 +33,8 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
 
   Offset? offset;
 
-  void uploadResume(PlatformFile file){
-    ResumeApi.uploadResume(file);
+  uploadResume(PlatformFile file, String profileJob, String profileName){
+    ResumeApi.uploadResume(file, profileJob, profileName, userEmail);
   }
 
   Widget uploadedResumeList (){
@@ -79,7 +81,13 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                       children: [
                                       Text(snapshot.data?.docs[index].get("file_name"), 
                                       style: TextStyle(fontSize: 13, color: Colors.black),),
-                                      Icon(Icons.remove_circle)
+                                      GestureDetector(
+                                        onTap: (){
+                                         String linkId = snapshot.data?.docs[index].get("link");
+                                         
+                                        },
+                                        child: Icon(Icons.remove_circle)
+                                      )
                                     ],),
                                     
                                   ],
@@ -156,7 +164,46 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                 );
                                 if (result != null) {
                                   PlatformFile file = result.files.first;
-                                  uploadResume(file);
+                                  profileJobEditingController.text = "";
+                                  profileNameEditingController.text = "";
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Add reference to resume'),
+                                        content: Column(
+                                           mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                          TextField(
+                                            controller: profileJobEditingController,
+                                            decoration: InputDecoration(hintText: "Enter your job title"),
+                                          ),
+                                           TextField(
+                                            controller: profileNameEditingController,
+                                            decoration: InputDecoration(hintText: "Enter your name"),
+                                          ),
+                                        ]),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Cancel'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text('Submit'),
+                                            onPressed: () {
+                                              uploadResume(file,profileJobEditingController.text, profileNameEditingController.text );
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  
                                 } 
                             },
                           )),
