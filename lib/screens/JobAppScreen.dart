@@ -103,7 +103,7 @@ class JobAppScreen extends StatelessWidget {
                   fontFamily: 'Poppins',
                 ),
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height:15.0),
               Expanded(
                 child: TextFormField(
                   maxLines: null,
@@ -126,20 +126,20 @@ class JobAppScreen extends StatelessWidget {
                     label: Text('Upload PDF', style: TextStyle(fontFamily: 'Poppins')),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: 5.0),
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
                   child: Text('Apply', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Poppins')),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff356899)),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(15)),
                   ),
                 ),
