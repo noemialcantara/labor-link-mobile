@@ -96,7 +96,9 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
               case ConnectionState.done: 
               if(streamDataLength > 0)
                 return 
-                  ListView.builder(scrollDirection: Axis.horizontal,
+                  Padding(
+                padding: EdgeInsets.only(left:20, right: 20),
+                child: SizedBox( height:100, child: ListView.builder(scrollDirection: Axis.horizontal,
                   itemCount: snapshot.data?.docs.length,
                   itemBuilder: (ctx, index) =>
                     Container(
@@ -155,9 +157,9 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                                         SizedBox(height:10),
                                       Text(snapshot.data?.docs[index].get("profile_name") ?? "", style: GoogleFonts.poppins(fontSize: 16, color: Color(0xff0D0D26)),)
                             ])])))
-                );
+                )));
               
-              return Container();
+              return Padding(padding: EdgeInsets.only(left:20,right:20),  child: Text("There is no resume yet. Please upload a resume first.", style: GoogleFonts.poppins(fontSize: 16, color: Color(0xff95969D)),));
              }
           });
   }
@@ -227,9 +229,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                 padding: EdgeInsets.only(left:20, right: 20),
                 child: Text("Select a resume", textAlign: TextAlign.left,  style: GoogleFonts.poppins(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xff0D0D26)))),
               SizedBox(height:20),
-              Padding(
-                padding: EdgeInsets.only(left:20, right: 20),
-                child: SizedBox( height:100, child: resumeList() )),
+              resumeList(),
               SizedBox(height:30),
               Padding(
                 padding: EdgeInsets.only(left:20, right: 20),
