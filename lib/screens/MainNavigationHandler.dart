@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
+import 'package:labor_link_mobile/screens/EmployerNavigationScreen.dart';
 import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
+import 'package:labor_link_mobile/screens/JobApplicationsListScreen.dart';
+import 'package:labor_link_mobile/screens/JobPostingsScreen.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
 import 'package:labor_link_mobile/screens/ResumesCertificationsScreen.dart';
 import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
@@ -25,7 +28,8 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   final user = FirebaseAuth.instance.currentUser;
   final autoSizeGroup = AutoSizeGroup();
   var _bottomNavIndex = 0;
-  String userName = "";
+  String userName = "user";
+  String userType = "";
 
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -39,6 +43,13 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     Icons.home,
     Icons.email,
     Icons.bookmark_sharp,
+    Icons.dashboard,
+  ];
+
+  final employerIconList = <IconData>[
+    Icons.home,
+    Icons.edit_document,
+    Icons.email,
     Icons.dashboard,
   ];
 
@@ -97,11 +108,10 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   }
 
   void _fetchUserData() async{
-   
     userName =   await FirebaseChatApi.getCurrentUserData(FirebaseAuth.instance.currentUser!.email ?? "");
-    setState(() {
-      
-    });
+    userType =   await FirebaseChatApi.getCurrentUserType(FirebaseAuth.instance.currentUser!.email ?? "");
+    print("USER TYPE IS $userType");
+    setState(() {});
   }
 
   bool onScrollNotification(ScrollNotification notification) {
@@ -134,7 +144,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         child: Column(
           children: [ 
             SizedBox(height:50),
-            RandomAvatar(userName, trBackground: true, height: 130, width: 130),
+            RandomAvatar(userName , trBackground: true, height: 130, width: 130),
             SizedBox(height:10),
             Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
@@ -161,7 +171,11 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
 
             ],))),
             SizedBox(height:30),
-            Padding(
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> JobApplicationsListScreen(userName: userName,))),
+              },
+              child:  Padding(
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
@@ -169,7 +183,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
                SizedBox(width: 20,),
                Text('Applications', style: GoogleFonts.poppins(fontSize: 18),), 
 
-            ],)),
+            ],))),
              SizedBox(height:30),
             GestureDetector(
               onTap: () => {
@@ -224,32 +238,144 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         ));
   }
 
+  Widget _employerDrawer() {
+    return Drawer(
+      backgroundColor: Colors.white,
+        child: Column(
+          children: [ 
+            SizedBox(height:50),
+            RandomAvatar(userName , trBackground: true, height: 130, width: 130),
+            SizedBox(height:10),
+            Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
+            SizedBox(height:5),
+            Text('No industry input yet',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            SizedBox(height:10),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+              },
+              child: Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
+            ),
+            SizedBox(height:40),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+              },
+              child: Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Image.asset("assets/icons/personal_info_icon.png"),
+               SizedBox(width: 20,),
+               Text('Company Info', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],))),
+            SizedBox(height:30),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> JobPostingsScreen(userName: userName,))),
+              },
+              child:  Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Image.asset("assets/icons/applications_icon.png"),
+               SizedBox(width: 20,),
+               Text('Job Posting', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],))),
+            SizedBox(height:30),
+            Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Image.asset("assets/icons/chat_support_icon.png"),
+               SizedBox(width: 20,),
+               Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],)),
+             SizedBox(height:30),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
+              },
+              child:  Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Image.asset("assets/icons/resumes_certifications_icon.png"),
+               SizedBox(width: 20,),
+               Expanded(child: Text('Subscription', style: GoogleFonts.poppins(fontSize: 18),)), 
+
+            ],))),
+            SizedBox(height:30),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> IDVerificationScreen())),
+              },
+              child: Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Image.asset("assets/icons/id_verifications_icon.png"),
+               SizedBox(width: 20,),
+               Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18),), 
+
+            ],))),
+            
+             SizedBox(height:30),
+            GestureDetector(
+              onTap: signOut,
+              child: Padding(
+              padding: EdgeInsets.only(left:50),
+              child: Row(
+              children: [
+               Image.asset("assets/icons/logout_icon.png"),
+               SizedBox(width: 20,),
+               Text('Logout', style: GoogleFonts.poppins(fontSize: 18,color: Color(0xffE30000)),), 
+
+            ],)))
+          ], 
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       body: NotificationListener<ScrollNotification>(
         onNotification: onScrollNotification,
-        child: NavigationScreen(_bottomNavIndex),
+        child: userType == "Employer" ? EmployerNavigationScreen(_bottomNavIndex) : NavigationScreen(_bottomNavIndex)
       ),
-      drawer: _drawer(),
+      drawer: userType == "Employer" ? _employerDrawer() : _drawer(),
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: iconList.length,
         tabBuilder: (int index, bool isActive) {
           final color = isActive
               ? Color(0xff356899)
               : Color(0xffCACBCE);
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                iconList[index],
-                size: 24,
-                color: color,
-              ),
-            ],
-          );
+          return userType != "Employer" ? 
+             Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  iconList[index],
+                  size: 24,
+                  color: color,
+                ),
+              ],
+            ):  Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  employerIconList[index],
+                  size: 24,
+                  color: color,
+                ),
+              ],
+            );
         },
         gapLocation: GapLocation.none,
         backgroundColor: Color(0xffffffff),

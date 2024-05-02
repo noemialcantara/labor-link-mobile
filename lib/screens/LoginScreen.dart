@@ -5,11 +5,11 @@ import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/components/SquareTile.dart';
 import 'package:labor_link_mobile/screens/AuthRedirector.dart';
+import 'package:labor_link_mobile/screens/RegistrationScreen.dart';
 
 class LoginScreen extends StatefulWidget {
-  final Function()? onTap;
-
-  LoginScreen({super.key,required this.onTap});
+  bool isApplicantFirstMode;
+  LoginScreen({super.key,required this.isApplicantFirstMode});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -17,8 +17,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
+  String switchLoginText = '';
+  String loginDescription = '';
+  
   void showmessage(String errorMessage) {
     showDialog(
         context: context,
@@ -61,6 +63,35 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
+  _switchUser(bool isClicked){
+    print("IS CLICKED: $isClicked");
+    if(isClicked) {
+       widget.isApplicantFirstMode = ! widget.isApplicantFirstMode;
+    }
+
+    if(widget.isApplicantFirstMode){
+      setState(() {
+        loginDescription = "Let\'s log in. Apply to jobs!";
+        switchLoginText = 'Switch to Employer';
+        print("IS APPLICANT FIRST MODE IS NOW: ${widget.isApplicantFirstMode}");
+      });
+    }
+    else {
+      setState(() {
+        loginDescription = "Let's log in. Post your jobs!";
+        switchLoginText = 'Switch to Applicant';
+        print("IS APPLICANT FIRST MODE IS NOW: ${widget.isApplicantFirstMode}");
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _switchUser(false);
+   
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height:10),
               Padding(child: Text('Welcome Back', style: GoogleFonts.poppins(color: Color(0xff000000), fontSize:28,fontWeight: FontWeight.w600),), padding: EdgeInsets.only(left:10,right:10),),
               const SizedBox(height:10),
-              Padding(child: Text('Let\'s Login. Apply to jobs!', style: GoogleFonts.poppins(color: Color(0xff0D0D26), fontSize:15,fontWeight: FontWeight.normal)), padding: EdgeInsets.only(left:10,right:10),),
+              Padding(child: Text(loginDescription, style: GoogleFonts.poppins(color: Color(0xff0D0D26), fontSize:15,fontWeight: FontWeight.normal)), padding: EdgeInsets.only(left:10,right:10),),
               
               const SizedBox(height: 45),
               CustomTextField(
@@ -102,10 +133,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: GoogleFonts.poppins(color: Color(0xff356899), fontWeight: FontWeight.w600), textAlign: TextAlign.center,
               ),
               const SizedBox(height: 25),
-              Text(
-                    'Switch to Employer',
+              
+              GestureDetector(
+                onTap: () {
+                  _switchUser(true);
+                },
+                child: Text(
+                    switchLoginText,
                     style: GoogleFonts.poppins(color: Color(0xff356899), fontWeight: FontWeight.w600), textAlign: TextAlign.center,
-              ),
+              )),
               const SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -154,7 +190,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: widget.onTap,
+                    onTap: (){
+                      print("IS APPLICANT FIRST MODE ${ widget.isApplicantFirstMode }");
+                       Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => RegistrationScreen(isApplicantFirstMode: widget.isApplicantFirstMode,)));
+                    },
                     child:  Text(
                       'Register',
                       style: GoogleFonts.poppins(

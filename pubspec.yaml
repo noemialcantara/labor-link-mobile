@@ -57,6 +57,8 @@ dependencies:
   flutter_randomcolor: ^1.0.15
   file_picker: ^8.0.0+1
   awesome_dialog: ^3.2.1
+  dotted_dashed_line: ^0.0.3
+  syncfusion_flutter_charts: ^21.2.6
 
 dev_dependencies:
   flutter_test:

@@ -42,7 +42,8 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   void submitApplication(){
     String coverLetter = coverLetterTextEditingController.text;
     if(selectedResume != ""){
-      JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId, userEmail);
+      JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId, userEmail, widget.jobDetails.companyLogo,
+       widget.jobDetails.jobName,widget.jobDetails.companyName,widget.jobDetails.minimumSalary.toString(), widget.jobDetails.jobCityLocation, "Reviewing", widget.jobDetails.employmentType);
       JobApplicationApi.submitApplication(payload.toJson());
       Navigator.push(
                   context,

@@ -12,4 +12,18 @@ class JobApi {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getJobListByEmployer(String companyName) {
+
+    return firestore
+        .collection('jobs')
+        .where("company_name", isEqualTo: companyName)
+        .snapshots();
+  }
+
+  static Future<QuerySnapshot> getJobPostingsCount(String companyName){
+    return firestore
+      .collection('jobs')
+      .where("company_name", isEqualTo: companyName)
+      .get();
+  }
 }
