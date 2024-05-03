@@ -17,6 +17,14 @@ class ResumeApi {
         .where("email_address",isEqualTo: emailAddress)
         .snapshots();
   }
+
+  static getResumeByEmail(String emailAddress) {
+
+    return firestore
+        .collection('resumes')
+        .where("email_address",isEqualTo: emailAddress)
+        .get();
+  }
   
 
   static uploadResume(PlatformFile file, String profileJob, String profileName, String emailAddress) async{

@@ -1,8 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/ExperiencesApi.dart';
+import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/apis/SkillsApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
@@ -27,12 +29,15 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
   TextEditingController skillController = TextEditingController();
 
   String skillCount = "0";
+  String resumeLink = "";
+  String resumeName = "";
 
    @override
   void initState() {
-    super.initState();
     _fetchUserData();
     _fetchSkillsCount();
+    _fetchResumeLink();
+    super.initState();
   }
 
   _fetchUserData() async{
@@ -63,6 +68,21 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
       }else{
         setState(() {
           skillCount = "0";
+        });
+      }
+    });
+  }
+  
+  _fetchResumeLink() async{
+    ResumeApi.getResumeByEmail(widget.email).then((QuerySnapshot querySnapshot) {
+      if(querySnapshot.docs.length > 0){
+        setState(() {
+          resumeLink = querySnapshot.docs[0].get("link");
+          resumeName = querySnapshot.docs[0].get("file_name");
+        });
+      }else{
+        setState(() {
+          resumeLink = "No available resume";
         });
       }
     });
@@ -302,11 +322,20 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                         return Padding(padding: EdgeInsets.only(left:30, right: 30,top:25,bottom:25), child: Text("You have no skills yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),));
                       }
                 }),
-               
               ),
+              SizedBox(height:30),
+              Padding(
+                padding: EdgeInsets.only(left:20,right:20),
+                child: Row(children: [
+                Text('Resume',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 22, fontWeight: FontWeight.w600),),
+              ])),
+              SizedBox(height:30),
+              GestureDetector(onTap: (){
+              
+              }, child: Padding(padding: EdgeInsets.only(left:20,right:20), child: Text(resumeName,textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.normal,decoration: TextDecoration.underline) ))),
               SizedBox(height: 40,),
               Padding(
-                padding: EdgeInsets.only(left:30, right:30),
+                padding: EdgeInsets.only(left:20, right:20),
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
