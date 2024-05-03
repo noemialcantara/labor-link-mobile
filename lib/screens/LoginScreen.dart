@@ -64,7 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _switchUser(bool isClicked){
-    print("IS CLICKED: $isClicked");
     if(isClicked) {
        widget.isApplicantFirstMode = ! widget.isApplicantFirstMode;
     }
@@ -73,14 +72,12 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         loginDescription = "Let\'s log in. Apply to jobs!";
         switchLoginText = 'Switch to Employer';
-        print("IS APPLICANT FIRST MODE IS NOW: ${widget.isApplicantFirstMode}");
       });
     }
     else {
       setState(() {
         loginDescription = "Let's log in. Post your jobs!";
         switchLoginText = 'Switch to Applicant';
-        print("IS APPLICANT FIRST MODE IS NOW: ${widget.isApplicantFirstMode}");
       });
     }
   }
@@ -108,25 +105,31 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(child: Text(loginDescription, style: GoogleFonts.poppins(color: Color(0xff0D0D26), fontSize:15,fontWeight: FontWeight.normal)), padding: EdgeInsets.only(left:10,right:10),),
               
               const SizedBox(height: 45),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                 prefixIcon: Icon(Icons.email_outlined),
                 controller: _emailController,
                 hintText: 'E-mail',
                 obscureText: false,
-              ),
+              )),
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                  prefixIcon: Icon(Icons.key_outlined),
                 controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
-              ),
+              )),
               const SizedBox(height: 10),
               const SizedBox(height: 25),
-              CustomButton(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomButton(
                 text: "Log in",
                 onTap: () => _signUserIn(context),
-              ),
+              )),
               const SizedBox(height: 20),
               Text(
                     'Forgot Password?',
@@ -191,7 +194,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: (){
-                      print("IS APPLICANT FIRST MODE ${ widget.isApplicantFirstMode }");
                        Navigator.push(
                                     context,
                                     MaterialPageRoute(

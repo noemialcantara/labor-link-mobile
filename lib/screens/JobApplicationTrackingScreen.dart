@@ -96,7 +96,7 @@ class TimelineComponent extends StatelessWidget {
 
   final List<JobApplicationProcess> listOfEvents = [
     JobApplicationProcess(statusName: "Application Submitted", statusDescription: DateTime.now().toString()),
-    JobApplicationProcess(statusName: "Reviewed By HR", statusDescription: "Not yet"),
+    JobApplicationProcess(statusName: "HR Review", statusDescription: "Not yet"),
     JobApplicationProcess(statusName: "Screening Interview", statusDescription: "Not yet"),
     JobApplicationProcess(statusName: "Technical Interview", statusDescription: "Not yet"),
     JobApplicationProcess(statusName: "Final Interview", statusDescription: "Not yet"),

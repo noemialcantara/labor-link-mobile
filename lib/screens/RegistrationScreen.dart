@@ -68,6 +68,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           "employer_about": "No data yet",  
           "year_founded": "No data yet",
           "owner": "No data yet",
+          "logo_url": "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/company_images%2Fdefault-company-avatar-removebg-preview.png?alt=media&token=a3649b8b-5034-406c-95b0-2d289e558be2",
           "email_address": _emailController.text,
         };
       }
@@ -119,40 +120,50 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Padding(child: Text(registrationDescription, style: GoogleFonts.poppins(color: Color(0xff0D0D26), fontSize:15,fontWeight: FontWeight.normal)), padding: EdgeInsets.only(left:10,right:10),),
               
               const SizedBox(height: 45),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                 prefixIcon: Icon(Icons.person_outline),
                 controller: _fullNameController,
                 hintText: widget.isApplicantFirstMode ? 'Full Name' : 'Company Name',
                 obscureText: false,
-              ),
+              )),
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                 prefixIcon: Icon(Icons.email_outlined),
                 controller: _emailController,
                 hintText: 'E-mail',
                 obscureText: false,
-              ),
+              )),
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                  prefixIcon: Icon(Icons.key_outlined),
                 controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
-              ),
+              )),
               
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                  prefixIcon: Icon(Icons.key_outlined),
                 controller: _confirmPasswordController,
                 hintText: 'Confirm Password',
                 obscureText: true,
-              ),
+              )),
 
               const SizedBox(height: 30),
-              CustomButton(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomButton(
                 text: "Register",
                 onTap: () => _signUserup(context),
-              ),
+              )),
               const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.all(8.0),

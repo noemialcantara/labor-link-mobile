@@ -5,6 +5,13 @@ class JobApi {
   // for accessing cloud firestore database
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  static postJob(Map<String, dynamic>  job) {
+
+    return firestore
+        .collection('jobs')
+        .add(job);
+  }
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> getJobDetails() {
 
     return firestore

@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
-  final Icon prefixIcon;
+  final Icon? prefixIcon;
+  final List<TextInputFormatter>? textInputFormatter;
+  final TextInputType? textInputType;
+  final int maxLines;
 
   const CustomTextField({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-    required this.prefixIcon,
+    this.prefixIcon,
+    this.textInputFormatter,
+    this.textInputType,
+    this.maxLines  = 1
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: TextField(
+        maxLines: maxLines,
         controller: controller,
         obscureText: obscureText,
+        keyboardType: textInputType,
+        inputFormatters: textInputFormatter,
         decoration: InputDecoration(
             prefixIcon: prefixIcon,
             prefixIconColor: Color(0xffAFB0B6),

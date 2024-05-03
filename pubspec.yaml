@@ -59,6 +59,7 @@ dependencies:
   awesome_dialog: ^3.2.1
   dotted_dashed_line: ^0.0.3
   syncfusion_flutter_charts: ^21.2.6
+  uuid: ^4.2.2
 
 dev_dependencies:
   flutter_test:

@@ -56,6 +56,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
 
     _fabAnimationController = AnimationController(
       duration: Duration(milliseconds: 500),
@@ -84,7 +85,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
       vsync: this,
     );
 
-   _fetchUserData();
+  
    
     Future.delayed(
       Duration(seconds: 1),

@@ -17,6 +17,7 @@ import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
 import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
+import 'package:labor_link_mobile/screens/JobPostingManagementScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:random_avatar/random_avatar.dart';
@@ -42,10 +43,6 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
   int jobPostingsCount = 0;
 
   Offset? offset;
-
-  uploadResume(PlatformFile file, String profileJob, String profileName){
-    ResumeApi.uploadResume(file, profileJob, profileName, userEmail);
-  }
 
   @override
   void initState() {
@@ -123,7 +120,7 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                       SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Padding( padding: EdgeInsets.only(left:10),child: Text(snapshot.data?.docs[index].get("job_name"), maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),))),
-                                       SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Padding( padding: EdgeInsets.only(left:10),child: Text("10 applicants", maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0,fontWeight: FontWeight.w500, color: Color(0xff82828e)),))),
+                                       SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Padding( padding: EdgeInsets.only(left:10),child: Text("${snapshot.data?.docs[index].get("required_applicant_count")} applicants", maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0,fontWeight: FontWeight.w500, color: Color(0xff82828e)),))),
                                     ],),
                                     Padding(
                                       padding: EdgeInsets.only(right:25),
@@ -188,7 +185,11 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {;
+        onPressed: () {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => JobPostingManagementScreen(companyName: companyName)));
         },
         backgroundColor: Color(0xff356899),
         child: const Icon(Icons.add, size: 30,),
