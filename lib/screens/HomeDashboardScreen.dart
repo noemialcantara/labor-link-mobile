@@ -44,13 +44,13 @@ void initState() {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Text("Welcome ${user?.email}!", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, color: Color(0xff95969D))),
+                  Text("Welcome ${userName}!", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, color: Color(0xff95969D))),
                   SizedBox(height: 5),
                   Text("Discover Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 25)),
                 ],),
                
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: user!.email.toString(),))),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: userName,))),
                   child: CircleAvatar(
                     radius: 30, 
                     backgroundColor: Colors.transparent,
