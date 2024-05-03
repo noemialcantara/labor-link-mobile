@@ -17,6 +17,7 @@ import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
+import 'package:labor_link_mobile/screens/EmployerApplicantProfileScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
@@ -95,13 +96,11 @@ class _JobApplicantsListScreenState extends State<JobApplicantsListScreen> {
                           itemBuilder: (ctx, index) =>
                             GestureDetector(
                               onTap: (){
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (_) => ApplicantProfileScreen(
-                                //           profileLogoUrl:snapshot.data?.docs[index].get("profile_logo_url"),
-                                //           jobName: snapshot.data?.docs[index].get("job_name"),
-                                //           status: snapshot.data?.docs[index].get("status"))));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => EmployerApplicantProfileScreen(email: snapshot.data?.docs[index].get("applicant_email"),
+                                         )));
                               },
                               child: Container(
                               margin: EdgeInsets.only(left:30,right:30,bottom:15),
