@@ -38,15 +38,24 @@ class _LoginScreenState extends State<LoginScreen> {
           return Center(child: CircularProgressIndicator());
         });
     try {
+     
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+      
+      if(widget.isApplicantFirstMode){
       //TODO: to remove once all of the existing users have their own profile data in applicants table
-      await UsersApi.urgentlyCreateUser(_emailController.text).then((value) => Future.delayed(Duration(milliseconds: 8000), (){ Navigator.push(
-        context,
-        fadeTransitionBuilder(child:  const HomeDashboardScreen())
-      ); }));
+        await UsersApi.urgentlyCreateUser(_emailController.text).then((value) => Future.delayed(Duration(milliseconds: 8000), (){ Navigator.push(
+          context,
+          fadeTransitionBuilder(child:  const HomeDashboardScreen())
+        ); }));
+      }else{
+        Navigator.push(
+          context,
+          fadeTransitionBuilder(child:  const AuthRedirector())
+        ); 
+      }
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //wrong Email

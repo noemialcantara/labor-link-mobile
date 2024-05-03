@@ -56,6 +56,16 @@ class UsersApi {
     });
   }
 
+  static updateEmployerProfile(Map<String, dynamic>  userData) {
+    firestore.collection('employers').where("email_address", isEqualTo: userData["email_address"]).snapshots().first.then((value) {
+      String id = value.docs.first.id.toString();
+      firestore
+          .collection('employers')
+          .doc(id)
+          .update(userData);
+    });
+  }
+
   static Future<QuerySnapshot> getApplicantData(String emailAddress){
     return firestore
       .collection('applicants')

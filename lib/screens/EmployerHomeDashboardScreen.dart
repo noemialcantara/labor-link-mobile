@@ -2,6 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/JobApi.dart';
+import 'package:labor_link_mobile/apis/JobApplicantsApi.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/screens/SearchListScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/JobCategoryList.dart';
 import 'package:labor_link_mobile/screens/widgets/JobList.dart';
@@ -17,9 +20,13 @@ class EmployerHomeDashboardScreen extends StatefulWidget {
 class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScreen> {
   final user = FirebaseAuth.instance.currentUser;
    List<ChartData>? chartData;
+   int applicantsCount = 0;
+   int jobPostingCount = 0;
 
-   @override
+  @override
   void initState() {
+    super.initState();
+    fetchKPIs();
     chartData = <ChartData>[
       ChartData(
           x: 'Sun',
@@ -42,13 +49,38 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
           x: 'Sat',
           y: 28.0,)
     ];
-    super.initState();
+    
   }
 
   @override
   void dispose() {
-    chartData!.clear();
+    
     super.dispose();
+    chartData!.clear();
+  }
+
+  fetchKPIs(){
+    if(mounted){
+      UsersApi.getCompanyNameByEmail(FirebaseAuth.instance.currentUser!.email!).then((value) {
+        String companyName  = value.docs.first.get("employer_name");
+        JobApplicantsApi.getApplicationCount(companyName).then((value) {
+          int dataLength = value.docs.length;
+          setState(() {
+            applicantsCount = dataLength;
+          });
+        });
+
+        JobApi.getQueryJobListByEmployer(companyName).then((value) {
+          int dataLength = value.docs.length;
+          setState(() {
+            jobPostingCount = dataLength;
+          });
+        });
+
+
+      });
+    }
+      
   }
 
   SfCartesianChart _buildDashedSplineChart() {
@@ -112,7 +144,7 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
                     ],),
                     
                     SizedBox(height:15),
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text("0",maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xff197BD2))))
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text(applicantsCount.toString(),maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xff197BD2))))
                 ])
               )
           ),
@@ -131,7 +163,7 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
                       SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.81) ,child:  Text("Job Posts",maxLines: 1,overflow: TextOverflow.ellipsis,  style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w500, color: Color(0xff7042C9)))),
                     ],),
                     SizedBox(height:15),
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text("0",maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xff7042C9))))
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text(jobPostingCount.toString(),maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xff7042C9))))
                 ])
               )
           ),

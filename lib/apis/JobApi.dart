@@ -35,6 +35,14 @@ class JobApi {
         .snapshots();
   }
 
+  static Future<QuerySnapshot> getQueryJobListByEmployer(String companyName) {
+
+    return firestore
+        .collection('jobs')
+        .where("company_name", isEqualTo: companyName)
+        .get();
+  }
+
   static Future<QuerySnapshot> getJobPostingsCount(String companyName){
     return firestore
       .collection('jobs')

@@ -6,6 +6,7 @@ import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/components/SquareTile.dart';
+import 'package:labor_link_mobile/screens/AuthRedirector.dart';
 import 'package:labor_link_mobile/screens/LoginScreen.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -67,10 +68,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }else{
          userPayload = {
           "employer_name": _fullNameController.text,
-          "employer_address": "No data yet",
-          "employer_about": "No data yet",  
-          "year_founded": "No data yet",
-          "owner": "No data yet",
+          "employer_address": "",
+          "employer_about": "",  
+          "year_founded": "",
+          "industry": "",
+          "owner": "",
+          "company_size": "",
+          "phone": "",
           "logo_url": "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/company_images%2Fdefault-company-avatar-removebg-preview.png?alt=media&token=a3649b8b-5034-406c-95b0-2d289e558be2",
           "email_address": _emailController.text,
         };
@@ -78,12 +82,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
       UsersApi.createUser(widget.isApplicantFirstMode, userPayload);
       
-      Navigator.pop(context);
+       Navigator.push(
+          context,
+          fadeTransitionBuilder(child:  const AuthRedirector())
+        ); 
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //wrong Email
       showmessage(e.message.toString());
     }
+  }
+
+  PageRouteBuilder fadeTransitionBuilder({required Widget child}) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final _scale = animation.drive(Tween<double>(begin: 0, end: 1));
+
+          return ScaleTransition(scale: _scale, child: child);
+        });
   }
 
   _switchUser(){

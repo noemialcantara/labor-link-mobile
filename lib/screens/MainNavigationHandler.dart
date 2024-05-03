@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/screens/EmployerNavigationScreen.dart';
+import 'package:labor_link_mobile/screens/EmployerProfileScreen.dart';
 import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicationsListScreen.dart';
 import 'package:labor_link_mobile/screens/JobPostingsScreen.dart';
@@ -36,6 +37,8 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   String userType = "";
   String fullName = "";
   String profession = 'No profession yet';
+  String industry = "No industry yet";
+  String logoUrl = "";
 
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -121,14 +124,26 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     userName =   await FirebaseChatApi.getCurrentUserData(FirebaseAuth.instance.currentUser!.email ?? "");
     userType =   await FirebaseChatApi.getCurrentUserType(FirebaseAuth.instance.currentUser!.email ?? "");
 
-    UsersApi.getApplicantData(user?.email ?? "").then((QuerySnapshot querySnapshot) {
-      if(querySnapshot.docs.length > 0){
-        setState(() {
-          fullName = querySnapshot.docs.first.get("full_name");
-          profession =  querySnapshot.docs.first.get("job_role");
-        });
-      }
-    });
+    if(userType != "Employer")
+      UsersApi.getApplicantData(user?.email ?? "").then((QuerySnapshot querySnapshot) {
+        if(querySnapshot.docs.length > 0){
+          setState(() {
+            fullName = querySnapshot.docs.first.get("full_name");
+            profession =  querySnapshot.docs.first.get("job_role");
+            logoUrl =  querySnapshot.docs.first.get("profile_url");
+          });
+        }
+      });
+    else 
+      UsersApi.getCompanyNameByEmail(user?.email ?? "").then((QuerySnapshot querySnapshot) {
+        if(querySnapshot.docs.length > 0){
+          setState(() {
+            fullName = querySnapshot.docs.first.get("employer_name");
+            industry =  querySnapshot.docs.first.get("industry");
+            logoUrl =  querySnapshot.docs.first.get("logo_url");
+          });
+        }
+      });
     
     setState(() {});
   }
@@ -164,7 +179,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         child: Column(
           children: [ 
             SizedBox(height:50),
-            Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 130),
+            Image.network(logoUrl, height: 130),
             SizedBox(height:10),
             Text(fullName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
@@ -287,22 +302,22 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         child: Column(
           children: [ 
             SizedBox(height:50),
-            Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 130),
+            Image.network(logoUrl, height: 130),
             SizedBox(height:10),
             Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
-            Text('No industry input yet',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            Text(industry == "" ? 'No industry input yet': industry ,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
             SizedBox(height:10),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EmployerProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
               },
               child: Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
             ),
             SizedBox(height:40),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EmployerProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
               },
               child: Padding(
               padding: EdgeInsets.only(left:50),
