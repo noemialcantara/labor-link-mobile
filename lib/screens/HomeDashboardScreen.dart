@@ -7,6 +7,7 @@ import 'package:labor_link_mobile/screens/SearchListScreen.dart';
 import 'package:labor_link_mobile/screens/UserProfileScreen.dart'; 
 import 'package:labor_link_mobile/screens/widgets/JobCategoryList.dart';
 import 'package:labor_link_mobile/screens/widgets/JobList.dart';
+import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({Key? key}) : super(key: key);
@@ -34,6 +35,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,3 +140,4 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     );
   }
 }
+

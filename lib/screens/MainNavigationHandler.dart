@@ -1,3 +1,4 @@
+// Importing necessary packages
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,6 +20,7 @@ import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
 import 'package:labor_link_mobile/screens/UserProfileScreen.dart';
 import 'package:random_avatar/random_avatar.dart';
 
+// Main class for handling the main navigation
 class MainNavigationHandler extends StatefulWidget {
   const MainNavigationHandler({Key? key}) : super(key: key);
 
@@ -62,6 +64,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     super.initState();
     _fetchUserData();
 
+    // Initializing animation controllers and curves
     _fabAnimationController = AnimationController(
       duration: Duration(milliseconds: 500),
       vsync: this,
@@ -89,8 +92,9 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
       vsync: this,
     );
 
-  
    
+
+    // Delayed animation controllers
     Future.delayed(
       Duration(seconds: 1),
       () => _fabAnimationController.forward(),
@@ -103,12 +107,13 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
 
   @override
   void dispose() {
+    // Disposing animation controllers and curves
     _hideBottomBarAnimationController.dispose();
     _fabAnimationController.dispose();
     _borderRadiusAnimationController.dispose();
     borderRadiusCurve.dispose();
     fabCurve.dispose();
-    
+
     super.dispose();
   }
 
@@ -128,9 +133,9 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     setState(() {});
   }
 
+  // Scroll notification handler
   bool onScrollNotification(ScrollNotification notification) {
-    if (notification is UserScrollNotification &&
-        notification.metrics.axis == Axis.vertical) {
+    if (notification is UserScrollNotification && notification.metrics.axis == Axis.vertical) {
       switch (notification.direction) {
         case ScrollDirection.forward:
           _hideBottomBarAnimationController.reverse();
@@ -147,7 +152,8 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     return false;
   }
 
-  void signOut() async{
+  // Sign out function
+  void signOut() async {
     await FirebaseChatApi.updateActiveStatus(false);
     await FirebaseChatApi.auth.signOut();
   }
@@ -179,77 +185,100 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
               padding: EdgeInsets.only(left:50),
               child: Row(
               children: [
-               Image.asset("assets/icons/personal_info_icon.png"),
-               SizedBox(width: 20,),
-               Text('Personal Info', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],))),
-            SizedBox(height:30),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> JobApplicationsListScreen(userName: userName,))),
-              },
-              child:  Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/personal_info_icon.png"),
+                SizedBox(width: 20),
+                Text('Personal Info', style: GoogleFonts.poppins(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => JobApplicationsListScreen(userName: userName),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/applications_icon.png"),
-               SizedBox(width: 20,),
-               Text('Applications', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],))),
-             SizedBox(height:30),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
-              },
-              child:  Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/applications_icon.png"),
+                SizedBox(width: 20),
+                Text('Applications', style: GoogleFonts.poppins(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ResumesCertificationsScreen(userName: userName),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/resumes_certifications_icon.png"),
-               SizedBox(width: 20,),
-               Expanded(child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18),)), 
-
-            ],))),
-            SizedBox(height:30),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> IDVerificationScreen())),
-              },
-              child: Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/resumes_certifications_icon.png"),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18)),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => IDVerificationScreen(),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/id_verifications_icon.png"),
-               SizedBox(width: 20,),
-               Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],))),
-            SizedBox(height:30),
-            Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/id_verifications_icon.png"),
+                SizedBox(width: 20),
+                Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        Padding(
+          padding: EdgeInsets.only(left: 50),
+          child: Row(
+            children: [
+              Image.asset("assets/icons/chat_support_icon.png"),
+              SizedBox(width: 20),
+              Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18)),
+            ],
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: signOut,
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/chat_support_icon.png"),
-               SizedBox(width: 20,),
-               Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],)),
-             SizedBox(height:30),
-            GestureDetector(
-              onTap: signOut,
-              child: Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
-              children: [
-               Image.asset("assets/icons/logout_icon.png"),
-               SizedBox(width: 20,),
-               Text('Logout', style: GoogleFonts.poppins(fontSize: 18,color: Color(0xffE30000)),), 
-
-            ],)))
-          ], 
-        ));
+                Image.asset("assets/icons/logout_icon.png"),
+                SizedBox(width: 20),
+                Text(
+                  'Logout',
+                  style: GoogleFonts.poppins(fontSize: 18, color: Color(0xffE30000)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   }
 
   Widget _employerDrawer() {
