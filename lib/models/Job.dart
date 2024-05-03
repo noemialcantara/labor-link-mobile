@@ -15,10 +15,11 @@ class Job {
   late String companyLogo;
   late String jobStateLocation;
   late String jobCityLocation;
+  late int requiredHireCount;
   
   Job(this.jobId, this.jobName, this.jobDescription, this.jobRequirements, this.jobResponsibilities, this.jobCategories,
       this.jobLevels, this.employmentType, this.minimumSalary, this.maximumSalary, this.isSalaryToBeDeclared, 
-      this.isSalaryConfidential, this.companyName, this.companyLogo, this.jobStateLocation, this.jobCityLocation);
+      this.isSalaryConfidential, this.companyName, this.companyLogo, this.jobStateLocation, this.jobCityLocation, this.requiredHireCount);
 
 
   Job.fromJson(Map<String, dynamic> json) {
@@ -38,5 +39,28 @@ class Job {
     companyLogo = json['company_logo_url'] ?? '';
     jobCityLocation = json['job_city_location'] ?? '';
     jobStateLocation = json['job_state_location'] ?? '';    
+    requiredHireCount = json['required_applicant_count'] ?? 0;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'job_id' : jobId,
+      'job_name' : jobName,
+      'job_description': jobDescription,
+      'job_requirements': jobRequirements,
+      'job_responsibilities': jobResponsibilities,
+      'job_categories': jobCategories,
+      'job_levels': jobLevels,
+      'employment_type': employmentType,
+      'min_salary': minimumSalary,
+      'max_salary': maximumSalary,
+      'is_salary_to_be_declared': isSalaryToBeDeclared,
+      'is_salary_confidential': isSalaryConfidential,
+      'company_name': companyName,
+      'company_logo_url': companyLogo,
+      'job_city_location': jobCityLocation,
+      'job_state_location': jobStateLocation,
+      'required_applicant_count': requiredHireCount
+    };
   }
 }

@@ -2,14 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/components/SquareTile.dart';
+import 'package:labor_link_mobile/screens/LoginScreen.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  final Function()? onTap;
+  bool isApplicantFirstMode;
 
-  RegistrationScreen({Key? key, required this.onTap}) : super(key: key);
+  RegistrationScreen({Key? key, required this.isApplicantFirstMode}) : super(key: key);
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -21,6 +23,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String registrationDescription = '';
 
   void showmessage(String errorMessage) {
     showDialog(
@@ -46,13 +49,59 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text, password: _passwordController.text);
 
-      await FirebaseChatApi.createUser(_fullNameController.text);
+      await FirebaseChatApi.createUser(_fullNameController.text, widget.isApplicantFirstMode);
+
+       Map<String, dynamic> userPayload = {};
+
+      if(widget.isApplicantFirstMode){
+        userPayload = {
+          "full_name": _fullNameController.text,
+          "address": "No data yet",
+          "about_me": "No data yet",
+          "skills": [],
+          "email_address": _emailController.text,
+        };
+      }else{
+         userPayload = {
+          "employer_name": _fullNameController.text,
+          "employer_address": "No data yet",
+          "employer_about": "No data yet",  
+          "year_founded": "No data yet",
+          "owner": "No data yet",
+          "logo_url": "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/company_images%2Fdefault-company-avatar-removebg-preview.png?alt=media&token=a3649b8b-5034-406c-95b0-2d289e558be2",
+          "email_address": _emailController.text,
+        };
+      }
+
+       UsersApi.createUser(widget.isApplicantFirstMode, userPayload);
+      
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //wrong Email
       showmessage(e.message.toString());
     }
+  }
+
+  _switchUser(){
+    if(widget.isApplicantFirstMode){
+      setState(() {
+        registrationDescription = 'Let\'s register. Apply to jobs!';
+      });
+      
+    }
+    else{
+      setState(() {
+        registrationDescription = 'Let\'s register. Post your jobs!';
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _switchUser();
+   
   }
 
   @override
@@ -68,43 +117,53 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               const SizedBox(height:10),
               Padding(child: Text('Registration', style: GoogleFonts.poppins(color: Color(0xff000000), fontSize:28,fontWeight: FontWeight.w600),), padding: EdgeInsets.only(left:10,right:10),),
               const SizedBox(height:10),
-              Padding(child: Text('Let\'s Register. Apply to jobs!', style: GoogleFonts.poppins(color: Color(0xff0D0D26), fontSize:15,fontWeight: FontWeight.normal)), padding: EdgeInsets.only(left:10,right:10),),
+              Padding(child: Text(registrationDescription, style: GoogleFonts.poppins(color: Color(0xff0D0D26), fontSize:15,fontWeight: FontWeight.normal)), padding: EdgeInsets.only(left:10,right:10),),
               
               const SizedBox(height: 45),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                 prefixIcon: Icon(Icons.person_outline),
                 controller: _fullNameController,
-                hintText: 'Full Name',
+                hintText: widget.isApplicantFirstMode ? 'Full Name' : 'Company Name',
                 obscureText: false,
-              ),
+              )),
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                 prefixIcon: Icon(Icons.email_outlined),
                 controller: _emailController,
                 hintText: 'E-mail',
                 obscureText: false,
-              ),
+              )),
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                  prefixIcon: Icon(Icons.key_outlined),
                 controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
-              ),
+              )),
               
               const SizedBox(height: 20),
-              CustomTextField(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomTextField(
                  prefixIcon: Icon(Icons.key_outlined),
                 controller: _confirmPasswordController,
                 hintText: 'Confirm Password',
                 obscureText: true,
-              ),
+              )),
 
               const SizedBox(height: 30),
-              CustomButton(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomButton(
                 text: "Register",
                 onTap: () => _signUserup(context),
-              ),
+              )),
               const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -153,7 +212,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: widget.onTap,
+                    onTap:(){
+                       Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => LoginScreen(isApplicantFirstMode: widget.isApplicantFirstMode,)));
+                    } ,
                     child:  Text(
                       'Log in',
                       style: GoogleFonts.poppins(

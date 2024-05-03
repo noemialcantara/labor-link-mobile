@@ -10,6 +10,7 @@ import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/JobApplication.dart';
 import 'package:labor_link_mobile/screens/AuthRedirector.dart';
+import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'dart:math' as math;
 
@@ -99,8 +100,11 @@ class _JobApplicationSuccessScreenState extends State<JobApplicationSuccessScree
                 padding: EdgeInsets.only(left:10,right:10,bottom:20),
                 child: CustomButton(
                 text: "Track Job",
-                onTap: () => (){
-                  
+                onTap: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => JobApplicationTrackingScreen(companyLogo: widget.jobDetails.companyLogo,  jobName: widget.jobDetails.jobName, minimumSalary: widget.jobDetails.minimumSalary.toString() , companyName: widget.jobDetails.companyName, jobCityLocation: widget.jobDetails.jobCityLocation, status: "Reviewing")));
                 },
               )),
               Padding(

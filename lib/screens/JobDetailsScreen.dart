@@ -73,7 +73,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               Text(widget.jobDetails.companyName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 18),), 
               SizedBox(height:25),
               Padding(
-                padding: EdgeInsets.only(left:40,right:40),
+                padding: EdgeInsets.only(left:30,right:30),
                 child: Row(
                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -83,9 +83,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                         border: Border.all(color: Color(0xffE4E5E7)),
                         borderRadius: BorderRadius.circular(20.0)
                       ),
-                      child: Padding(
+                      child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .75),child: Padding(
                         padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                        child: Text(widget.jobDetails.jobCategories[0], style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)))
+                        child: Text(widget.jobDetails.jobCategories[0], maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26))))
                       )
                   ),
                   Container(
@@ -94,9 +94,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                         border: Border.all(color: Color(0xffE4E5E7)),
                         borderRadius: BorderRadius.circular(20.0)
                       ),
-                      child: Padding(
+                      child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .75),child: Padding(
                         padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                        child: Text(widget.jobDetails.employmentType, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)))
+                        child: Text(widget.jobDetails.employmentType, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26))))
                       )
                   ),
                   Container(
@@ -105,9 +105,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                         border: Border.all(color: Color(0xffE4E5E7)),
                         borderRadius: BorderRadius.circular(20.0)
                       ),
-                      child: Padding(
+                      child:SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .75),child:  Padding(
                         padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                        child: Text(widget.jobDetails.jobLevels, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)))
+                        child: Text(widget.jobDetails.jobLevels, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26))))
                       )
                   ),
                   

@@ -31,7 +31,8 @@ class FirebaseChatApi {
       createdAt: '',
       isOnline: false,
       lastActive: '',
-      pushToken: '');
+      pushToken: '',
+      userType: '');
 
   // to return current user
   static User get user => auth.currentUser!;
@@ -104,6 +105,14 @@ class FirebaseChatApi {
     return data.docs.first.data()["name"];
   }
 
+  static Future<String> getCurrentUserType(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    return data.docs.first.data()["user_type"];
+  }
+
   // for adding an chat user for our conversation
   static Future<bool> addChatUser(String email) async {
     final data = await firestore
@@ -148,7 +157,7 @@ class FirebaseChatApi {
   }
 
   // for creating a new user
-  static Future<void> createUser(String userName) async {
+  static Future<void> createUser(String userName, bool isApplicantFirstMode) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
@@ -160,7 +169,8 @@ class FirebaseChatApi {
         createdAt: time,
         isOnline: false,
         lastActive: time,
-        pushToken: '');
+        pushToken: '',
+        userType: isApplicantFirstMode ? "Applicant" : "Employer");
 
     return await firestore
         .collection('users')
