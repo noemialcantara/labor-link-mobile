@@ -146,105 +146,156 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   }
 
   // Drawer widget
-  Widget _drawer() {
-    return Drawer(
-      backgroundColor: Colors.white,
-        child: Column(
-          children: [ 
-            SizedBox(height:50),
-            Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 130),
-            SizedBox(height:10),
-            Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
-            SizedBox(height:5),
-            Text('No profession yet',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
-            SizedBox(height:10),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
-              },
-              child: Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
+ Widget _drawer() {
+  return Drawer(
+    backgroundColor: Colors.white,
+    child: Column(
+      children: [
+        SizedBox(height: 50),
+        Image.network(
+          "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae",
+          height: 130,
+        ),
+        SizedBox(height: 10),
+        Text(
+          userName,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: Color(0xff000000),
+            fontSize: 25,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(height: 5),
+        Text(
+          'No profession yet',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: Color(0xff95969D),
+            fontSize: 16,
+          ),
+        ),
+        SizedBox(height: 10),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserProfileScreen(userName: userName),
+            )),
+          },
+          child: Text(
+            'View Profile',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              color: Color(0xff356899),
+              fontSize: 18,
             ),
           ),
-          SizedBox(height: 40),
-          GestureDetector(
-            onTap: () => {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: userName,))),
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 50),
-              child: Row(
+        ),
+        SizedBox(height: 40),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserProfileScreen(userName: userName),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/personal_info_icon.png"),
-               SizedBox(width: 20,),
-               Text('Personal Info', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],))),
-            SizedBox(height:30),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> JobApplicationsListScreen(userName: userName,))),
-              },
-              child:  Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/personal_info_icon.png"),
+                SizedBox(width: 20),
+                Text('Personal Info', style: GoogleFonts.poppins(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => JobApplicationsListScreen(userName: userName),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/applications_icon.png"),
-               SizedBox(width: 20,),
-               Text('Applications', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],))),
-             SizedBox(height:30),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
-              },
-              child:  Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/applications_icon.png"),
+                SizedBox(width: 20),
+                Text('Applications', style: GoogleFonts.poppins(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ResumesCertificationsScreen(userName: userName),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/resumes_certifications_icon.png"),
-               SizedBox(width: 20,),
-               Expanded(child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18),)), 
-
-            ],))),
-            SizedBox(height:30),
-            GestureDetector(
-              onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> IDVerificationScreen())),
-              },
-              child: Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/resumes_certifications_icon.png"),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Text('Resumes & Certifications', style: GoogleFonts.poppins(fontSize: 18)),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: () => {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => IDVerificationScreen(),
+            )),
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/id_verifications_icon.png"),
-               SizedBox(width: 20,),
-               Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],))),
-            SizedBox(height:30),
-            Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
+                Image.asset("assets/icons/id_verifications_icon.png"),
+                SizedBox(width: 20),
+                Text('ID Verifications', style: GoogleFonts.poppins(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        Padding(
+          padding: EdgeInsets.only(left: 50),
+          child: Row(
+            children: [
+              Image.asset("assets/icons/chat_support_icon.png"),
+              SizedBox(width: 20),
+              Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18)),
+            ],
+          ),
+        ),
+        SizedBox(height: 30),
+        GestureDetector(
+          onTap: signOut,
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Row(
               children: [
-               Image.asset("assets/icons/chat_support_icon.png"),
-               SizedBox(width: 20,),
-               Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],)),
-             SizedBox(height:30),
-            GestureDetector(
-              onTap: signOut,
-              child: Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
-              children: [
-               Image.asset("assets/icons/logout_icon.png"),
-               SizedBox(width: 20,),
-               Text('Logout', style: GoogleFonts.poppins(fontSize: 18,color: Color(0xffE30000)),), 
-
-            ],)))
-          ], 
-        ));
+                Image.asset("assets/icons/logout_icon.png"),
+                SizedBox(width: 20),
+                Text(
+                  'Logout',
+                  style: GoogleFonts.poppins(fontSize: 18, color: Color(0xffE30000)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   }
 
   Widget _employerDrawer() {
