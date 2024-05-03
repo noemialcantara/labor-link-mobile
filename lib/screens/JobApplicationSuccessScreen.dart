@@ -51,19 +51,20 @@ class _JobApplicationSuccessScreenState extends State<JobApplicationSuccessScree
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height:10),
+              SizedBox(height:30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                   Image.network(widget.jobDetails.companyLogo, height: 100, width: 100, alignment: Alignment.center),
-                  
+                      SizedBox(width:20),
+                   Image.network(widget.jobDetails.companyLogo, height: 60, width: 60, alignment: Alignment.center),
+                     SizedBox(width:10),
                    Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.jobName+"asdfafafasdfasfd", maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.jobName, maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
                     SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.companyName, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)),))
                    ],)
                   ],),
