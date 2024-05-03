@@ -70,6 +70,13 @@ class UsersApi {
       .get();
   }
 
+  static Future<QuerySnapshot> getEmployerDataByName(String companyName){
+    return firestore
+      .collection('employers')
+      .where("employer_name", isEqualTo: companyName)
+      .get();
+  }
+
   static Future<QuerySnapshot> getCompanyDetailsByName(String companyName){
     return firestore
       .collection('employers')

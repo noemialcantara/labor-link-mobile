@@ -142,6 +142,43 @@ class FirebaseChatApi {
     }
   }
 
+  static Future<Map<String,dynamic>> addChatUserWithFrom(String fromEmail, String toEmail) async {
+
+    final fromData = await firestore
+        .collection('users')
+        .where('email', isEqualTo: fromEmail)
+        .get();
+
+    final toData = await firestore
+        .collection('users')
+        .where('email', isEqualTo: toEmail)
+        .get();
+
+    log('data: ${toData.docs.length} and ${fromData.docs.length}');
+
+    if (toData.docs.isNotEmpty && fromData.docs.isNotEmpty) {
+
+      firestore
+          .collection('users')
+          .doc(fromData.docs.first.id)
+          .collection('my_users')
+          .doc(toData.docs.first.id)
+          .set({});
+
+      firestore
+          .collection('users')
+          .doc(toData.docs.first.id)
+          .collection('my_users')
+          .doc(fromData.docs.first.id)
+          .set({});
+    }
+
+    return {
+      "from_id": fromData.docs.first.id,
+      "to_id": toData.docs.first.id
+    };
+  }
+
   // for getting current user info
   static Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(user.uid).get().then((user) async {
@@ -187,6 +224,14 @@ class FirebaseChatApi {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getChatUserData() {
+    return firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('my_users')
+        .snapshots();
+  }
+
   // for getting all users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
       List<String> userIds) {
@@ -211,6 +256,16 @@ class FirebaseChatApi {
         .collection('my_users')
         .doc(user.uid)
         .set({}).then((value) => sendMessage(chatUser, msg, type));
+  }
+
+  static Future<void> sendFirstMessageCustom(
+      String fromId, String toId, String msg, Type type) async {
+    await firestore
+        .collection('users')
+        .doc(fromId)
+        .collection('my_users')
+        .doc(toId)
+        .set({}).then((value) => sendCustomMessage(fromId, toId, msg, type));
   }
 
   // for updating user information
@@ -273,6 +328,10 @@ class FirebaseChatApi {
       ? '${user.uid}_$id'
       : '${id}_${user.uid}';
 
+  static String getCustomConversationId(String fromId, String toId) => fromId.hashCode <= toId.hashCode
+      ? '${fromId}_$toId'
+      : '${toId}_${fromId}';
+
   // for getting all messages of a specific conversation from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
       ChatUser user) {
@@ -301,6 +360,26 @@ class FirebaseChatApi {
         .collection('chats/${getConversationID(chatUser.id)}/messages/');
     await ref.doc(time).set(message.toJson()).then((value) =>
         sendPushNotification(chatUser, type == Type.text ? msg : 'image'));
+  }
+
+  // for sending message
+  static Future<void> sendCustomMessage(
+      String fromId, toId, String msg, Type type) async {
+    //message sending time (also used as id)
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    //message to send
+    final Message message = Message(
+        toId: toId,
+        msg: msg,
+        read: '',
+        type: type,
+        fromId: fromId,
+        sent: time);
+
+    final ref = firestore
+        .collection('chats/${getCustomConversationId(fromId, toId)}/messages/');
+    await ref.doc(time).set(message.toJson());
   }
 
   //update read status of message

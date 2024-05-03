@@ -120,9 +120,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFAFAFD),
-      floatingActionButton: Padding(padding: const EdgeInsets.only(bottom: 60), child: FloatingActionButton(backgroundColor: Color(0xff356899), onPressed: (){ 
-        _addChatUserDialog();
-      }, child: const Icon(Icons.add_comment_rounded,),),),
+      // floatingActionButton: Padding(padding: const EdgeInsets.only(bottom: 60), child: FloatingActionButton(backgroundColor: Color(0xff356899), onPressed: (){ 
+      //   _addChatUserDialog();
+      // }, 
+      // child: const Icon(Icons.add_comment_rounded,),),),
       body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

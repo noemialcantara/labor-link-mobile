@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
+import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/JobApplication.dart';
+import 'package:labor_link_mobile/models/Message.dart';
 import 'package:labor_link_mobile/screens/JobApplicationSuccessScreen.dart';
 
 class JobApplicationScreen extends StatefulWidget {
@@ -23,6 +27,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   Options options = Options(format: Format.rgb, luminosity: Luminosity.dark);
   TextEditingController coverLetterTextEditingController = TextEditingController();
   String userEmail = "test@gmail.com";
+  String employerEmailAddress = "";
   String selectedResume = "";
   String selectedResumeProfileName = "";
   List<bool> isResumeCheckedList = [] ;
@@ -31,6 +36,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   void initState() {
     super.initState();
     _getUserEmail();
+    _getEmployerEmailAddress();
   }
 
   void _getUserEmail(){
@@ -39,12 +45,27 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
     });
   }
 
-  void submitApplication(){
+  void _getEmployerEmailAddress(){
+     UsersApi.getEmployerDataByName(widget.jobDetails.companyName).then((value) {
+          setState(() {
+            employerEmailAddress =  value.docs.first.get("email_address");
+            print("EMLOYER EMAIL: $employerEmailAddress");
+          });
+     });
+  }
+
+  void submitApplication() async{
     String coverLetter = coverLetterTextEditingController.text;
     if(selectedResume != ""){
       JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId, userEmail, widget.jobDetails.companyLogo,
        widget.jobDetails.jobName,widget.jobDetails.companyName,widget.jobDetails.minimumSalary.toString(), widget.jobDetails.jobCityLocation, "Reviewing", widget.jobDetails.employmentType);
       JobApplicationApi.submitApplication(payload.toJson());
+
+
+      await FirebaseChatApi.addChatUserWithFrom(employerEmailAddress, userEmail).then((value) {
+        FirebaseChatApi.sendFirstMessageCustom(value["from_id"],value["to_id"], "Hello ${selectedResumeProfileName},\n\nThis is to inform you that we have already received your application regarding ${widget.jobDetails.jobName} position. We are now currently reviewing your resume. Rest assured that we will send you a message regarding the interview schedule.\n\nThank you.", Type.text);
+      });
+     
       Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -195,14 +216,14 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                 children: [
                   Row(
                     children: [
-                   Image.network(widget.jobDetails.companyLogo, height: 100, width: 100, alignment: Alignment.center),
-                  
+                    Padding(padding: EdgeInsets.only(left:20), child: Image.network(widget.jobDetails.companyLogo, height: 50, width: 50, alignment: Alignment.center)),
+                    SizedBox(width:10),
                    Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.jobName+"asdfafafasdfasfd", maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .70), child: Text(widget.jobDetails.companyName, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)),))
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .60), child: Text(widget.jobDetails.jobName, maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .60), child: Text(widget.jobDetails.companyName, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 14.0, color: Color(0xff0D0D26)),))
                    ],)
                   ],),
                   Padding(
@@ -272,10 +293,10 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
               )),
               SizedBox(height:30),
               Padding(
-                padding: EdgeInsets.only(left:10,right:10,bottom: 30),
+                padding: EdgeInsets.only(left:20,right:20,bottom: 30),
                 child: CustomButton(
                 text: "Apply Now",
-                onTap: () =>  submitApplication(),
+                onTap: () async  =>  submitApplication(),
               )),
             ]
           )
