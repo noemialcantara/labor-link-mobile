@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/screens/SearchListScreen.dart';
-import 'package:labor_link_mobile/screens/UserProfileScreen.dart'; // Import the UserProfileScreen.dart
+import 'package:labor_link_mobile/screens/UserProfileScreen.dart'; 
 import 'package:labor_link_mobile/screens/widgets/JobCategoryList.dart';
 import 'package:labor_link_mobile/screens/widgets/JobList.dart';
 
@@ -15,6 +17,23 @@ class HomeDashboardScreen extends StatefulWidget {
 
 class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
   final user = FirebaseAuth.instance.currentUser;
+  String fullName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  _fetchUserData() async{
+    UsersApi.getApplicantData(user?.email ?? "").then((QuerySnapshot querySnapshot) {
+      if(querySnapshot.docs.length > 0){
+        setState(() {
+          fullName = querySnapshot.docs.first.get("full_name");
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +51,13 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Text("Welcome ${user?.email}!", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, color: Color(0xff95969D))),
+                  Text("Welcome $fullName", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, fontSize: 16, color: Color(0xff95969D))),
                   SizedBox(height: 5),
                   Text("Discover Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 25)),
                 ],),
                
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: user!.email.toString(),))),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(email: user!.email.toString(),))),
                   child: CircleAvatar(
                     radius: 30, 
                     backgroundColor: Colors.transparent,

@@ -33,4 +33,12 @@ class JobApi {
       .where("company_name", isEqualTo: companyName)
       .get();
   }
+
+  static deleteJobById(String jobId){
+    firestore.collection('jobs').where("job_id", isEqualTo: jobId).snapshots().first.then((value) {
+      String id = value.docs.first.id.toString();
+      firestore
+          .collection('jobs').doc(id).delete();
+    });
+  }
 }

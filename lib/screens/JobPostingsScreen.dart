@@ -93,7 +93,19 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
                           itemBuilder: (ctx, index) =>
                             GestureDetector(
                               onTap: (){
-                               
+                                
+                              },
+                              onLongPress: (){
+                                JobApi.deleteJobById(snapshot.data?.docs[index].get("job_id"));
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.success,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Alert!',
+                                    desc: 'Successfully deleted this job',
+                                    btnOkOnPress: () {
+                                    },
+                                    )..show();
                               },
                               child: Container(
                               margin: EdgeInsets.only(left:30,right:30,bottom:15),

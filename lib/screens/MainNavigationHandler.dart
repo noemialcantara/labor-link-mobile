@@ -1,12 +1,14 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/screens/EmployerNavigationScreen.dart';
 import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicationsListScreen.dart';
@@ -30,6 +32,8 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   var _bottomNavIndex = 0;
   String userName = "user";
   String userType = "";
+  String fullName = "";
+  String profession = 'No profession yet';
 
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -111,7 +115,16 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   void _fetchUserData() async{
     userName =   await FirebaseChatApi.getCurrentUserData(FirebaseAuth.instance.currentUser!.email ?? "");
     userType =   await FirebaseChatApi.getCurrentUserType(FirebaseAuth.instance.currentUser!.email ?? "");
-    print("USER TYPE IS $userType");
+
+    UsersApi.getApplicantData(user?.email ?? "").then((QuerySnapshot querySnapshot) {
+      if(querySnapshot.docs.length > 0){
+        setState(() {
+          fullName = querySnapshot.docs.first.get("full_name");
+          profession =  querySnapshot.docs.first.get("job_role");
+        });
+      }
+    });
+    
     setState(() {});
   }
 
@@ -147,20 +160,20 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
             SizedBox(height:50),
             Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 130),
             SizedBox(height:10),
-            Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
+            Text(fullName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
-            Text('No profession yet',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            Text(profession,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
             SizedBox(height:10),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString()))),
               },
               child: Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
             ),
             SizedBox(height:40),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
               },
               child: Padding(
               padding: EdgeInsets.only(left:50),
@@ -253,14 +266,14 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
             SizedBox(height:10),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
               },
               child: Text('View Profile',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899),fontSize: 18),), 
             ),
             SizedBox(height:40),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(email: FirebaseAuth.instance.currentUser!.email.toString(),))),
               },
               child: Padding(
               padding: EdgeInsets.only(left:50),

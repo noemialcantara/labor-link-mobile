@@ -235,12 +235,6 @@ class _IDVerificationScreenState extends State<IDVerificationScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left:20,right:20),
-                  child: CustomButton(
-                  text: "Save",
-                  onTap: () => (){},
-                )),
                 SizedBox(height:30),
              
             ]
