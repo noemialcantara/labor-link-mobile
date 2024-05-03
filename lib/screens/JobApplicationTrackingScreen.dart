@@ -48,8 +48,9 @@ class _JobApplicationTrackingScreenState extends State<JobApplicationTrackingScr
                 children: [
                   Row(
                     children: [
-                   Image.network(widget.companyLogo, height: 100, width: 100, alignment: Alignment.center),
-                  
+                      SizedBox(width:25),
+                   Image.network(widget.companyLogo, height: 50, width: 50, alignment: Alignment.center),
+                    SizedBox(width:20),
                    Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -78,7 +79,7 @@ class _JobApplicationTrackingScreenState extends State<JobApplicationTrackingScr
                     SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .73), child: Text(widget.jobCityLocation,maxLines: 1,textAlign: TextAlign.right,  overflow:TextOverflow.ellipsis,style: GoogleFonts.poppins(fontSize: 14.0,color: Color(0xff0D0D26)))),
                   ],))
               ]),
-              SizedBox(height:10),
+              SizedBox(height:30),
               
              TimelineComponent(status: widget.status)
              

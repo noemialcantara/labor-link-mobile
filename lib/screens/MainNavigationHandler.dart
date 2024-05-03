@@ -340,7 +340,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
              SizedBox(height:30),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
               },
               child:  Padding(
               padding: EdgeInsets.only(left:50),

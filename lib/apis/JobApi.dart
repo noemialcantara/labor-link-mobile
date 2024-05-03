@@ -19,6 +19,14 @@ class JobApi {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getJobListByCategory(String category) {
+
+    return firestore
+        .collection('jobs')
+        .where("job_categories", isEqualTo: [category])
+        .snapshots();
+  }
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> getJobListByEmployer(String companyName) {
 
     return firestore

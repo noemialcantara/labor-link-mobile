@@ -4,11 +4,11 @@ import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/screens/widgets/IconText.dart';
 
 class JobItem extends StatefulWidget {
-  JobItem({Key? key, required this.job, this.showTime = false})
+  JobItem({Key? key, required this.job, this.width = 280})
       : super(key: key);
 
   final Job job;
-  final bool showTime;
+  final double width;
 
   @override
   State<JobItem> createState() => _JobItemState();
@@ -18,7 +18,7 @@ class _JobItemState extends State<JobItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
+      width: widget.width,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -30,7 +30,7 @@ class _JobItemState extends State<JobItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-             Flexible(child: Padding(
+             Padding(
                 padding: EdgeInsets.only(left:20,right:20),
                 child:  Row(
                 children: [
@@ -47,7 +47,9 @@ class _JobItemState extends State<JobItem> {
                   SizedBox(
                     width: 10,
                   ),
-                  Flexible(child: Text(
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .70 : .45)),
+                    child:Text(
                     widget.job.companyName,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -57,7 +59,7 @@ class _JobItemState extends State<JobItem> {
                         overflow: TextOverflow.ellipsis),
                   )),
                 ],
-              ))),
+              )),
             ],
           ),
           SizedBox(
@@ -65,25 +67,29 @@ class _JobItemState extends State<JobItem> {
           ),
           Padding(
                 padding: EdgeInsets.only(left:20,right:20),
-                child: Text(
+                child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .40 : .35)),
+                    child:Text(
                   widget.job.jobName,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
+                )),
           ),
           SizedBox(height: 15),
-          Flexible(child: Padding(
+          Padding(
               padding: EdgeInsets.only(left:15,right:15),
               child:
                   Row(
                   children: [
                     Icon(Icons.location_on_outlined),
                     SizedBox(width: 10,),
-                    Flexible(child:Text(widget.job.jobCityLocation + ", "+ widget.job.jobStateLocation,overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins( fontSize: 15),))
-                    
+                     SizedBox(
+                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .59 : .40)),
+                    child:Text(widget.job.jobCityLocation+ ", "+ widget.job.jobStateLocation,overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins( fontSize: 15),)
+                     )
                   ],
                 ),
-          )),
+          ),
         ],
       ),
     );

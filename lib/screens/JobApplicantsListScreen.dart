@@ -186,10 +186,10 @@ class _JobApplicantsListScreenState extends State<JobApplicantsListScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height:40),
+                          SizedBox(height:50),
                           Padding(
                             padding: EdgeInsets.only(left:30,right:30),
-                            child: Text('Applications',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 20, fontWeight: FontWeight.w600),),
+                            child: Text('Applications',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 25, fontWeight: FontWeight.w600),),
                           ),
                           SizedBox(height:20),
                           Padding(

@@ -115,13 +115,15 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                               ),
                               child: 
                                 Column(children: [
+                                   SizedBox(height:10),
                                  Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
-                                    Image.network(snapshot.data?.docs[index].get("company_logo_url") ?? "", height: 70, width: 70, alignment: Alignment.center),
-                                    
+                                      SizedBox(width: 10,),
+                                    Image.network(snapshot.data?.docs[index].get("company_logo_url") ?? "", height: 55, width: 55, alignment: Alignment.center),
+                                    SizedBox(width:10),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -150,19 +152,19 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                                       SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .75), child: Text(snapshot.data?.docs[index].get("job_city_location"),maxLines: 1,textAlign: TextAlign.right,  overflow:TextOverflow.ellipsis,style: GoogleFonts.poppins(fontSize: 14.0,color: Color(0xff0D0D26)))),
                                     ],))
                                 ]),
-                                SizedBox(height: 10),
+                                SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                      Container(
-                                        margin: EdgeInsets.only(left:20,bottom:20),
+                                        margin: EdgeInsets.only(left:20,bottom:10),
                                         decoration: BoxDecoration(
                                           color: snapshot.data?.docs[index].get("status") == "Rejected" ? Color(0xffFFEDED) : snapshot.data?.docs[index].get("status") == "Hired" ? Color(0xffE8FDF2)  :  Color(0xffEDF3FC),
                                           border: Border.all(color: Color(0xffEDF3FC)),
                                           borderRadius: BorderRadius.circular(20.0)
                                         ),
                                         child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width  * .60), child: Padding(
-                                          padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
+                                          padding: EdgeInsets.only(left: 7, right: 7, top:7, bottom: 7),
                                           child: Text(snapshot.data?.docs[index].get("status"), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w600, color: snapshot.data?.docs[index].get("status") == "Rejected" ? Color(0xffDC312D) : snapshot.data?.docs[index].get("status") == "Hired" ? Color(0xff0E9D57)  : Color(0xff5386E4)))
                                         ))
                                     ),

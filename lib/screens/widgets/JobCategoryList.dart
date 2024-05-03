@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/JobCategoryApi.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/JobCategory.dart';
+import 'package:labor_link_mobile/screens/JobListByCategoryScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/JobItem.dart';
 
 class JobCategoryList extends StatelessWidget {
@@ -32,9 +33,14 @@ class JobCategoryList extends StatelessWidget {
                       itemCount: 6,
                       itemBuilder: (context, index) => GestureDetector(
                           onTap: () {
+                             Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => JobListByCategoryScreen(categoryTitle: _jobCategoryList[index].category,))
+                                          );
                           },
-                          child: Column(children: [
-                            Container(
+                          child:  Column(children: [
+                           Container(
                               height: 80,
                               decoration: BoxDecoration(
                                 color: Color(0xffEAEAEA),
