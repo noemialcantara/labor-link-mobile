@@ -25,17 +25,24 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 50),
-            Text("Welcome ${user?.email}!", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, color: Color(0xff95969D))),
-            SizedBox(height: 20),
+            
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align between Discover Jobs and the profile picture
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Discover Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 25)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Text("Welcome ${user?.email}!", style: GoogleFonts.poppins(fontWeight: FontWeight.normal, color: Color(0xff95969D))),
+                  SizedBox(height: 5),
+                  Text("Discover Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 25)),
+                ],),
+               
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: '',))),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: user!.email.toString(),))),
                   child: CircleAvatar(
-                    radius: 30, // Increased size
-                    backgroundImage: NetworkImage(user?.photoURL ?? ''), // Set the profile picture
+                    radius: 30, 
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae"),
                   ),
                 ),
               ],

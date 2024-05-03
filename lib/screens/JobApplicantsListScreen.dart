@@ -120,12 +120,14 @@ class _JobApplicantsListScreenState extends State<JobApplicantsListScreen> {
                               ),
                               child: 
                                 Column(children: [
+                                  SizedBox(height:10),
                                  Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
-                                      RandomAvatar(snapshot.data?.docs[index].get("applicant_name") , trBackground: true,  width: 70),
+                                        SizedBox(width: 20),
+                                     Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 60),
                                     //Image.network(snapshot.data?.docs[index].get("profile_logo_url"), height: 90, width: 90, alignment: Alignment.center),
                                     SizedBox(width: 10),
                                     Column(

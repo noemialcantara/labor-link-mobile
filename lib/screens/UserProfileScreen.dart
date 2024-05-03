@@ -33,7 +33,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 Text("Edit", style: GoogleFonts.poppins(fontSize: 20),)
               ],)),
               SizedBox(height: 40),
-              RandomAvatar(widget.userName, trBackground: true, height: 130, width: 130, alignment: Alignment.center),
+              Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 100),
               SizedBox(height:10),
               Text(widget.userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
               SizedBox(height:5),

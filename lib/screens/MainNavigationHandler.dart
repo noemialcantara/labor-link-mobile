@@ -145,7 +145,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         child: Column(
           children: [ 
             SizedBox(height:50),
-            RandomAvatar(userName , trBackground: true, height: 130, width: 130),
+            Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 130),
             SizedBox(height:10),
             Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
@@ -245,7 +245,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
         child: Column(
           children: [ 
             SizedBox(height:50),
-            RandomAvatar(userName , trBackground: true, height: 130, width: 130),
+            Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae", height: 130),
             SizedBox(height:10),
             Text(userName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
