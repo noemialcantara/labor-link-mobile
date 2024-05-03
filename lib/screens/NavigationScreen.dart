@@ -64,7 +64,7 @@ class _NavigationScreenState extends State<NavigationScreen>
   @override
   Widget build(BuildContext context) {
     if(widget.bottomNavIndex == 1){
-      return MessagesScreen();
+      return MessagesScreen(isApplicant: true,);
     }else if(widget.bottomNavIndex == 2){
       return SavedJobsScreen();
     }else if(widget.bottomNavIndex == 3){

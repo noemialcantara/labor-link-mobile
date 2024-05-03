@@ -162,7 +162,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
             SizedBox(height:10),
             Text(fullName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),), 
             SizedBox(height:5),
-            Text(profession,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
+            Text(profession == "" ? "No profession yet" : profession,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
             SizedBox(height:10),
             GestureDetector(
               onTap: () => {

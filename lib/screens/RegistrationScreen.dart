@@ -51,15 +51,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
       await FirebaseChatApi.createUser(_fullNameController.text, widget.isApplicantFirstMode);
 
-       Map<String, dynamic> userPayload = {};
+      Map<String, dynamic> userPayload = {};
 
       if(widget.isApplicantFirstMode){
         userPayload = {
-          "full_name": _fullNameController.text,
-          "address": "No data yet",
-          "about_me": "No data yet",
-          "skills": [],
+          "address": "",
           "email_address": _emailController.text,
+          "full_name": _fullNameController.text,
+          "job_role": "",
+          "minimum_expected_salary": "",
+          "maximum_expected_salary": "",
+          "profile_url": "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae",
+          "years_of_experience": ""
         };
       }else{
          userPayload = {
@@ -73,7 +76,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         };
       }
 
-       UsersApi.createUser(widget.isApplicantFirstMode, userPayload);
+      UsersApi.createUser(widget.isApplicantFirstMode, userPayload);
       
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {

@@ -68,7 +68,7 @@ class _EmployerNavigationScreenState extends State<EmployerNavigationScreen>
     if(widget.bottomNavIndex == 1){
       return JobApplicantsListScreen();
     }else if(widget.bottomNavIndex == 2){
-      return MessagesScreen();
+      return MessagesScreen(isApplicant: false,);
     }else if(widget.bottomNavIndex == 3){
       return NotificationsScreen();
     }

@@ -12,7 +12,8 @@ import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/screens/widgets/ChatUserCard.dart';
 
 class MessagesScreen extends StatefulWidget {
-  const MessagesScreen({Key? key}) : super(key: key);
+  final bool isApplicant;
+  const MessagesScreen({Key? key, required this.isApplicant}) : super(key: key);
 
   @override
   _MessagesScreenState createState() => _MessagesScreenState();
@@ -151,7 +152,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 )),
               ),
               SizedBox(height: 25),
-              Padding(child: Text("Employers", style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 21)), padding: EdgeInsets.only(left:25,right:25),),
+              Padding(child: Text(widget.isApplicant ? "Employers" : "Applicants", style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 21)), padding: EdgeInsets.only(left:25,right:25),),
               SizedBox(height:20),
               Container(
               height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * .32),

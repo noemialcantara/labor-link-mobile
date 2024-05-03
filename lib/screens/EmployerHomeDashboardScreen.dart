@@ -172,7 +172,7 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
                     Row(children: [
                       Image.asset("assets/icons/rejected_icon.png",height: 20,),
                       SizedBox(width:10),
-                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.81) ,child:  Text("Job Posts",maxLines: 1,overflow: TextOverflow.ellipsis,  style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w500, color: Color(0xffDF1F04)))),
+                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.81) ,child:  Text("Rejected",maxLines: 1,overflow: TextOverflow.ellipsis,  style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w500, color: Color(0xffDF1F04)))),
                     ],),
                     SizedBox(height:15),
                     SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text("0",maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xffDF1F04))))

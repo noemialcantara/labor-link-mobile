@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/components/CustomTextField.dart';
 import 'package:labor_link_mobile/components/SquareTile.dart';
 import 'package:labor_link_mobile/screens/AuthRedirector.dart';
+import 'package:labor_link_mobile/screens/HomeDashboardScreen.dart';
 import 'package:labor_link_mobile/screens/RegistrationScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -40,12 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      //query the user here to get user info and user type id
-      //create another class setter getter method
-      Navigator.push(
+      //TODO: to remove once all of the existing users have their own profile data in applicants table
+      await UsersApi.urgentlyCreateUser(_emailController.text).then((value) => Future.delayed(Duration(milliseconds: 8000), (){ Navigator.push(
         context,
-        fadeTransitionBuilder(child:  const AuthRedirector())
-      );
+        fadeTransitionBuilder(child:  const HomeDashboardScreen())
+      ); }));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //wrong Email

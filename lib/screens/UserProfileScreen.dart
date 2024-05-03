@@ -96,8 +96,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               SizedBox(height:10),
               Center(child: Text(applicant?.fullName ?? "",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 25,fontWeight: FontWeight.w700),)), 
               SizedBox(height:5),
-              Center(child: Text(applicant?.jobRole ?? "",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),)), 
+              Center(child: Text(applicant?.jobRole == "" ? "There is no job role yet" : applicant?.jobRole ?? "",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),)), 
               SizedBox(height:10),
+              applicant?.minimumExpectedSalary != ""
+              ?
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -106,7 +108,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 Text('${applicant?.minimumExpectedSalary ?? "" } to ',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),), 
                 Text(' ₱',textAlign: TextAlign.center, style: TextStyle(color: Color(0xff95969D),fontSize: 16),),  
                 Text('${applicant?.maximumExpectedSalary ?? ""}',textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),),
-              ]),
+              ]) : 
+              Center(child: Text("There is no expected salary yet", style: GoogleFonts.poppins(color: Color(0xff95969D),fontSize: 16),),),
               SizedBox(height:30),
               Padding(
                 padding: EdgeInsets.only(left:20,right:20),
@@ -114,7 +117,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(children: [
-                    Text(applicant?.yearsOfExperience ?? '0', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 22),),
+                    Text(applicant?.yearsOfExperience == "" ? '0' : applicant?.yearsOfExperience ?? "", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 22),),
                     Text("Experience", style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
                   ],),
                   Column(children: [
@@ -221,7 +224,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         ])
                                     )))
                         );
-                        return Padding(padding: EdgeInsets.only(left:30, right: 30), child: Text("You have no experiences yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),));
+                        return Center(child: Padding(padding: EdgeInsets.only(left:30, right: 30), child: Text("You have no experiences yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),)));
                       }
               }),
               SizedBox(height: 30),
