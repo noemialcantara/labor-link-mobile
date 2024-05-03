@@ -5,6 +5,7 @@ import 'package:labor_link_mobile/screens/SearchListScreen.dart';
 import 'package:labor_link_mobile/screens/UserProfileScreen.dart'; // Import the UserProfileScreen.dart
 import 'package:labor_link_mobile/screens/widgets/JobCategoryList.dart';
 import 'package:labor_link_mobile/screens/widgets/JobList.dart';
+import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({Key? key}) : super(key: key);
@@ -15,7 +16,18 @@ class HomeDashboardScreen extends StatefulWidget {
 
 class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
   final user = FirebaseAuth.instance.currentUser;
+  String userName = "";
 
+// Fetching user data from Firebase
+  void _fetchUserData() async {
+    userName = await FirebaseChatApi.getCurrentUserData(FirebaseAuth.instance.currentUser!.email ?? "");
+    setState(() {});
+  }
+@override
+void initState() {
+  super.initState();
+  _fetchUserData();
+}
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -32,7 +44,9 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
               children: [
                 Text("Discover Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 25)),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserProfileScreen(userName: '',))),
+                onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfileScreen(userName: userName,))),
+                  },
                   child: CircleAvatar(
                     radius: 30, // Increased size
                     backgroundImage: NetworkImage(user?.photoURL ?? ''), // Set the profile picture
@@ -112,3 +126,4 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     );
   }
 }
+
