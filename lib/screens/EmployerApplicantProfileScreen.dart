@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/ExperiencesApi.dart';
+import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/apis/SkillsApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
@@ -18,8 +19,10 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class EmployerApplicantProfileScreen extends StatefulWidget {
   final String email;
+  final String jobId;
+  final String applicationStatus;
   
-  EmployerApplicantProfileScreen({Key? key, required this.email}) : super(key: key);
+  EmployerApplicantProfileScreen({Key? key,required this.jobId, required this.email, required this.applicationStatus}) : super(key: key);
 
   @override
   State<EmployerApplicantProfileScreen> createState() => _EmployerApplicantProfileScreenState();
@@ -91,6 +94,17 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
   }
 
   _acceptApplicant(){
+    if(widget.applicationStatus == "Reviewing")
+      JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Screening Interview");
+    else if(widget.applicationStatus == "Screening Interview")
+      JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Technical Interview");
+    else if(widget.applicationStatus == "Technical Interview")
+      JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Final Interview");
+    else if(widget.applicationStatus == "Final Interview")
+      JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Job Offer");
+    else if(widget.applicationStatus == "Job Offer")
+      JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Hired");
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
@@ -98,11 +112,14 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
       title: 'Alert!',
       desc: 'Successfully accepted this applicant!',
       btnOkOnPress: () {
+        Navigator.pop(context);
       },
     )..show();
   }
 
   _rejectApplicant(){
+    JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Rejected");
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
@@ -110,6 +127,7 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
       title: 'Alert!',
       desc: 'Successfully rejected this applicant!',
       btnOkOnPress: () {
+        Navigator.pop(context);
       },
     )..show();
   }
@@ -200,25 +218,7 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                                     physics: NeverScrollableScrollPhysics(),
                                     itemCount: snapshot.data?.docs.length ?? 0,
                                     itemBuilder: (ctx, index) =>
-                                      GestureDetector(
-                                        onTap: () {
-                                           AwesomeDialog(
-                                              context: context,
-                                              animType: AnimType.scale,
-                                              dialogType: DialogType.info,
-                                              body: Center(child: Text(
-                                                      'Are you sure you want to delete this experience?',
-                                                      style: GoogleFonts.poppins(),
-                                                    ),),
-                                              title: 'Alert',
-                                              btnOkText: "Yes",
-                                              btnCancelOnPress: (){},
-                                              btnOkOnPress: () {
-                                                ExperiencesApi.deleteExperience(snapshot.data?.docs[index].get("id") );
-                                              },
-                                            )..show();
-                                        },
-                                        child: Container(
+                                       Container(
                                         margin: EdgeInsets.only(left: 20, right:20),
                                         padding: EdgeInsets.only(left: 10, right:10),
                                         height: 80,
@@ -257,7 +257,7 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                                             ],)
                                           )
                                         ])
-                                    )))
+                                    ))
                         );
                         return Center(child: Padding(padding: EdgeInsets.only(left:30, right: 30), child: Text("You have no experiences yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),)));
                       }
@@ -341,7 +341,20 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
               
               }, child: Padding(padding: EdgeInsets.only(left:20,right:20), child: Text(resumeName,textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.normal,decoration: TextDecoration.underline) ))),
               SizedBox(height: 40,),
-              Padding(
+
+              Container(
+                margin: EdgeInsets.only(left:20,right:20),
+                decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(20.0)
+                ),
+                child: Column(
+                  children: [
+              widget.applicationStatus != "Hired" &&  widget.applicationStatus != "Rejected" ? Padding(padding: EdgeInsets.only(top:20, bottom: 20, left:20,right:20) ,child: Text("The application process is now at ${widget.applicationStatus == "Reviewing" ? "HR Interview" : widget.applicationStatus}", style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600))) 
+              : Padding(padding: EdgeInsets.only(top:20, bottom: 20, left:20,right:20) ,child: Text("This applicant ${widget.applicationStatus == "Rejected" ? "has been rejected" : "now hired" }!", style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600))) ,
+              SizedBox(height: 20),
+              widget.applicationStatus != "Hired" &&  widget.applicationStatus != "Rejected" ? Padding(
                 padding: EdgeInsets.only(left:20, right:20),
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -359,7 +372,7 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                     ),
                     child: Center(
                       child: Text(
-                        "Accept Applicant",
+                        "Accept",
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 16,
@@ -381,7 +394,7 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                     ),
                     child: Center(
                       child: Text(
-                        "Reject Applicant",
+                        "Reject",
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 16,
@@ -390,8 +403,11 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                     ),
                   ),
                 )),
-              ],)),
+              ],)) : Container(),
+              widget.applicationStatus != "Hired" &&  widget.applicationStatus != "Rejected" ? SizedBox(height: 20,) : Container(),
+              ])),
               SizedBox(height: 60,)])
+                
             ]
           )
       )

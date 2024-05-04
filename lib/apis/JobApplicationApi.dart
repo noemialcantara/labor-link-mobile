@@ -21,6 +21,14 @@ class JobApplicationApi {
         .get();
   }
 
+   static updateApplicantStatus(String  jobId, String applicantEmail, String status){
+    firestore.collection('job_applications').where("applicant_email", isEqualTo: applicantEmail).where("job_id", isEqualTo: jobId).snapshots().first.then((value) {
+      String id = value.docs.first.id.toString();
+      firestore
+          .collection('job_applications').doc(id).update({"status": status});
+    });
+  }
+
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getJobDetailsByApplicantId(String emailAddress) {
     

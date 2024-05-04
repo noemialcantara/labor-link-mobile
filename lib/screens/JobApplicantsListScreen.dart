@@ -99,7 +99,7 @@ class _JobApplicantsListScreenState extends State<JobApplicantsListScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => EmployerApplicantProfileScreen(email: snapshot.data?.docs[index].get("applicant_email"),
+                                        builder: (_) => EmployerApplicantProfileScreen(jobId: snapshot.data?.docs[index].get("job_id"), email: snapshot.data?.docs[index].get("applicant_email"), applicationStatus:  snapshot.data?.docs[index].get("status"),
                                          )));
                               },
                               child: Container(
