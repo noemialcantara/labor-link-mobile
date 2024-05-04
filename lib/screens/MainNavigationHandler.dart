@@ -174,6 +174,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   }
 
   Widget _drawer() {
+    _fetchUserData();
     return Drawer(
       backgroundColor: Colors.white,
         child: Column(
@@ -297,6 +298,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   }
 
   Widget _employerDrawer() {
+    _fetchUserData();
     return Drawer(
       backgroundColor: Colors.white,
         child: Column(

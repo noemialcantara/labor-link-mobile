@@ -104,6 +104,7 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
                                     title: 'Alert!',
                                     desc: 'Successfully deleted this job',
                                     btnOkOnPress: () {
+                                      _getJobPostingsCount();
                                     },
                                     )..show();
                               },
@@ -201,7 +202,7 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
           Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => JobPostingManagementScreen(companyName: companyName)));
+                      builder: (_) => JobPostingManagementScreen(companyName: companyName))).then((value) => _getJobPostingsCount());
         },
         backgroundColor: Color(0xff356899),
         child: const Icon(Icons.add, size: 30,),
