@@ -19,6 +19,7 @@ class HomeDashboardScreen extends StatefulWidget {
 class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
   final user = FirebaseAuth.instance.currentUser;
   String fullName = "";
+  TextEditingController searchJobController = TextEditingController();
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
             ),
             SizedBox(height:30),
             GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchListScreen())),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchListScreen(searchKeyword: searchJobController.text))),
               child: Row(
                 children: [
                   Expanded(
@@ -78,6 +79,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                       cursorColor: Color(0xff000000),
                       textCapitalization: TextCapitalization.words,
                       textInputAction: TextInputAction.done,
+                      controller: searchJobController,
                       decoration: InputDecoration(
                         fillColor: Color(0xffF2F2F3),
                         filled: true,

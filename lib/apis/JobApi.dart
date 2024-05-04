@@ -35,6 +35,22 @@ class JobApi {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> searchJobByKeyword(String searchKeyword) {
+
+    return firestore
+        .collection('jobs')
+        .where("job_name", isGreaterThanOrEqualTo: searchKeyword, isLessThan: searchKeyword.substring(0, searchKeyword.length-1) + String.fromCharCode(searchKeyword.codeUnitAt(searchKeyword.length - 1) + 1) )
+        .snapshots();
+  }
+
+  static Future<int> querySearchJobByKeyword(String searchKeyword) async{
+    final data = await firestore
+        .collection('jobs')
+        .where("job_name", isGreaterThanOrEqualTo: searchKeyword, isLessThan: searchKeyword.substring(0, searchKeyword.length-1) + String.fromCharCode(searchKeyword.codeUnitAt(searchKeyword.length - 1) + 1) )
+        .get();
+     return data.docs.length;
+  }
+
   static Future<QuerySnapshot> getQueryJobListByEmployer(String companyName) {
 
     return firestore

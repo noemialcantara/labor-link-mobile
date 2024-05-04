@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchAppBar extends StatefulWidget {
-  const SearchAppBar({Key? key}) : super(key: key);
+  final TextEditingController controller;
+  const SearchAppBar({Key? key, required this.controller}) : super(key: key);
 
   @override
   _SearchAppBarState createState() => _SearchAppBarState();
 }
 
 class _SearchAppBarState extends State<SearchAppBar> {
+  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +40,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
              cursorColor: Color(0xff000000),
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.done,
-
+              controller: widget.controller,
               decoration: InputDecoration(
                fillColor: Color(0xffF2F2F3),
                 filled: true,
