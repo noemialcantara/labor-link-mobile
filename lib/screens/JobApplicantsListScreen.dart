@@ -133,8 +133,8 @@ class _JobApplicantsListScreenState extends State<JobApplicantsListScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .45), child: Text(snapshot.data?.docs[index].get("applicant_name"), maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 18.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
-                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .45), child: Text(snapshot.data?.docs[index].get("company_name"), overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0, color: Color(0xff0D0D26)),))
+                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .60), child: Text(snapshot.data?.docs[index].get("applicant_name"), maxLines: 1,softWrap: false, overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 18.0,fontWeight: FontWeight.w600, color: Color(0xff0D0D26)),)),
+                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .60), child: Text("Applying for "+snapshot.data?.docs[index].get("job_name"), overflow:TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0, color: Color(0xff0D0D26)),))
                                     ],)
                                     ],),
                                 ]),
@@ -161,9 +161,9 @@ class _JobApplicantsListScreenState extends State<JobApplicantsListScreen> {
                                           border: Border.all(color: Color(0xffffffff)),
                                           borderRadius: BorderRadius.circular(20.0)
                                         ),
-                                        child: Padding(
+                                        child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width  * .70), child: Padding(
                                           padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                                          child: Text(snapshot.data?.docs[index].get("employment_type"), style: GoogleFonts.poppins(fontSize: 16.0,  color: Color(0xff0D0D26)))
+                                          child: Text(snapshot.data?.docs[index].get("employment_type"), maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,  color: Color(0xff0D0D26))))
                                         )
                                     ),
                                 ],)
