@@ -401,6 +401,9 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      onDrawerChanged: (isOpened) {
+       _fetchUserData();
+      },
       extendBody: true,
       body: NotificationListener<ScrollNotification>(
         onNotification: onScrollNotification,
