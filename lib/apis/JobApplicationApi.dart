@@ -29,6 +29,15 @@ class JobApplicationApi {
     });
   }
 
+   static Future<QuerySnapshot> getQueryJobListByEmployerWithStatus(String companyName, String status) {
+
+    return firestore
+        .collection('job_applications')
+        .where("company_name", isEqualTo: companyName)
+        .where("status", isEqualTo: status)
+        .get();
+  }
+
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getJobDetailsByApplicantId(String emailAddress) {
     

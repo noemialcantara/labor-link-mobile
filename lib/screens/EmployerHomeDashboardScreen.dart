@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/JobApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicantsApi.dart';
+import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/screens/SearchListScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/JobCategoryList.dart';
@@ -22,6 +23,8 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
    List<ChartData>? chartData;
    int applicantsCount = 0;
    int jobPostingCount = 0;
+   int hiredCount = 0;
+   int rejectedCount = 0;
 
   @override
   void initState() {
@@ -77,6 +80,19 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
           });
         });
 
+        JobApplicationApi.getQueryJobListByEmployerWithStatus(companyName,"Hired").then((value) {
+          int dataLength = value.docs.length;
+          setState(() {
+            hiredCount = dataLength;
+          });
+        });
+
+        JobApplicationApi.getQueryJobListByEmployerWithStatus(companyName,"Rejected").then((value) {
+          int dataLength = value.docs.length;
+          setState(() {
+            rejectedCount = dataLength;
+          });
+        });
 
       });
     }
@@ -188,7 +204,7 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
                     ],),
                     
                     SizedBox(height:15),
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text("0",maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xff0DB1AD))))
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text(hiredCount.toString(),maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xff0DB1AD))))
                 ])
               )
           ),
@@ -207,7 +223,7 @@ class _EmployerHomeDashboardScreenState extends State<EmployerHomeDashboardScree
                       SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.81) ,child:  Text("Rejected",maxLines: 1,overflow: TextOverflow.ellipsis,  style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w500, color: Color(0xffDF1F04)))),
                     ],),
                     SizedBox(height:15),
-                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text("0",maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xffDF1F04))))
+                    SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * 0.7) ,child: Text(rejectedCount.toString(),maxLines: 1,overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 36.0, fontWeight: FontWeight.bold, color: Color(0xffDF1F04))))
                 ])
               )
           ),
