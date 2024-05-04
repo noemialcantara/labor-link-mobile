@@ -48,7 +48,7 @@ class _JobItemState extends State<JobItem> {
                     width: 10,
                   ),
                   SizedBox(
-                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .70 : .45)),
+                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .70 : .50)),
                     child:Text(
                     widget.job.companyName,
                     overflow: TextOverflow.ellipsis,
@@ -68,7 +68,7 @@ class _JobItemState extends State<JobItem> {
           Padding(
                 padding: EdgeInsets.only(left:20,right:20),
                 child: SizedBox(
-                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .40 : .35)),
+                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .40 : .50)),
                     child:Text(
                   widget.job.jobName,
                   overflow: TextOverflow.ellipsis,
@@ -84,7 +84,7 @@ class _JobItemState extends State<JobItem> {
                     Icon(Icons.location_on_outlined),
                     SizedBox(width: 10,),
                      SizedBox(
-                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .59 : .40)),
+                    width: MediaQuery.sizeOf(context).width - ( MediaQuery.sizeOf(context).width * (widget.width == 280 ? .70 : .50)),
                     child:Text(widget.job.jobCityLocation+ ", "+ widget.job.jobStateLocation,overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins( fontSize: 15),)
                      )
                   ],
