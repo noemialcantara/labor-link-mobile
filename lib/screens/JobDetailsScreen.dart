@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -137,23 +138,23 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   length: 3,
                   child: Scaffold(
                     appBar:  PreferredSize(
-                      preferredSize: Size.fromHeight(kToolbarHeight),
+                      preferredSize: Size.fromHeight(70),
                       child:  Container(
                         color: Color(0xffFAFAFD),
                         child: SafeArea(
                           child: Column(
                             children: <Widget>[
                                SizedBox(height: 15,),
-                               TabBar(
+                               Expanded(child: TabBar(
                                 indicatorColor: Color(0xffFAFAFD),
                                 labelColor: Color(0xff000000),
                                 unselectedLabelColor: Color(0xff95969D),
                                 tabs: [
-                                  Text("Description", style: GoogleFonts.poppins( fontSize: 14, fontWeight: FontWeight.w600)), 
-                                  Text("Requirements", style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600)),
-                                  Text("About", style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600))
+                                  Padding(padding: EdgeInsets.only(left:5,right: 5),  child: AutoSizeText("Description", style: GoogleFonts.poppins( fontSize: 15, fontWeight: FontWeight.w600))), 
+                                  Padding(padding: EdgeInsets.only(left:5,right: 5),  child: AutoSizeText("Requirements",  style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600))),
+                                  Padding(padding: EdgeInsets.only(left:5,right: 5),  child: AutoSizeText("About",  style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600)))
                                 ],
-                              ),
+                              )),
                             ],
                           ),
                         ),
