@@ -117,14 +117,14 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                                 Column(children: [
                                    SizedBox(height:10),
                                  Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Row(
                                       children: [
                                       SizedBox(width: 10,),
                                     Image.network(snapshot.data?.docs[index].get("company_logo_url") ?? "", height: 55, width: 55, alignment: Alignment.center),
                                     SizedBox(width:10),
-                                    Column(
+                                    Column( 
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
@@ -133,12 +133,12 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                                     ],)
                                     ],),
                                     Padding(
-                                      padding: EdgeInsets.only(right:25),
+                                      padding: EdgeInsets.only(right:20),
                                       child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .80), child: RichText(
+                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .75), child: RichText(
                                         overflow:TextOverflow.ellipsis,
                                         maxLines: 1,
                                             text: TextSpan( text: 
@@ -149,7 +149,7 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                                                     ]
                                             ),
                                           )),
-                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .80), child: Text(snapshot.data?.docs[index].get("job_city_location"),maxLines: 1,textAlign: TextAlign.right,  overflow:TextOverflow.ellipsis,style: GoogleFonts.poppins(fontSize: 14.0,color: Color(0xff0D0D26)))),
+                                      SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width * .75), child: Text(snapshot.data?.docs[index].get("job_city_location"),maxLines: 1,textAlign: TextAlign.right,  overflow:TextOverflow.ellipsis,style: GoogleFonts.poppins(fontSize: 14.0,color: Color(0xff0D0D26)))),
                                     ],))
                                 ]),
                                 SizedBox(height: 20),
