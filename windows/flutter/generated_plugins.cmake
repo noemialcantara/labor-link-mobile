@@ -11,6 +11,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_core
   firebase_storage
   rive_common
+  syncfusion_pdfviewer_windows
   url_launcher_windows
 )
 

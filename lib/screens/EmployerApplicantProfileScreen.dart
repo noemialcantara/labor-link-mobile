@@ -12,7 +12,9 @@ import 'package:labor_link_mobile/models/Applicant.dart';
 import 'package:labor_link_mobile/screens/AddWorkExperienceScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:labor_link_mobile/screens/UserProfileUpdateScreen.dart';
+import 'package:labor_link_mobile/screens/widgets/PDFViewerScreen.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class EmployerApplicantProfileScreen extends StatefulWidget {
   final String email;
@@ -327,10 +329,15 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
               Padding(
                 padding: EdgeInsets.only(left:20,right:20),
                 child: Row(children: [
+                  
                 Text('Resume',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 22, fontWeight: FontWeight.w600),),
               ])),
               SizedBox(height:30),
               GestureDetector(onTap: (){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => PDFViewerScreen(resumeLink: resumeLink,)));
               
               }, child: Padding(padding: EdgeInsets.only(left:20,right:20), child: Text(resumeName,textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.normal,decoration: TextDecoration.underline) ))),
               SizedBox(height: 40,),

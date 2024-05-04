@@ -58,8 +58,9 @@ dependencies:
   file_picker: ^8.0.0+1
   awesome_dialog: ^3.2.1
   dotted_dashed_line: ^0.0.3
-  syncfusion_flutter_charts: ^21.2.6
-  uuid: ^4.2.2
+  syncfusion_flutter_charts: ^22.2.12
+  uuid: ^3.0.5
+  syncfusion_flutter_pdfviewer: ^22.2.12
 
 dev_dependencies:
   flutter_test:
