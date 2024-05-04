@@ -186,7 +186,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
                         //if some or all data is loaded then show it
                         case ConnectionState.active:
-                        case ConnectionState.done:
+                        case ConnectionState.done: 
                           final data = snapshot.data?.docs;
                           _chatUserList = data
                                   ?.map((e) => ChatUser.fromJson(e.data()))
