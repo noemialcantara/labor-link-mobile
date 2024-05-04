@@ -163,7 +163,7 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                                           border: Border.all(color: Color(0xffEDF3FC)),
                                           borderRadius: BorderRadius.circular(20.0)
                                         ),
-                                        child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width  * .60), child: Padding(
+                                        child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width  * .75), child: Padding(
                                           padding: EdgeInsets.only(left: 7, right: 7, top:7, bottom: 7),
                                           child: Text(snapshot.data?.docs[index].get("status"), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 16.0, fontWeight: FontWeight.w600, color: snapshot.data?.docs[index].get("status") == "Rejected" ? Color(0xffDC312D) : snapshot.data?.docs[index].get("status") == "Hired" ? Color(0xff0E9D57)  : Color(0xff5386E4)))
                                         ))
@@ -175,9 +175,9 @@ class _JobApplicationsListScreenState extends State<JobApplicationsListScreen> {
                                           border: Border.all(color: Color(0xffffffff)),
                                           borderRadius: BorderRadius.circular(20.0)
                                         ),
-                                        child: Padding(
+                                        child: SizedBox(width: MediaQuery.sizeOf(context).width - (MediaQuery.sizeOf(context).width  * .70), child:Padding(
                                           padding: EdgeInsets.only(left: 25, right: 25, top:10, bottom: 10),
-                                          child: Text(snapshot.data?.docs[index].get("employment_type"), style: GoogleFonts.poppins(fontSize: 16.0,  color: Color(0xff0D0D26)))
+                                          child: Text(snapshot.data?.docs[index].get("employment_type"), maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 16.0,  color: Color(0xff0D0D26))))
                                         )
                                     ),
                                 ],)
