@@ -272,7 +272,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
          GestureDetector(
               onTap: () async  {
                 await FirebaseChatApi.addChatUserWithFrom("admin@laborlink.site", FirebaseAuth.instance.currentUser?.email ?? "").then((value) {
-                  FirebaseChatApi.sendFirstMessageCustom(value["from_id"],value["to_id"], "Hello $userName and welcome to LaborLink Chat Support!\nHow can I assist you today?Whether you have questions, feedback, or need troubleshooting assistance, I'm here to help. Feel free to let me know how I can make your experience with our app smoother! ", Type.text);
+                  FirebaseChatApi.sendFirstMessageCustom(value["from_id"],value["to_id"], "Hello $userName and welcome to LaborLink Chat Support!\nHow can I assist you today?\nWhether you have questions, feedback, or need troubleshooting assistance, I'm here to help.\nFeel free to let me know how I can make your experience with our app smoother! ", Type.text);
                   FirebaseChatApi.getUserDataByEmail("admin@laborlink.site").then((chatUser) {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=> 
                       ChatScreen(user: chatUser,
