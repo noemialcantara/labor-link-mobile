@@ -232,6 +232,29 @@ class FirebaseChatApi {
         .snapshots();
   }
 
+  static Future<ChatUser> getUserDataByEmail(String email) {
+    var data = firestore
+        .collection('users')
+        .where("email", isEqualTo: email)
+        .get();
+    
+    return data.then((value){
+      return ChatUser(
+        image: value.docs.first.get("image").toString(), 
+        about: value.docs.first.get("about").toString(), 
+        name: value.docs.first.get("name").toString(),
+        createdAt: value.docs.first.get("created_at").toString(),
+        isOnline: value.docs.first.get("is_online"),
+        lastActive: value.docs.first.get("last_active"),
+        pushToken: value.docs.first.get("push_token"),
+        id: value.docs.first.get("id"),
+        email: value.docs.first.get("email"),
+        userType: value.docs.first.get("user_type"),
+      );
+    });
+   
+  }
+
   // for getting all users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
       List<String> userIds) {

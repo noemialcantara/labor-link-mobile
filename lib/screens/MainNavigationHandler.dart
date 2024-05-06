@@ -10,11 +10,15 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
+import 'package:labor_link_mobile/models/ChatUser.dart';
+import 'package:labor_link_mobile/models/Message.dart';
+import 'package:labor_link_mobile/screens/ChatScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerNavigationScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerProfileScreen.dart';
 import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicationsListScreen.dart';
 import 'package:labor_link_mobile/screens/JobPostingsScreen.dart';
+import 'package:labor_link_mobile/screens/MessagesScreen.dart';
 import 'package:labor_link_mobile/screens/NavigationScreen.dart';
 import 'package:labor_link_mobile/screens/ResumesCertificationsScreen.dart';
 import 'package:labor_link_mobile/screens/UploadIDScreen.dart';
@@ -265,7 +269,19 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
           ),
         ),
         SizedBox(height: 30),
-        Padding(
+         GestureDetector(
+              onTap: () async  {
+                await FirebaseChatApi.addChatUserWithFrom("admin@laborlink.site", FirebaseAuth.instance.currentUser?.email ?? "").then((value) {
+                  FirebaseChatApi.sendFirstMessageCustom(value["from_id"],value["to_id"], "Hello $userName and welcome to LaborLink Chat Support!\nHow can I assist you today?Whether you have questions, feedback, or need troubleshooting assistance, I'm here to help. Feel free to let me know how I can make your experience with our app smoother! ", Type.text);
+                  FirebaseChatApi.getUserDataByEmail("admin@laborlink.site").then((chatUser) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> 
+                      ChatScreen(user: chatUser,
+                    )));
+                  });
+                });
+               
+              },
+              child:  Padding(
           padding: EdgeInsets.only(left: 50),
           child: Row(
             children: [
@@ -274,7 +290,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
               Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18)),
             ],
           ),
-        ),
+        )),
         SizedBox(height: 30),
         GestureDetector(
           onTap: signOut,
@@ -344,16 +360,28 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
 
             ],))),
             SizedBox(height:30),
-            Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Row(
-              children: [
-               Image.asset("assets/icons/chat_support_icon.png"),
-               SizedBox(width: 20,),
-               Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),), 
-
-            ],)),
-             SizedBox(height:30),
+            GestureDetector(
+              onTap: () async  {
+                await FirebaseChatApi.addChatUserWithFrom("admin@laborlink.site", FirebaseAuth.instance.currentUser?.email ?? "").then((value) {
+                  FirebaseChatApi.sendFirstMessageCustom(value["from_id"],value["to_id"], "Hello $userName and welcome to LaborLink Chat Support!\nHow can I assist you today?\nWhether you have questions, feedback, or need troubleshooting assistance, I'm here to help.\nFeel free to let me know how I can make your experience with our app smoother! ", Type.text);
+                  FirebaseChatApi.getUserDataByEmail("admin@laborlink.site").then((chatUser) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> 
+                      ChatScreen(user: chatUser,
+                    )));
+                  });
+                });
+               
+              },
+              child:  Padding(
+                padding: EdgeInsets.only(left:50),
+                child: Row(
+                children: [
+                Image.asset("assets/icons/chat_support_icon.png"),
+                SizedBox(width: 20,),
+                Text('Chat Support', style: GoogleFonts.poppins(fontSize: 18),)
+              ],)),
+            ),
+            SizedBox(height:30),
             GestureDetector(
               onTap: () => {
                 // Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResumesCertificationsScreen(userName: userName,))),
