@@ -21,10 +21,12 @@ class SearchList extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => GestureDetector(
             onTap: (){
-               Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => JobDetailsScreen(jobDetails: jobDetails[index])));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => JobDetailsScreen(jobDetails: jobDetails[index])
+                )
+            );
             },
             child:
           JobItem(

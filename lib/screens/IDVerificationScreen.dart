@@ -1,8 +1,13 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:desktop_drop/desktop_drop.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:labor_link_mobile/apis/IDUploadApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
+import 'package:labor_link_mobile/constants/IDTypesConstants.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:random_avatar/random_avatar.dart';
@@ -22,8 +27,6 @@ class _IDVerificationScreenState extends State<IDVerificationScreen> {
   final List<XFile> _resumeList = [];
   final List<XFile> _certificationsList = [];
 
-  bool _dragging = false;
-
   Offset? offset;
 
   Future<void> launch(String url, {bool isNewTab = true}) async {
@@ -31,6 +34,96 @@ class _IDVerificationScreenState extends State<IDVerificationScreen> {
       Uri.parse(url),
       webOnlyWindowName: isNewTab ? '_blank' : '_self',
     );
+  }
+
+  Widget uploadedFiles(BuildContext parentContext, String idType) {
+    return StreamBuilder(
+        stream: IDUploadApi.getUploadedIDByUserEmail(FirebaseAuth.instance.currentUser?.email ?? "", idType),
+        builder: (context, snapshot) {
+          var streamDataLength = snapshot.data?.docs.length ?? 0;
+
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (streamDataLength > 0)
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (ctx, index) => Container(
+                    margin: EdgeInsets.only(left: 30, right: 30, bottom: 15),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            offset: Offset(0, 1),
+                            blurRadius: 3,
+                            spreadRadius: 2,
+                          )
+                        ]),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    snapshot.data?.docs[index].get("file_name"),
+                                    style: TextStyle(fontSize: 13, color: Colors.black),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        String linkId = snapshot.data?.docs[index].get("link");
+                                        IDUploadApi.deleteIDByLinkId(linkId);
+                                        AwesomeDialog(
+                                          context: parentContext,
+                                          dialogType: DialogType.success,
+                                          animType: AnimType.rightSlide,
+                                          title: 'Alert!',
+                                          desc: 'Successfully deleted this ID.',
+                                          btnOkOnPress: () {},
+                                        )..show();
+                                      },
+                                      child: Icon(Icons.remove_circle))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                );
+
+              return Text(
+                "There are no uploaded files yet",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
+              );
+          }
+        });
+  }
+
+  uploadID(PlatformFile file, String idType){
+    IDUploadApi.uploadID(file, FirebaseAuth.instance.currentUser?.email ?? "", idType);
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        title: 'Alert!',
+        desc: 'Successfully uploaded the $idType',
+        btnOkOnPress: () {
+        },
+      )..show();
   }
 
   @override
@@ -52,91 +145,68 @@ class _IDVerificationScreenState extends State<IDVerificationScreen> {
                 child: Text('Upload 1 Primary Government ID',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 20, fontWeight: FontWeight.w600),),
               ),
               SizedBox(height: 30),
-              DropTarget(
-                  onDragDone: (detail) async {
-                    setState(() {
-                      _resumeList.addAll(detail.files);
-                    });
-
-                    debugPrint('onDragDone:');
-                    for (final file in detail.files) {
-                      debugPrint('  ${file.path} ${file.name}'
-                          '  ${await file.lastModified()}'
-                          '  ${await file.length()}'
-                          '  ${file.mimeType}');
-                    }
-                  },
-                  onDragUpdated: (details) {
-                    setState(() {
-                      offset = details.localPosition;
-                    });
-                  },
-                  onDragEntered: (detail) {
-                    setState(() {
-                      _dragging = true;
-                      offset = detail.localPosition;
-                    });
-                  },
-                  onDragExited: (detail) {
-                    setState(() {
-                      _dragging = false;
-                      offset = null;
-                    });
-                  },
-                  child: Container(
+              Container(
                      decoration: const BoxDecoration(
                         border: DashedBorder.fromBorderSide(
                             dashLength: 8, side: BorderSide(color: Color(0xff356899), width: 2)),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    margin: EdgeInsets.only(left:30,right:30),
-                    height: 200,
+                    margin: EdgeInsets.only(left:30,right:30,),
+                    padding: EdgeInsets.only(top:30,bottom:30),
                     width: double.infinity,
-                    // color: _dragging ? Colors.blue.withOpacity(0.4) : Colors.black26,
                     child: Stack(
                       children: [
-                        if (_resumeList.isEmpty)
-                           Center(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Upload 1 Primary ID",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                        Text("(Please check this ",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                                        GestureDetector(
-                                          onTap: () => {
-                                            launch('https://governmentph.com/list-valid-id-in-the-philippines/', isNewTab: true)
-                                          },
-                                          child: Text("link",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899), fontSize: 16,),)),
-                                        Text(" for more info)",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
-                                      ]),
-                                      SizedBox(height: 25),
-                                      Padding(
-                                        padding: EdgeInsets.only(left:20,right:20),
-                                        child: CustomButton(
-                                        text: "Upload a PNG/JPG",
-                                        onTap: () => (){},
-                                      )),
-                                    ]
-                                  )
-                                )
-                        else
-                          Text(_resumeList.map((e) => e.path).join("\n")),
-                        if (offset != null)
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Text(
-                              '$offset',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
+                        Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Upload 1 Primary ID",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                Text("(Please check this ",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
+                                GestureDetector(
+                                  onTap: () => {
+                                    launch('https://governmentph.com/list-valid-id-in-the-philippines/', isNewTab: true)
+                                  },
+                                  child: Text("link",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899), fontSize: 16,),)),
+                                Text(" for more info)",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
+                              ]),
+                              SizedBox(height: 25),
+                              Text(
+                                "Uploaded Files",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
+                              ),
+                              SizedBox(height: 10),
+                              uploadedFiles(context, PRIMARY),
+                              SizedBox(height: 25),
+                              Padding(
+                                padding: EdgeInsets.only(left:20,right:20),
+                                child: CustomButton(
+                                text: "Upload a PNG/JPG",
+                                onTap: ()  async {
+                                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['png', 'jpg', 'jpeg'],
+                                  );
+
+                                  if (result != null) {
+                                    PlatformFile file = result.files.first;
+                                    
+                                    uploadID(file, "primary");
+
+                                  }
+
+                                },
+                              )),
+                            ]
                           )
+                        )
                       ],
                     ),
-                  ),
-                ),
+              ),
               SizedBox(height: 40),
               Padding(
                 padding: EdgeInsets.only(left:30,right:30),
@@ -150,90 +220,66 @@ class _IDVerificationScreenState extends State<IDVerificationScreen> {
                   ])
                 ),
               SizedBox(height:30),
-              DropTarget(
-                  onDragDone: (detail) async {
-                    setState(() {
-                      _certificationsList.addAll(detail.files);
-                    });
-
-                    debugPrint('onDragDone:');
-                    for (final file in detail.files) {
-                      debugPrint('  ${file.path} ${file.name}'
-                          '  ${await file.lastModified()}'
-                          '  ${await file.length()}'
-                          '  ${file.mimeType}');
-                    }
-                  },
-                  onDragUpdated: (details) {
-                    setState(() {
-                      offset = details.localPosition;
-                    });
-                  },
-                  onDragEntered: (detail) {
-                    setState(() {
-                      _dragging = true;
-                      offset = detail.localPosition;
-                    });
-                  },
-                  onDragExited: (detail) {
-                    setState(() {
-                      _dragging = false;
-                      offset = null;
-                    });
-                  },
-                  child: Container(
+              Container(
                      decoration: const BoxDecoration(
                         border: DashedBorder.fromBorderSide(
                             dashLength: 8, side: BorderSide(color: Color(0xff356899), width: 2)),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     margin: EdgeInsets.only(left:30,right:30,bottom: 30),
-                    height: 200,
+                    padding: EdgeInsets.only(top:30,bottom:30),
                     width: double.infinity,
-                    // color: _dragging ? Colors.blue.withOpacity(0.4) : Colors.black26,
                     child: Stack(
                       children: [
-                        if (_certificationsList.isEmpty)
-                           Center(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Upload 1 Secondary ID",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                        Text("(Please check this ",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                                        GestureDetector(
-                                          onTap: () => {
-                                            launch('https://governmentph.com/list-valid-id-in-the-philippines/', isNewTab: true)
-                                          },
-                                          child: Text("link",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899), fontSize: 16,),)),
-                                        Text(" for more info)",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
-                                      ]),
-                                      SizedBox(height: 25),
-                                      Padding(
-                                        padding: EdgeInsets.only(left:20,right:20),
-                                        child: CustomButton(
-                                        text: "Upload a PNG/JPG",
-                                        onTap: () => (){},
-                                      )),
-                                    ]
-                                  )
-                                )
-                        else
-                          Text(_certificationsList.map((e) => e.path).join("\n")),
-                        if (offset != null)
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Text(
-                              '$offset',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
+                        Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Upload 1 Secondary ID",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                Text("(Please check this ",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
+                                GestureDetector(
+                                  onTap: () => {
+                                    launch('https://governmentph.com/list-valid-id-in-the-philippines/', isNewTab: true)
+                                  },
+                                  child: Text("link",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899), fontSize: 16,),)),
+                                Text(" for more info)",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
+                              ]),
+                              SizedBox(height: 25),
+                              Text(
+                                "Uploaded Files",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
+                              ),
+                              SizedBox(height: 10),
+                              uploadedFiles(context, SECONDARY),
+                              SizedBox(height: 25),
+                              Padding(
+                                padding: EdgeInsets.only(left:20,right:20),
+                                child: CustomButton(
+                                text: "Upload a PNG/JPG",
+                                onTap: () async{ 
+                                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['png', 'jpg', 'jpeg'],
+                                  );
+
+                                  if (result != null) {
+                                    PlatformFile file = result.files.first;
+                                      
+                                      uploadID(file, "secondary");
+                                  }
+                                },
+                              )),
+                            ]
                           )
+                        )
+                       
                       ],
                     ),
-                  ),
                 ),
                 SizedBox(height:30),
              
