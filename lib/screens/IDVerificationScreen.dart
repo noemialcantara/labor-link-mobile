@@ -24,11 +24,7 @@ class IDVerificationScreen extends StatefulWidget {
 }
 
 class _IDVerificationScreenState extends State<IDVerificationScreen> {
-  final List<XFile> _resumeList = [];
-  final List<XFile> _certificationsList = [];
-
-  Offset? offset;
-
+  
   Future<void> launch(String url, {bool isNewTab = true}) async {
     await launchUrl(
       Uri.parse(url),

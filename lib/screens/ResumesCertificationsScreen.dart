@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:labor_link_mobile/apis/CertificationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
@@ -27,20 +28,29 @@ class ResumesCertificationsScreen extends StatefulWidget {
 class _ResumesCertificationsScreenState extends State<ResumesCertificationsScreen> {
   TextEditingController profileJobEditingController = TextEditingController();
   TextEditingController profileNameEditingController = TextEditingController();
-  final List<XFile> _certificationsList = [];
   String userEmail = "test@gmail.com";
-
-  bool _dragging = false;
-
   Offset? offset;
 
   uploadResume(PlatformFile file, String profileJob, String profileName) {
     ResumeApi.uploadResume(file, profileJob, profileName, userEmail);
   }
+  
+  uploadCertification(PlatformFile file) {
+    CertificationApi.uploadID(file, userEmail);
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'Alert!',
+      desc: 'Successfully uploaded your certification',
+      btnOkOnPress: () {
+      },
+    )..show();
+  }
 
-  Widget uploadedResumeList(BuildContext parentContext) {
+  Widget fetchUploadedFilesList(BuildContext parentContext, String fileClassification) {
     return StreamBuilder(
-        stream: ResumeApi.getResumeByUser(userEmail),
+        stream: fileClassification == "resume" ? ResumeApi.getResumeByUser(userEmail) : CertificationApi.getUploadedIDByUserEmail(userEmail),
         builder: (context, snapshot) {
           var streamDataLength = snapshot.data?.docs.length ?? 0;
 
@@ -84,13 +94,13 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                   GestureDetector(
                                       onTap: () {
                                         String linkId = snapshot.data?.docs[index].get("link");
-                                        ResumeApi.deleteResumePerLinkId(linkId);
+                                        fileClassification == "resume" ? ResumeApi.deleteResumePerLinkId(linkId) : CertificationApi.deleteIDByLinkId(linkId);
                                         AwesomeDialog(
                                           context: parentContext,
                                           dialogType: DialogType.success,
                                           animType: AnimType.rightSlide,
                                           title: 'Alert!',
-                                          desc: 'Successfully deleted this resume',
+                                          desc: 'Successfully deleted this file',
                                           btnOkOnPress: () {},
                                         )..show();
                                       },
@@ -181,7 +191,7 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                     style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
                   ),
                   SizedBox(height: 10),
-                  uploadedResumeList(context),
+                  fetchUploadedFilesList(context, "resume"),
                   SizedBox(height: 10),
                   Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -262,48 +272,16 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
               ]),
             ),
             SizedBox(height: 30),
-            DropTarget(
-              onDragDone: (detail) async {
-                setState(() {
-                  _certificationsList.addAll(detail.files);
-                });
-
-                debugPrint('onDragDone:');
-                for (final file in detail.files) {
-                  debugPrint('  ${file.path} ${file.name}'
-                      '  ${await file.lastModified()}'
-                      '  ${await file.length()}'
-                      '  ${file.mimeType}');
-                }
-              },
-              onDragUpdated: (details) {
-                setState(() {
-                  offset = details.localPosition;
-                });
-              },
-              onDragEntered: (detail) {
-                setState(() {
-                  _dragging = true;
-                  offset = detail.localPosition;
-                });
-              },
-              onDragExited: (detail) {
-                setState(() {
-                  _dragging = false;
-                  offset = null;
-                });
-              },
-              child: Container(
+            Container(
                 decoration: const BoxDecoration(
                     border: DashedBorder.fromBorderSide(dashLength: 8, side: BorderSide(color: Color(0xff356899), width: 2)),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 margin: EdgeInsets.only(left: 30, right: 30),
-                height: 250,
+                padding:EdgeInsets.only(top:30, bottom:30),
                 width: double.infinity,
                 child: Stack(
                   children: [
-                    if (_certificationsList.isEmpty)
-                      Center(
+                    Center(
                           child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -314,6 +292,14 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                             style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
                           ),
                           SizedBox(height: 25),
+                          Text(
+                            "Uploaded Files",
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
+                          ),
+                          SizedBox(height: 10),
+                          fetchUploadedFilesList(context, "certification"),
+                          SizedBox(height: 10),
                           Padding(
                               padding: EdgeInsets.only(left: 20, right: 20),
                               child: CustomButton(
@@ -325,64 +311,18 @@ class _ResumesCertificationsScreenState extends State<ResumesCertificationsScree
                                   );
                                   if (result != null) {
                                     PlatformFile file = result.files.first;
-                                    profileJobEditingController.text = "";
-                                    profileNameEditingController.text = "";
-
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Add reference to your certification'),
-                                          content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                              ]),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Cancel'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Submit'),
-                                              onPressed: () {
-                                                uploadResume(file, profileJobEditingController.text, profileNameEditingController.text);
-                                                AwesomeDialog(
-                                                  context: context,
-                                                  dialogType: DialogType.success,
-                                                  animType: AnimType.rightSlide,
-                                                  title: 'Alert!',
-                                                  desc: 'Successfully uploaded the resume',
-                                                  btnOkOnPress: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                )..show();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    uploadCertification(file);
                                   }
                                 },
                               )),
                         ],
                       ))
-                    else
-                      Text(_certificationsList.map((e) => e.path).join("\n")),
-                    if (offset != null)
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          '$offset',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      )
+                   
                   ],
                 ),
               ),
-            ),
+              SizedBox(height: 40),
+            
           ],
         )));
   }
