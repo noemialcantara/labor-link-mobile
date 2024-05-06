@@ -35,6 +35,17 @@ class JobApi {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllJobsById(
+      List<String> jobIds) {
+    return firestore
+        .collection('jobs')
+        .where('job_id',
+            whereIn: jobIds.isEmpty
+                ? ['']
+                : jobIds)
+        .snapshots();
+  }
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> searchJobByKeyword(String searchKeyword) {
 
     return firestore

@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/CompanyApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
+import 'package:labor_link_mobile/apis/SavedJobsApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/screens/JobApplicationScreen.dart';
@@ -25,16 +27,17 @@ class JobDetailsScreen extends StatefulWidget {
 class _JobDetailsScreenState extends State<JobDetailsScreen> {
   bool isAlreadyApplied = false;
   String userEmail = "";
+  bool isJobSaved = false;
 
   @override
   void initState() {
     super.initState();
     _checkIfAlreadyApplied();
+    _checkSavedJobStatus();
   }
 
   _checkIfAlreadyApplied() async{
     userEmail =  FirebaseAuth.instance.currentUser!.email ?? "test@gmail.com";
-    print("USER EMAIL IS ${userEmail}");
     JobApplicationApi.checkIfUserAlreadyApplied(widget.jobDetails.jobId, userEmail).then((QuerySnapshot querySnapshot) {
       if(querySnapshot.docs.length > 0){
         setState(() {
@@ -43,6 +46,51 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
       }
     });
   }
+
+  void _checkSavedJobStatus(){
+    String jobId = widget.jobDetails.jobId;
+
+    SavedJobsApi.getSaveJobStatusByJobId(jobId, userEmail).then((value) {
+      setState(() {
+        print("ANUNG SAVED JOB VALUE NETO $value");
+        isJobSaved = value;
+      });
+      
+    });
+  }
+  
+  void _doBookmarkAction(String jobId){
+    String actionText = "";
+    
+    setState(() {
+      isJobSaved =  !isJobSaved;
+    });
+
+    Map<String, dynamic> payload = {
+      "email_address": userEmail,
+      "job_id": jobId
+    };
+   
+    if(isJobSaved){
+      SavedJobsApi.addSaveJob(payload);
+      actionText = "bookmarked";
+    }else{
+      SavedJobsApi.deleteSavedJob(jobId);
+      actionText = "unbookmarked";
+    }
+
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'Alert!',
+      desc: 'Successfully $actionText this job!',
+      btnOkOnPress: () {
+        Navigator.pop(context);
+      },
+    )..show();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +110,16 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   onTap: () => Navigator.pop(context),
                   child: Icon(Icons.arrow_back, size: 30,),
                   ),
-              Icon(
-                  Icons.bookmark_add_outlined,
-                  color: Color(0xff000000),
-                  size: 30,
-               )
+                GestureDetector(
+                  onTap: () {  
+                    _doBookmarkAction(widget.jobDetails.jobId);
+                  },
+                  child: Icon(
+                      !isJobSaved ? Icons.bookmark_add_outlined : Icons.bookmark_remove_sharp,
+                      color: !isJobSaved ? Color(0xff000000) : Color(0xff356899),
+                      size: 30,
+                  )
+                )
               ],)),
               Image.network(widget.jobDetails.companyLogo, height: 125, width: 125, alignment: Alignment.center),
               Text(widget.jobDetails.jobName,textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 26,fontWeight: FontWeight.w700),), 

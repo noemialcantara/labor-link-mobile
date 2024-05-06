@@ -31,7 +31,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   String selectedResume = "";
   String selectedResumeProfileName = "";
   List<bool> isResumeCheckedList = [] ;
-
+  
   @override
   void initState() {
     super.initState();
@@ -204,11 +204,8 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                   onTap: () => Navigator.pop(context),
                   child: Icon(Icons.arrow_back, size: 30,)),
                 Text("Apply", style: GoogleFonts.poppins(color: Color(0xff000000),fontSize: 20,fontWeight: FontWeight.w600)),
-               Icon(
-                  Icons.bookmark_add_outlined,
-                  color: Color(0xff000000),
-                  size: 30,
-               )
+                Container()
+              
               ],)),
               SizedBox(height:20),
               Row(
