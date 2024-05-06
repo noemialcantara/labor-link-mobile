@@ -13,6 +13,7 @@ import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/models/Message.dart';
 import 'package:labor_link_mobile/screens/ChatScreen.dart';
+import 'package:labor_link_mobile/screens/EmployerIDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerNavigationScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerProfileScreen.dart';
 import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
@@ -398,7 +399,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
             SizedBox(height:30),
             GestureDetector(
               onTap: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> IDVerificationScreen())),
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EmployerIDVerificationScreen())),
               },
               child: Padding(
               padding: EdgeInsets.only(left:50),
