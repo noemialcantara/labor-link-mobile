@@ -130,7 +130,7 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
 
   _rejectApplicant(){
     JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Rejected");
-
+    createNotification(applicant?.emailAddress ?? "", "New Activity", "The ${widget.companyName} has already proceeded with the other applicant who is the better fit for this job. Thank you for taking your time in applying to us!");
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
