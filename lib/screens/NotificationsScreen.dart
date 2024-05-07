@@ -46,6 +46,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     ),
                     shrinkWrap: true,
                     itemBuilder: (context, index) => 
+                        GestureDetector(
+                          onTap: (){
+                             showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(backgroundColor: Color(0xffffffff), title: Text(_notificationList[index].notificationDescription,style: GoogleFonts.poppins(fontSize: 18),));
+                              });
+                          },
+                          child: 
                         ListTile(
                           leading: Image.network("https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/company_images%2Fdefault-company-avatar-removebg-preview.png?alt=media&token=a3649b8b-5034-406c-95b0-2d289e558be2",height:40),
                           title: Text(_notificationList[index].notificationDescription,overflow: TextOverflow.ellipsis,  style: GoogleFonts.poppins(color: Colors.black, fontSize: 16), maxLines: 2,),
@@ -56,7 +65,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             SizedBox(height: 10),
                             Text(GetTimeAgo.parse(DateTime.parse(_notificationList[index].dateSent)), style: GoogleFonts.poppins(color: Colors.black,)),
                           ])
-                        )
+                        ))
               ), margin: EdgeInsets.only(bottom:80),);
           }
           return Padding(padding: EdgeInsets.only(left:25, right: 25), child: Text("No notifications yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),));
