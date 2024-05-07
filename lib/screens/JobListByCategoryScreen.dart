@@ -61,6 +61,7 @@ class _JobListByCategoryScreenState extends State<JobListByCategoryScreen> {
                   return ListView.separated(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         scrollDirection: Axis.vertical,
+                        physics: NeverScrollableScrollPhysics(),
                         separatorBuilder: (_, index) => SizedBox(
                           height: 20,
                         ),
