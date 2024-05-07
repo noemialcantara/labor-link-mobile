@@ -65,7 +65,7 @@ class _SavedJobsScreenState extends State<SavedJobsScreen> {
                                   itemCount: _jobList.length);
                         }
                   
-                        return Padding(padding: EdgeInsets.only(left:30, right: 30), child: Text("No saved jobs yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),));
+                        return Padding(padding: EdgeInsets.only(left:25, right: 25), child: Text("No saved jobs yet",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 18),));
                       }
               });
 
@@ -83,7 +83,7 @@ class _SavedJobsScreenState extends State<SavedJobsScreen> {
         children: [
         SizedBox(height: 50),
               Padding(child: Text("Saved Jobs", style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 25)), padding: EdgeInsets.only(left:25,right:25),),
-        SizedBox(height: 50),
+        SizedBox(height: 20),
         fetchSavedJobs()
       
       ])

@@ -8,6 +8,7 @@ import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
+import 'package:labor_link_mobile/helper/NotificationHelper.dart';
 import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/JobApplication.dart';
@@ -65,6 +66,9 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
       await FirebaseChatApi.addChatUserWithFrom(employerEmailAddress, userEmail).then((value) {
         FirebaseChatApi.sendFirstMessageCustom(value["from_id"],value["to_id"], "Hello ${selectedResumeProfileName},\n\nThis is to inform you that we have already received your application regarding ${widget.jobDetails.jobName} position. We are now currently reviewing your resume. Rest assured that we will send you a message regarding the interview schedule.\n\nThank you.", Type.text);
       });
+
+      createNotification(userEmail,"New Activity", "${widget.jobDetails.companyName} has already received your application for ${ widget.jobDetails.jobName} position.");
+      createNotification(employerEmailAddress, "New Activity", "$selectedResumeProfileName has submitted his/her application for ${ widget.jobDetails.jobName} position.");
      
       Navigator.push(
                   context,
@@ -75,7 +79,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
     }
    
   }
-
+                                                                                                                                                                                                                                              
   showAlertDialog(BuildContext context) {
         Widget okButton = TextButton(
           child: Text("Okay", style: GoogleFonts.poppins(color: Colors.black),),

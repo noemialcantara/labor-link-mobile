@@ -100,7 +100,7 @@ class _JobListByCategoryScreenState extends State<JobListByCategoryScreen> {
                         children: <Widget>[
                           SizedBox(height:30),
                           fetchJobs(),
-                          SizedBox(height: 30),
+                          SizedBox(height: 50),
                         ]
                       )
                   )

@@ -9,6 +9,7 @@ import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/apis/SkillsApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
+import 'package:labor_link_mobile/helper/NotificationHelper.dart';
 import 'package:labor_link_mobile/models/Applicant.dart';
 import 'package:labor_link_mobile/screens/AddWorkExperienceScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
@@ -21,8 +22,9 @@ class EmployerApplicantProfileScreen extends StatefulWidget {
   final String email;
   final String jobId;
   final String applicationStatus;
+  final String companyName;
   
-  EmployerApplicantProfileScreen({Key? key,required this.jobId, required this.email, required this.applicationStatus}) : super(key: key);
+  EmployerApplicantProfileScreen({Key? key,required this.jobId, required this.email, required this.applicationStatus, required this.companyName}) : super(key: key);
 
   @override
   State<EmployerApplicantProfileScreen> createState() => _EmployerApplicantProfileScreenState();
@@ -94,16 +96,25 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
   }
 
   _acceptApplicant(){
-    if(widget.applicationStatus == "Reviewing")
+    if(widget.applicationStatus == "Reviewing"){
       JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Screening Interview");
-    else if(widget.applicationStatus == "Screening Interview")
+      createNotification(applicant?.emailAddress ?? "", "New Activity", "Congratulations! ${widget.companyName} wants to take a screening interview with you.");
+    }
+    else if(widget.applicationStatus == "Screening Interview"){
       JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Technical Interview");
-    else if(widget.applicationStatus == "Technical Interview")
+      createNotification(applicant?.emailAddress ?? "", "New Activity", "Congratulations! ${widget.companyName} wants to take a technical interview with you.");
+    }
+    else if(widget.applicationStatus == "Technical Interview"){
       JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Final Interview");
-    else if(widget.applicationStatus == "Final Interview")
+      createNotification(applicant?.emailAddress ?? "", "New Activity", "Congratulations! ${widget.companyName} wants to take a final interview with you.");
+    }else if(widget.applicationStatus == "Final Interview"){
       JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Job Offer");
-    else if(widget.applicationStatus == "Job Offer")
+      createNotification(applicant?.emailAddress ?? "", "New Activity", "Congratulations! You passed all of the interviews and ${widget.companyName} will send you a job offer to your email within 2 to 3 days.");
+    }
+    else if(widget.applicationStatus == "Job Offer"){
       JobApplicationApi.updateApplicantStatus(widget.jobId, applicant?.emailAddress ?? "", "Hired");
+      createNotification(applicant?.emailAddress ?? "", "New Activity", "Congratulations! You are now hired by the ${widget.companyName}!");
+    }
 
     AwesomeDialog(
       context: context,
