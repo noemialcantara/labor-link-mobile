@@ -11,10 +11,11 @@ class JobApplication {
   late String jobCityLocation;
   late String status;
   late String employmentType;
+  late String applicationDate;
   
   
   JobApplication(this.applicantName, this.resumeLink, this.coverLetter, this.jobId, this.applicantEmail, this.companyLogoUrl, this.jobName, this.companyName,
-  this.minSalary, this.jobCityLocation, this.status, this.employmentType);
+  this.minSalary, this.jobCityLocation, this.status, this.employmentType, this.applicationDate);
 
 
   JobApplication.fromJson(Map<String, dynamic> json) {
@@ -30,6 +31,7 @@ class JobApplication {
     jobCityLocation = json['job_city_location'] ?? '';
     status = json['status'] ?? '';
     employmentType = json['employment_type'] ?? '';
+    applicationDate = json['application_date'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -45,7 +47,8 @@ class JobApplication {
       'min_salary': minSalary,
       'job_city_location': jobCityLocation,
       'status': status,
-      'employment_type': employmentType
+      'employment_type': employmentType,
+      'application_date': applicationDate
     };
   }
 }
