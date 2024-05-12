@@ -180,6 +180,11 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
 
              });
           }
+        }else{
+          setState(() {
+              isAlreadySubscribed = false;
+
+          });
         }
       });
   }

@@ -7,8 +7,11 @@ import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:labor_link_mobile/apis/SubscribersApi.dart';
+import 'package:labor_link_mobile/apis/TransactionsApi.dart';
+import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Subscriber.dart';
+import 'package:labor_link_mobile/models/Transaction.dart' as LLTransaction;
 import 'package:labor_link_mobile/models/SubscriptionPlan.dart';
 import 'package:labor_link_mobile/screens/EmployerSubscriptionManagementScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerSubscriptionScreen.dart';
@@ -33,6 +36,8 @@ class CreditCardPaymentScreenState extends State<CreditCardPaymentScreen> {
   bool useBackgroundImage = false;
   bool useFloatingAnimation = true;
 
+  String companyName = "";
+
   final OutlineInputBorder border = OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.grey.withOpacity(0.7),
@@ -40,6 +45,21 @@ class CreditCardPaymentScreenState extends State<CreditCardPaymentScreen> {
     ),
   );
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+
+  @override
+  void initState(){
+    super.initState();
+    fetchCompanyDetails();
+  }
+
+  fetchCompanyDetails(){
+     UsersApi.getCompanyNameByEmail(FirebaseAuth.instance.currentUser!.email!).then((value) {
+        setState(() {
+          companyName  = value.docs.first.get("employer_name");
+        });
+     });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,17 +98,6 @@ class CreditCardPaymentScreenState extends State<CreditCardPaymentScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     SizedBox(height:30),
-                    // Padding(
-                    //   padding: EdgeInsets.only(left:20, right: 20),
-                    //   child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //     GestureDetector(
-                    //       onTap: () => Navigator.pop(context),
-                    //       child: Icon(Icons.arrow_back, size: 30,),
-                    //     ),
-                    // ],)),
-                    // SizedBox(height:20),
                     CreditCardWidget(
                       enableFloatingCard: useFloatingAnimation,
                       glassmorphismConfig: _getGlassmorphismConfig(),
@@ -208,6 +217,10 @@ class CreditCardPaymentScreenState extends State<CreditCardPaymentScreen> {
 
           Subscriber subscriptionPayload = Subscriber(widget.subscriptionPlan.duration, FirebaseAuth.instance.currentUser?.email ?? "", widget.subscriptionPlan.price,widget.subscriptionPlan.planName + " Premium",formattedDateNow, formattedDateNextDuration, "false", subscriptionId, Timestamp.now());
           SubscribersApi.addSubscription(subscriptionPayload.toJson());
+
+          LLTransaction.Transaction transactionPayload = LLTransaction.Transaction(widget.subscriptionPlan.price,"Credit Card", "Completed", companyName ,formattedDateNow ,subscriptionId, widget.subscriptionPlan.duration);
+          TransactionsApi.addTransaction(transactionPayload.toJson());
+
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> EmployerSubscriptionManagementScreen(subscriber: subscriptionPayload)));
         },
       )..show();

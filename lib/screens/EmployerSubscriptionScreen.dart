@@ -140,7 +140,6 @@ class _EmployerSubscriptionScreenState extends State<EmployerSubscriptionScreen>
                           }
                         );
                     }else{
-                      print("CHOSEN PAYMENT PLAN IS ${subscriptionPlan!.planName}");
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

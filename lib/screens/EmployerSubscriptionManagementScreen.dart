@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:labor_link_mobile/apis/SubscribersApi.dart';
+import 'package:labor_link_mobile/apis/TransactionsApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Subscriber.dart';
 import 'package:labor_link_mobile/models/SubscriptionPlan.dart';
@@ -41,6 +42,7 @@ class _EmployerSubscriptionManagementScreenState extends State<EmployerSubscript
 
   cancelSubscriptionPlan(){
     SubscribersApi.cancelSubscription(widget.subscriber.id.toString());
+    TransactionsApi.cancelTransaction(widget.subscriber.id.toString());
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
