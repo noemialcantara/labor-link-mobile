@@ -59,7 +59,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   void submitApplication() async{
     String coverLetter = coverLetterTextEditingController.text;
     DateTime now = DateTime.now();
-    DateFormat format = DateFormat('yy/MM/dd kk:mm:ss');
+    DateFormat format = DateFormat('yyyy-MM-dd kk:mm:ss');
     String formattedDateNow = format.format(now);
 
     if(selectedResume != ""){
