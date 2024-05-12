@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,10 +13,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:labor_link_mobile/apis/JobApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
+import 'package:labor_link_mobile/apis/SubscribersApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
+import 'package:labor_link_mobile/models/Subscriber.dart';
+import 'package:labor_link_mobile/screens/EmployerSubscriptionScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
 import 'package:labor_link_mobile/screens/JobPostingManagementScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
@@ -39,8 +43,10 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
   String userEmail = "test@gmail.com";
   String companyName = "";
 
-  bool _dragging = false;
+  bool isAlreadySubscribed = false;
   int jobPostingsCount = 0;
+
+  Subscriber? subscriber;
 
   Offset? offset;
 
@@ -48,6 +54,35 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
   void initState() {
     super.initState();
     _getUserEmail();
+    _getSubscriptionPlan();
+  }
+
+  _getSubscriptionPlan(){
+    SubscribersApi.getUserPlan(FirebaseAuth.instance.currentUser?.email?? "").then((QuerySnapshot querySnapshot) {
+        if(querySnapshot.docs.length > 0){
+          if(querySnapshot.docs.first.get("is_cancelled") == "false" && DateTime.parse( querySnapshot.docs.first.get("premium_plan_ending_date")).isAfter(DateTime.now())){
+             setState(() {
+              isAlreadySubscribed = true;
+              subscriber = Subscriber(
+                querySnapshot.docs.first.get("duration"), 
+                FirebaseAuth.instance.currentUser?.email?? "",
+                querySnapshot.docs.first.get("monthly_payment"),
+                querySnapshot.docs.first.get("plan"), 
+                querySnapshot.docs.first.get("premium_plan_starting_date"), 
+                querySnapshot.docs.first.get("premium_plan_ending_date"), 
+                querySnapshot.docs.first.get("is_cancelled"),
+                querySnapshot.docs.first.get("id"),
+                querySnapshot.docs.first.get("created_on"),
+                );
+            });
+          }else{
+             setState(() {
+              isAlreadySubscribed = false;
+
+             });
+          }
+        }
+      });
   }
 
   void _getUserEmail(){
@@ -199,11 +234,33 @@ class _JobPostingsScreenState extends State<JobPostingsScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
+          //TODO: STILL NEED TO ADD A CONDITION. IF THERE'S AN EXISTING SUBSCRIPTION AND THAT SUBSCRIPTION IS CANCELLED
+          //AND IF THE ENDING DATE OF LAST SUBSCRIPTION IS STILL GREATER THAN THE CURRENT DATE, ALLOW UNLI JOB POST
+          if(!isAlreadySubscribed && jobPostingsCount >= 10){ 
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.info,
+              animType: AnimType.rightSlide,
+              title: 'Alert!',
+              desc: 'You are currently in a free plan wherein you only have 10 free job postings. Please subscribe to our monthly or annualy plan to post unlimited jobs in our application.',
+              btnOkOnPress: () {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => EmployerSubscriptionScreen()));
+              },
+              btnOkText: "Subscribe",
+              btnCancelOnPress: () {
+                
+              },
+            )..show();
+          }else{
+             Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => JobPostingManagementScreen(companyName: companyName))).then((value) => _getJobPostingsCount());
-        },
+          }
+         },
         backgroundColor: Color(0xff356899),
         child: const Icon(Icons.add, size: 30,),
       ),

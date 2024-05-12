@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/ExperiencesApi.dart';
+import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/SkillsApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/models/Applicant.dart';
@@ -28,8 +29,10 @@ class _EmployerProfileScreenState extends State<EmployerProfileScreen> {
   TextEditingController skillController = TextEditingController();
 
   String jobPostingCount = "0";
+  String hiredCount = "0";
+  String rejectedCount= "0";
 
-   @override
+  @override
   void initState() {
     super.initState();
     _fetchUserData();
@@ -53,6 +56,7 @@ class _EmployerProfileScreenState extends State<EmployerProfileScreen> {
           );
 
           _fetchJobPostings();
+          _fetchStatistics(employer!.employerName.toString());
         });
       }
     });
@@ -67,6 +71,32 @@ class _EmployerProfileScreenState extends State<EmployerProfileScreen> {
       }else{
         setState(() {
           jobPostingCount = "0";
+        });
+      }
+    });
+  }
+
+  _fetchStatistics(String companyName) async{
+    JobApplicationApi.getHiredCountByCompanyName(companyName).then((QuerySnapshot querySnapshot) {
+      if(querySnapshot.docs.length > 0){
+        setState(() {
+          hiredCount = querySnapshot.docs.length.toString();
+        });
+      }else{
+        setState(() {
+          hiredCount = "0";
+        });
+      }
+    });
+
+    JobApplicationApi.getRejectedCountByCompanyName(companyName).then((QuerySnapshot querySnapshot) {
+      if(querySnapshot.docs.length > 0){
+        setState(() {
+          rejectedCount = querySnapshot.docs.length.toString();
+        });
+      }else{
+        setState(() {
+          rejectedCount = "0";
         });
       }
     });
@@ -113,11 +143,11 @@ class _EmployerProfileScreenState extends State<EmployerProfileScreen> {
                     Text("No. of Employees", style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
                   ],),
                   Column(children: [
-                    Text("0", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 22),),
+                    Text(hiredCount, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 22),),
                     Text("Hired", style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
                   ],),
                   Column(children: [
-                    Text("0", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 22),),
+                    Text(rejectedCount, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 22),),
                     Text("Rejected", style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
                   ],)
               ],)),

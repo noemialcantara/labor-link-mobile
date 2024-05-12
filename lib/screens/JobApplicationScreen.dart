@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
@@ -57,9 +58,13 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
 
   void submitApplication() async{
     String coverLetter = coverLetterTextEditingController.text;
+    DateTime now = DateTime.now();
+    DateFormat format = DateFormat('yyyy-MM-dd kk:mm:ss');
+    String formattedDateNow = format.format(now);
+
     if(selectedResume != ""){
       JobApplication payload = JobApplication(selectedResumeProfileName, selectedResume, coverLetter, widget.jobDetails.jobId, userEmail, widget.jobDetails.companyLogo,
-       widget.jobDetails.jobName,widget.jobDetails.companyName,widget.jobDetails.minimumSalary.toString(), widget.jobDetails.jobCityLocation, "Reviewing", widget.jobDetails.employmentType);
+       widget.jobDetails.jobName,widget.jobDetails.companyName,widget.jobDetails.minimumSalary.toString(), widget.jobDetails.jobCityLocation, "Reviewing", widget.jobDetails.employmentType, formattedDateNow);
       JobApplicationApi.submitApplication(payload.toJson());
 
 

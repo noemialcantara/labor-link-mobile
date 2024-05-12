@@ -54,4 +54,20 @@ class JobApplicationApi {
       .get();
   }
 
+  static Future<QuerySnapshot> getHiredCountByCompanyName(String companyName){
+    return firestore
+      .collection('job_applications')
+      .where("company_name", isEqualTo: companyName)
+      .where("status", isEqualTo: "Hired")
+      .get();
+  }
+
+  static Future<QuerySnapshot> getRejectedCountByCompanyName(String companyName){
+    return firestore
+      .collection('job_applications')
+      .where("company_name", isEqualTo: companyName)
+      .where("status", isEqualTo: "Rejected")
+      .get();
+  }
+
 }

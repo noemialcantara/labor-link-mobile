@@ -9,13 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
+import 'package:labor_link_mobile/apis/SubscribersApi.dart';
 import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/models/ChatUser.dart';
 import 'package:labor_link_mobile/models/Message.dart';
+import 'package:labor_link_mobile/models/Subscriber.dart';
 import 'package:labor_link_mobile/screens/ChatScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerIDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerNavigationScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerProfileScreen.dart';
+import 'package:labor_link_mobile/screens/EmployerSubscriptionManagementScreen.dart';
 import 'package:labor_link_mobile/screens/EmployerSubscriptionScreen.dart';
 import 'package:labor_link_mobile/screens/IDVerificationScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicationsListScreen.dart';
@@ -38,6 +41,7 @@ class MainNavigationHandler extends StatefulWidget {
 class _MainNavigationHandlerState extends State<MainNavigationHandler> with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
   final autoSizeGroup = AutoSizeGroup();
+  bool isAlreadySubscribed = false;
   var _bottomNavIndex = 0;
   String userName = "user";
   String userType = "";
@@ -45,6 +49,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   String profession = 'No profession yet';
   String industry = "No industry yet";
   String logoUrl = "";
+  Subscriber? subscriber;
 
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -126,7 +131,7 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
     super.dispose();
   }
 
-  void _fetchUserData() async{
+  _fetchUserData() async{
     userName =   await FirebaseChatApi.getCurrentUserData(FirebaseAuth.instance.currentUser!.email ?? "");
     userType =   await FirebaseChatApi.getCurrentUserType(FirebaseAuth.instance.currentUser!.email ?? "");
 
@@ -150,8 +155,38 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
           });
         }
       });
-    
-    setState(() {});
+     
+
+      SubscribersApi.getUserPlan(user?.email ?? "").then((QuerySnapshot querySnapshot) {
+        if(querySnapshot.docs.length > 0){
+          if(querySnapshot.docs.first.get("is_cancelled") == "false" && DateTime.parse( querySnapshot.docs.first.get("premium_plan_ending_date")).isAfter(DateTime.now())){
+             setState(() {
+              isAlreadySubscribed = true;
+              subscriber = Subscriber(
+                querySnapshot.docs.first.get("duration"), 
+                user?.email ?? "", 
+                querySnapshot.docs.first.get("monthly_payment"),
+                querySnapshot.docs.first.get("plan"), 
+                querySnapshot.docs.first.get("premium_plan_starting_date"), 
+                querySnapshot.docs.first.get("premium_plan_ending_date"), 
+                querySnapshot.docs.first.get("is_cancelled"),
+                querySnapshot.docs.first.get("id"),
+                querySnapshot.docs.first.get("created_on"),
+                );
+            });
+          }else{
+             setState(() {
+              isAlreadySubscribed = false;
+
+             });
+          }
+        }else{
+          setState(() {
+              isAlreadySubscribed = false;
+
+          });
+        }
+      });
   }
 
   // Scroll notification handler
@@ -385,8 +420,13 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
             ),
             SizedBox(height:30),
             GestureDetector(
-              onTap: () => {
-                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EmployerSubscriptionScreen())),
+              onTap: () {
+                Navigator.pop(context);
+                if(isAlreadySubscribed){  
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EmployerSubscriptionManagementScreen(subscriber:subscriber!)));
+                }else{
+                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EmployerSubscriptionScreen()));
+                }
               },
               child:  Padding(
               padding: EdgeInsets.only(left:50),
@@ -431,8 +471,8 @@ class _MainNavigationHandlerState extends State<MainNavigationHandler> with Tick
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      onDrawerChanged: (isOpened) {
-       _fetchUserData();
+      onDrawerChanged: (isOpened) async{
+       await _fetchUserData();
       },
       extendBody: true,
       body: NotificationListener<ScrollNotification>(
