@@ -12,6 +12,7 @@ import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/helper/NotificationHelper.dart';
 import 'package:labor_link_mobile/models/Applicant.dart';
 import 'package:labor_link_mobile/screens/AddWorkExperienceScreen.dart';
+import 'package:labor_link_mobile/screens/JobApplicantFeedbackScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:labor_link_mobile/screens/UserProfileUpdateScreen.dart';
 import 'package:labor_link_mobile/screens/widgets/PDFViewerScreen.dart';
@@ -161,6 +162,12 @@ class _EmployerApplicantProfileScreenState extends State<EmployerApplicantProfil
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Icon(Icons.arrow_back, size: 30,)),
+                 GestureDetector(
+                  onTap: () =>   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => JobApplicantFeedbackScreen(jobId: widget.jobId, applicantEmailAddress: applicant?.emailAddress))),
+                  child: Image.asset("assets/icons/feedback-icon.png",height:40)),
                  
               ],)),
               SizedBox(height: 40),

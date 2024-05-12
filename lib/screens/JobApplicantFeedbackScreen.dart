@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,20 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/CompanyApi.dart';
+import 'package:labor_link_mobile/apis/FeedbackApis.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
-import 'package:labor_link_mobile/models/Job.dart';
-import 'package:labor_link_mobile/models/JobApplication.dart';
-import 'package:labor_link_mobile/screens/AuthRedirector.dart';
-import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
-import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
+import 'package:labor_link_mobile/models/Feedback.dart' as LLFeedback;
 import 'dart:math' as math;
 
 
 class JobApplicantFeedbackScreen extends StatefulWidget {
-
-  const JobApplicantFeedbackScreen({Key? key})
+  late String jobId;
+  late String? applicantEmailAddress;
+  JobApplicantFeedbackScreen({Key? key, required this.jobId, required this.applicantEmailAddress})
       : super(key: key);
 
   @override
@@ -30,8 +30,9 @@ class JobApplicantFeedbackScreen extends StatefulWidget {
 class _JobApplicantFeedbackScreenState
     extends State<JobApplicantFeedbackScreen> {
   Options options = Options(format: Format.rgb, luminosity: Luminosity.dark);
-  TextEditingController coverLetterTextEditingController =
+  TextEditingController commentsTextEditingController =
       TextEditingController();
+  String rating = "Medium"; //DEFAULT IS MEDIUM
 
 
   @override
@@ -49,8 +50,27 @@ class _JobApplicantFeedbackScreenState
     }
   }
 
-  void saveFeedback(){
-}
+  saveFeedback(){
+    LLFeedback.Feedback feedbackPayload =  LLFeedback.Feedback(
+      widget.applicantEmailAddress.toString(), 
+      FirebaseAuth.instance.currentUser?.email ?? "",
+      commentsTextEditingController.text,
+      rating,
+      widget.jobId
+    );
+
+    FeedbacksApi.addFeedback(feedbackPayload.toJson(), "employer");
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'Alert!',
+      desc: 'You have successfully added a feedback!',
+      btnOkOnPress: () {
+        Navigator.pop(context);
+      },
+    )..show();
+  }
 
 
   @override
@@ -156,6 +176,7 @@ class _JobApplicantFeedbackScreenState
                             ),
                             padding: EdgeInsets.all(20),
                             child: TextFormField(
+                              controller: commentsTextEditingController,
                               maxLines: 4,
                               decoration: InputDecoration(
                                 hintText: "Write your comments here...",
