@@ -32,44 +32,66 @@ class _JobApplicantFeedbackScreenState
   Options options = Options(format: Format.rgb, luminosity: Luminosity.dark);
   TextEditingController commentsTextEditingController =
       TextEditingController();
-  String rating = "Medium"; //DEFAULT IS MEDIUM
+  String selectedRating = "";
+  bool hasExistingData = false;
 
-
+  
   @override
   void initState() {
     super.initState();
-    _getUserEmail();
+    fetchFeedbackDetails();
   }
 
-
-  void _getUserEmail() async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
+  fetchFeedbackDetails(){
+    FeedbacksApi.fetchFeedbackDetails(widget.applicantEmailAddress.toString() ,FirebaseAuth.instance.currentUser?.email ?? "", "employer", widget.jobId.toString()).then((value) {
       setState(() {
+        if(value.docs.length > 0){
+          selectedRating = value.docs.first.get("rating");
+          commentsTextEditingController.text = value.docs.first.get("comments");
+          hasExistingData = true;
+        }
+        
       });
-    }
+        
+    });
   }
 
   saveFeedback(){
-    LLFeedback.Feedback feedbackPayload =  LLFeedback.Feedback(
-      widget.applicantEmailAddress.toString(), 
-      FirebaseAuth.instance.currentUser?.email ?? "",
-      commentsTextEditingController.text,
-      rating,
-      widget.jobId
-    );
-
-    FeedbacksApi.addFeedback(feedbackPayload.toJson(), "employer");
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.rightSlide,
-      title: 'Alert!',
-      desc: 'You have successfully added a feedback!',
-      btnOkOnPress: () {
-        Navigator.pop(context);
-      },
-    )..show();
+    if(selectedRating == ""){
+       AwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          animType: AnimType.rightSlide,
+          title: 'Alert!',
+          desc: 'Please select a rating first',
+          btnOkOnPress: () {
+          },
+        )..show();
+    }else{
+      LLFeedback.Feedback feedbackPayload =  LLFeedback.Feedback(
+        widget.applicantEmailAddress.toString(), 
+        FirebaseAuth.instance.currentUser?.email ?? "",
+        commentsTextEditingController.text,
+        selectedRating,
+        widget.jobId
+      );
+      if(hasExistingData){
+        FeedbacksApi.updateFeedback(feedbackPayload.toJson(), "employer",  FirebaseAuth.instance.currentUser?.email ?? "");
+      }else{
+        FeedbacksApi.addFeedback(feedbackPayload.toJson(), "employer");
+      }
+     
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        title: 'Alert!',
+        desc: 'You have successfully ${hasExistingData ? "updated": "added"} a feedback!',
+        btnOkOnPress: () {
+          Navigator.pop(context);
+        },
+      )..show();
+    }
   }
 
 
@@ -186,7 +208,7 @@ class _JobApplicantFeedbackScreenState
                       ),
                       SizedBox(height: 30),
                       CustomButton(
-                            text: "Submit Feedback",
+                            text: "${hasExistingData ? "Update" : "Submit"} Feedback",
                               onTap: () {
                               saveFeedback();
                               },
@@ -206,7 +228,7 @@ class _JobApplicantFeedbackScreenState
 
 Widget _buildRatingSmiley(String label, String imageUrl) {
   double screenWidth = MediaQuery.of(context).size.width;
-  double smileyWidth = screenWidth * 0.15;
+  double smileyWidth = screenWidth * 0.12;
 
   Color textColor = Colors.black;
   double fontSize = 14;
@@ -218,13 +240,23 @@ Widget _buildRatingSmiley(String label, String imageUrl) {
   } else if (label == "Very Bad") {textColor = Color(0xFFED1F25); fontSize = 14;
   } 
 
-    return Column(
-       crossAxisAlignment:  CrossAxisAlignment.center,
-       children: [
-          Image.network(imageUrl, height: 50, width: smileyWidth),
-          SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: fontSize, color: textColor)),
-       ],
-    );
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+           selectedRating = label;
+        });
+      },
+      child:
+      Container(
+        padding: EdgeInsets.all(10),
+        decoration: selectedRating == label ? BoxDecoration(border: Border.all(color: Color(0xff356899))) : BoxDecoration(),
+        child: Column(
+        crossAxisAlignment:  CrossAxisAlignment.center,
+        children: [
+            Image.network(imageUrl, height: 50, width: smileyWidth),
+            SizedBox(height: 4),
+            Text(label, style: TextStyle(fontSize: fontSize, color: textColor)),
+        ],
+      )));
   }   
 }
