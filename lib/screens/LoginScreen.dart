@@ -174,47 +174,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Color(0xff356899), fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 )),
-            const SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      color: Color(0xffAFB0B6),
-                      thickness: 1,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Or continue with',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                          color: Color(0xffAFB0B6),
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Color(0xffAFB0B6),
-                      thickness: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                SquareTile(imagePath: 'assets/images/apple.png'),
-                SizedBox(width: 25),
-                SquareTile(imagePath: 'assets/images/google.png'),
-                SizedBox(width: 25),
-                SquareTile(imagePath: 'assets/images/facebook.png'),
-              ],
-            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

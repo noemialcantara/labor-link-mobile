@@ -16,15 +16,15 @@ import 'dart:math' show min;
 import 'package:url_launcher/url_launcher.dart';
 
 class EmployerIDVerificationScreen extends StatefulWidget {
- 
   EmployerIDVerificationScreen({Key? key}) : super(key: key);
 
   @override
-  State<EmployerIDVerificationScreen> createState() => _EmployerIDVerificationScreenState();
+  State<EmployerIDVerificationScreen> createState() =>
+      _EmployerIDVerificationScreenState();
 }
 
-class _EmployerIDVerificationScreenState extends State<EmployerIDVerificationScreen> {
-  
+class _EmployerIDVerificationScreenState
+    extends State<EmployerIDVerificationScreen> {
   Future<void> launch(String url, {bool isNewTab = true}) async {
     await launchUrl(
       Uri.parse(url),
@@ -34,7 +34,8 @@ class _EmployerIDVerificationScreenState extends State<EmployerIDVerificationScr
 
   Widget uploadedFiles(BuildContext parentContext, String idType) {
     return StreamBuilder(
-        stream: IDUploadApi.getUploadedIDByUserEmail(FirebaseAuth.instance.currentUser?.email ?? "", idType),
+        stream: IDUploadApi.getUploadedIDByUserEmail(
+            FirebaseAuth.instance.currentUser?.email ?? "", idType),
         builder: (context, snapshot) {
           var streamDataLength = snapshot.data?.docs.length ?? 0;
 
@@ -69,15 +70,21 @@ class _EmployerIDVerificationScreenState extends State<EmployerIDVerificationScr
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  Flexible(
+                                      child: Text(
                                     snapshot.data?.docs[index].get("file_name"),
-                                    style: TextStyle(fontSize: 13, color: Colors.black),
-                                  ),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 13, color: Colors.black),
+                                  )),
                                   GestureDetector(
                                       onTap: () {
-                                        String linkId = snapshot.data?.docs[index].get("link");
+                                        String linkId = snapshot
+                                            .data?.docs[index]
+                                            .get("link");
                                         IDUploadApi.deleteIDByLinkId(linkId);
                                         AwesomeDialog(
                                           context: parentContext,
@@ -103,234 +110,223 @@ class _EmployerIDVerificationScreenState extends State<EmployerIDVerificationScr
               return Text(
                 "There are no uploaded files yet",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
+                style:
+                    GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
               );
           }
         });
   }
 
-  uploadID(PlatformFile file, String idType){
-    IDUploadApi.uploadID(file, FirebaseAuth.instance.currentUser?.email ?? "", idType);
+  uploadID(PlatformFile file, String idType) {
+    IDUploadApi.uploadID(file, FirebaseAuth.instance.currentUser?.email ?? "",
+        idType, "employer");
     AwesomeDialog(
-        context: context,
-        dialogType: DialogType.success,
-        animType: AnimType.rightSlide,
-        title: 'Alert!',
-        desc: "Successfully uploaded the ${idType.replaceAll("_", " ")}",
-        btnOkOnPress: () {
-        },
-      )..show();
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'Alert!',
+      desc: "Successfully uploaded the ${idType.replaceAll("_", " ")}",
+      btnOkOnPress: () {},
+    )..show();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80,
-                bottomOpacity: 0.0,
-                elevation: 0.0,
-                iconTheme: IconThemeData( color: Colors. black, ), title: Text("ID Verification", style: GoogleFonts.poppins(color:Color(0xff0D0D26), fontSize: 22,fontWeight: FontWeight.w600),),centerTitle: true,backgroundColor: Colors.transparent),
-      body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height:30),
+        appBar: AppBar(
+            toolbarHeight: 80,
+            bottomOpacity: 0.0,
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            title: Text(
+              "ID Verification",
+              style: GoogleFonts.poppins(
+                  color: Color(0xff0D0D26),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.transparent),
+        body: SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+              SizedBox(height: 30),
               Padding(
-                padding: EdgeInsets.only(left:30,right:30),
-                child: Text('Upload 1 Primary Govt. ID of Owner',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 20, fontWeight: FontWeight.w600),),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: Text(
+                  'Upload 1 Primary Govt. ID of Owner',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                      color: Color(0xff0D0D26),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
               SizedBox(height: 30),
               Container(
-                     decoration: const BoxDecoration(
-                        border: DashedBorder.fromBorderSide(
-                            dashLength: 8, side: BorderSide(color: Color(0xff356899), width: 2)),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    margin: EdgeInsets.only(left:30,right:30,),
-                    padding: EdgeInsets.only(top:30,bottom:30),
-                    width: double.infinity,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Column(
+                decoration: const BoxDecoration(
+                    border: DashedBorder.fromBorderSide(
+                        dashLength: 8,
+                        side: BorderSide(color: Color(0xff356899), width: 2)),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                margin: EdgeInsets.only(
+                  left: 30,
+                  right: 30,
+                ),
+                padding: EdgeInsets.only(top: 30, bottom: 30),
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    Center(
+                        child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Upload 1 Primary ID",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                Text("(Please check this ",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
+                          Text(
+                            "Upload 1 Primary ID",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                color: Color(0xff95969D), fontSize: 16),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "(Please check this ",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                      color: Color(0xff95969D), fontSize: 16),
+                                ),
                                 GestureDetector(
-                                  onTap: () => {
-                                    launch('https://governmentph.com/list-valid-id-in-the-philippines/', isNewTab: true)
-                                  },
-                                  child: Text("link",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff356899), fontSize: 16,),)),
-                                Text(" for more info)",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),)
+                                    onTap: () => {
+                                          launch(
+                                              'https://governmentph.com/list-valid-id-in-the-philippines/',
+                                              isNewTab: true)
+                                        },
+                                    child: Text(
+                                      "link",
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.poppins(
+                                        color: Color(0xff356899),
+                                        fontSize: 16,
+                                      ),
+                                    )),
+                                Text(
+                                  " for more info)",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                      color: Color(0xff95969D), fontSize: 16),
+                                )
                               ]),
-                              SizedBox(height: 25),
-                              Text(
-                                "Uploaded Files",
-                                textAlign: TextAlign.left,
-                                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
-                              ),
-                              SizedBox(height: 10),
-                              uploadedFiles(context, PRIMARY),
-                              SizedBox(height: 25),
-                              Padding(
-                                padding: EdgeInsets.only(left:20,right:20),
-                                child: CustomButton(
+                          SizedBox(height: 25),
+                          Text(
+                            "Uploaded Files",
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(
+                                color: Color(0xff95969D), fontSize: 16),
+                          ),
+                          SizedBox(height: 10),
+                          uploadedFiles(context, PRIMARY),
+                          SizedBox(height: 25),
+                          Padding(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: CustomButton(
                                 text: "Upload a PNG/JPG",
-                                onTap: ()  async {
-                                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                onTap: () async {
+                                  FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
                                     allowedExtensions: ['png', 'jpg', 'jpeg'],
                                   );
 
                                   if (result != null) {
                                     PlatformFile file = result.files.first;
-                                    
+
                                     uploadID(file, PRIMARY);
-
                                   }
-
                                 },
                               )),
-                            ]
-                          )
-                        )
-                      ],
-                    ),
+                        ]))
+                  ],
+                ),
               ),
               SizedBox(height: 40),
               Padding(
-                padding: EdgeInsets.only(left:30,right:30),
-                child: 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Text('Upload the Business Permit',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 20, fontWeight: FontWeight.w600),),
-                   
-                  ])
-                ),
-              SizedBox(height:30),
-              Container(
-                     decoration: const BoxDecoration(
-                        border: DashedBorder.fromBorderSide(
-                            dashLength: 8, side: BorderSide(color: Color(0xff356899), width: 2)),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    margin: EdgeInsets.only(left:30,right:30,bottom: 30),
-                    padding: EdgeInsets.only(top:30,bottom:30),
-                    width: double.infinity,
-                    child: Stack(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                          child: Column(
+                        Text(
+                          'Upload the Business Permit',
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.poppins(
+                              color: Color(0xff0D0D26),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ])),
+              SizedBox(height: 30),
+              Container(
+                decoration: const BoxDecoration(
+                    border: DashedBorder.fromBorderSide(
+                        dashLength: 8,
+                        side: BorderSide(color: Color(0xff356899), width: 2)),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                margin: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+                padding: EdgeInsets.only(top: 30, bottom: 30),
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    Center(
+                        child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Upload 1 Business Permit",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                              SizedBox(height: 25),
-                              Text(
-                                "Uploaded Files",
-                                textAlign: TextAlign.left,
-                                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
-                              ),
-                              SizedBox(height: 10),
-                              uploadedFiles(context, BUSINESS_PERMIT),
-                              SizedBox(height: 25),
-                              Padding(
-                                padding: EdgeInsets.only(left:20,right:20),
-                                child: CustomButton(
+                          Text(
+                            "Upload 1 Business Permit",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                color: Color(0xff95969D), fontSize: 16),
+                          ),
+                          SizedBox(height: 25),
+                          Text(
+                            "Uploaded Files",
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(
+                                color: Color(0xff95969D), fontSize: 16),
+                          ),
+                          SizedBox(height: 10),
+                          uploadedFiles(context, BUSINESS_PERMIT),
+                          SizedBox(height: 25),
+                          Padding(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: CustomButton(
                                 text: "Upload a PNG/JPG",
-                                onTap: () async{ 
-                                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                onTap: () async {
+                                  FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
                                     allowedExtensions: ['png', 'jpg', 'jpeg'],
                                   );
 
                                   if (result != null) {
                                     PlatformFile file = result.files.first;
-                                      
+
                                     uploadID(file, BUSINESS_PERMIT);
                                   }
                                 },
                               )),
-                            ]
-                          )
-                        )
-                       
-                      ],
-                    ),
+                        ]))
+                  ],
                 ),
-                SizedBox(height: 40),
-              Padding(
-                padding: EdgeInsets.only(left:30,right:30),
-                child: 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Text('Upload the Mayor\'s Permit',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 20, fontWeight: FontWeight.w600),),
-                  ])
-                ),
-              SizedBox(height:30),
-              Container(
-                     decoration: const BoxDecoration(
-                        border: DashedBorder.fromBorderSide(
-                            dashLength: 8, side: BorderSide(color: Color(0xff356899), width: 2)),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    margin: EdgeInsets.only(left:30,right:30,bottom: 30),
-                    padding: EdgeInsets.only(top:30,bottom:30),
-                    width: double.infinity,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Upload 1 Mayor's Permit",textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),),
-                              SizedBox(height: 25),
-                              Text(
-                                "Uploaded Files",
-                                textAlign: TextAlign.left,
-                                style: GoogleFonts.poppins(color: Color(0xff95969D), fontSize: 16),
-                              ),
-                              SizedBox(height: 10),
-                              uploadedFiles(context, MAYORS_PERMIT),
-                              SizedBox(height: 25),
-                              Padding(
-                                padding: EdgeInsets.only(left:20,right:20),
-                                child: CustomButton(
-                                text: "Upload a PNG/JPG",
-                                onTap: () async{ 
-                                  FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: ['png', 'jpg', 'jpeg'],
-                                  );
-
-                                  if (result != null) {
-                                    PlatformFile file = result.files.first;
-                                      
-                                      uploadID(file, MAYORS_PERMIT);
-                                  }
-                                },
-                              )),
-                            ]
-                          )
-                        )
-                       
-                      ],
-                    ),
-                ),
-                SizedBox(height:30),
-             
-            ]
-          )
-      )
-    );
+              ),
+              SizedBox(height: 30),
+            ])));
   }
 }

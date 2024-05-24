@@ -142,8 +142,8 @@ class FirebaseChatApi {
     }
   }
 
-  static Future<Map<String,dynamic>> addChatUserWithFrom(String fromEmail, String toEmail) async {
-
+  static Future<Map<String, dynamic>> addChatUserWithFrom(
+      String fromEmail, String toEmail) async {
     final fromData = await firestore
         .collection('users')
         .where('email', isEqualTo: fromEmail)
@@ -157,7 +157,6 @@ class FirebaseChatApi {
     log('data: ${toData.docs.length} and ${fromData.docs.length}');
 
     if (toData.docs.isNotEmpty && fromData.docs.isNotEmpty) {
-
       firestore
           .collection('users')
           .doc(fromData.docs.first.id)
@@ -173,10 +172,7 @@ class FirebaseChatApi {
           .set({});
     }
 
-    return {
-      "from_id": fromData.docs.first.id,
-      "to_id": toData.docs.first.id
-    };
+    return {"from_id": fromData.docs.first.id, "to_id": toData.docs.first.id};
   }
 
   // for getting current user info
@@ -194,12 +190,13 @@ class FirebaseChatApi {
   }
 
   // for creating a new user
-  static Future<void> createUser(String userName, bool isApplicantFirstMode) async {
+  static Future<void> createUser(
+      String userName, bool isApplicantFirstMode) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
         id: user.uid,
-        name:  userName,
+        name: userName,
         email: user.email.toString(),
         about: "Message me",
         image: user.photoURL.toString(),
@@ -233,15 +230,13 @@ class FirebaseChatApi {
   }
 
   static Future<ChatUser> getUserDataByEmail(String email) {
-    var data = firestore
-        .collection('users')
-        .where("email", isEqualTo: email)
-        .get();
-    
-    return data.then((value){
+    var data =
+        firestore.collection('users').where("email", isEqualTo: email).get();
+
+    return data.then((value) {
       return ChatUser(
-        image: value.docs.first.get("image").toString(), 
-        about: value.docs.first.get("about").toString(), 
+        image: value.docs.first.get("image").toString(),
+        about: value.docs.first.get("about").toString(),
         name: value.docs.first.get("name").toString(),
         createdAt: value.docs.first.get("created_at").toString(),
         isOnline: value.docs.first.get("is_online"),
@@ -252,7 +247,6 @@ class FirebaseChatApi {
         userType: value.docs.first.get("user_type"),
       );
     });
-   
   }
 
   // for getting all users from firestore database
@@ -351,9 +345,10 @@ class FirebaseChatApi {
       ? '${user.uid}_$id'
       : '${id}_${user.uid}';
 
-  static String getCustomConversationId(String fromId, String toId) => fromId.hashCode <= toId.hashCode
-      ? '${fromId}_$toId'
-      : '${toId}_${fromId}';
+  static String getCustomConversationId(String fromId, String toId) =>
+      fromId.hashCode <= toId.hashCode
+          ? '${fromId}_$toId'
+          : '${toId}_${fromId}';
 
   // for getting all messages of a specific conversation from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
@@ -393,12 +388,7 @@ class FirebaseChatApi {
 
     //message to send
     final Message message = Message(
-        toId: toId,
-        msg: msg,
-        read: '',
-        type: type,
-        fromId: fromId,
-        sent: time);
+        toId: toId, msg: msg, read: '', type: type, fromId: fromId, sent: time);
 
     final ref = firestore
         .collection('chats/${getCustomConversationId(fromId, toId)}/messages/');
