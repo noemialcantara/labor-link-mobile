@@ -33,23 +33,25 @@ import 'package:uuid/uuid.dart';
 
 class JobPostingManagementScreen extends StatefulWidget {
   final String companyName;
-  JobPostingManagementScreen({Key? key, required this.companyName}) : super(key: key);
+  Job? job;
+  JobPostingManagementScreen({Key? key, required this.companyName, this.job})
+      : super(key: key);
 
   @override
-  State<JobPostingManagementScreen> createState() => _JobPostingManagementScreenState();
+  State<JobPostingManagementScreen> createState() =>
+      _JobPostingManagementScreenState();
 }
 
-class _JobPostingManagementScreenState extends State<JobPostingManagementScreen> {
+class _JobPostingManagementScreenState
+    extends State<JobPostingManagementScreen> {
   TextEditingController jobTitleController = TextEditingController();
   TextEditingController requiredHireCountController = TextEditingController();
   TextEditingController salaryController = TextEditingController();
   TextEditingController jobDescriptionController = TextEditingController();
   TextEditingController jobCityController = TextEditingController();
   TextEditingController jobStateController = TextEditingController();
-  
 
   String selectedJobType = "Full-time";
-  String selectedJobSchedule = "8 hours shift";
   String selectedJobCategory = "Electrician";
   String selectedJobLevel = "Junior";
   List<String> jobResponsbilitiesList = [""];
@@ -57,22 +59,48 @@ class _JobPostingManagementScreenState extends State<JobPostingManagementScreen>
 
   String userEmail = "test@gmail.com";
   String companyLogoUrl = "";
+  String action = "Create";
+  String buttonAction = "Post";
 
   @override
   void initState() {
     super.initState();
     _getUserEmail();
+    _loadJobData();
   }
 
-  void _getUserEmail(){
+  void _loadJobData() {
+    if (widget.job != null) {
+      jobTitleController.text = widget.job!.jobName;
+      requiredHireCountController.text =
+          widget.job!.requiredHireCount.toString();
+      jobTitleController.text = widget.job!.jobName;
+      salaryController.text =
+          widget.job!.minimumSalary.toString().replaceAll(".0", "");
+      jobDescriptionController.text = widget.job!.jobDescription;
+      jobCityController.text = widget.job!.jobCityLocation;
+      jobStateController.text = widget.job!.jobStateLocation;
+
+      setState(() {
+        action = "Update";
+        buttonAction = "Update";
+        selectedJobType = widget.job!.employmentType;
+        selectedJobCategory = widget.job!.jobCategories[0];
+        selectedJobLevel = widget.job!.jobLevels;
+        jobResponsbilitiesList = widget.job!.jobResponsibilities.cast<String>();
+        jobRequirementsList = widget.job!.jobRequirements.cast<String>();
+      });
+    }
+  }
+
+  void _getUserEmail() {
     setState(() {
-       userEmail =  FirebaseAuth.instance.currentUser!.email ?? "test@gmail.com";
-       UsersApi.getCompanyDetailsByName(widget.companyName).then((value) {
-          setState(() {
-            companyLogoUrl  = value.docs.first.get("logo_url");
-            print("COMPANY LOGO URL: $companyLogoUrl");
-          });
+      userEmail = FirebaseAuth.instance.currentUser!.email ?? "test@gmail.com";
+      UsersApi.getCompanyDetailsByName(widget.companyName).then((value) {
+        setState(() {
+          companyLogoUrl = value.docs.first.get("logo_url");
         });
+      });
     });
   }
 
@@ -81,7 +109,9 @@ class _JobPostingManagementScreenState extends State<JobPostingManagementScreen>
 
     return InkWell(
       onTap: () => setState(
-        () => isLast ? jobResponsbilitiesList.add('') : jobResponsbilitiesList.removeAt(index),
+        () => isLast
+            ? jobResponsbilitiesList.add('')
+            : jobResponsbilitiesList.removeAt(index),
       ),
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -104,7 +134,9 @@ class _JobPostingManagementScreenState extends State<JobPostingManagementScreen>
 
     return InkWell(
       onTap: () => setState(
-        () => isLast ? jobRequirementsList.add('') : jobRequirementsList.removeAt(index),
+        () => isLast
+            ? jobRequirementsList.add('')
+            : jobRequirementsList.removeAt(index),
       ),
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -122,27 +154,26 @@ class _JobPostingManagementScreenState extends State<JobPostingManagementScreen>
     );
   }
 
-  void postJob(){
-    String jobId =  Uuid().v4();
+  void postJob() {
+    String jobId = Uuid().v4();
     Job jobPayload = Job(
-      jobId,
-      jobTitleController.text,
-      jobDescriptionController.text,
-      jobRequirementsList,
-      jobResponsbilitiesList,
-      [selectedJobCategory],
-      selectedJobLevel,
-      selectedJobType,
-      double.parse(salaryController.text),
-      double.parse(salaryController.text),
-      false,
-      false,
-      widget.companyName,
-      companyLogoUrl,
-      jobStateController.text,
-      jobCityController.text,
-      int.parse(requiredHireCountController.text)
-    );
+        jobId,
+        jobTitleController.text,
+        jobDescriptionController.text,
+        jobRequirementsList,
+        jobResponsbilitiesList,
+        [selectedJobCategory],
+        selectedJobLevel,
+        selectedJobType,
+        double.parse(salaryController.text),
+        double.parse(salaryController.text),
+        false,
+        false,
+        widget.companyName,
+        companyLogoUrl,
+        jobStateController.text,
+        jobCityController.text,
+        int.parse(requiredHireCountController.text));
 
     JobApi.postJob(jobPayload.toJson());
     AwesomeDialog(
@@ -150,9 +181,43 @@ class _JobPostingManagementScreenState extends State<JobPostingManagementScreen>
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
       title: 'Alert!',
-      desc: 'Successfully posted your job! Applicants may now apply to this job listing.',
+      desc:
+          'Successfully posted your job! Applicants may now apply to this job listing.',
       btnOkOnPress: () {
-          Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    )..show();
+  }
+
+  updateJob() async {
+    Job jobPayload = Job(
+        widget.job!.jobId,
+        jobTitleController.text,
+        jobDescriptionController.text,
+        jobRequirementsList,
+        jobResponsbilitiesList,
+        [selectedJobCategory],
+        selectedJobLevel,
+        selectedJobType,
+        double.parse(salaryController.text),
+        double.parse(salaryController.text),
+        false,
+        false,
+        widget.companyName,
+        companyLogoUrl,
+        jobStateController.text,
+        jobCityController.text,
+        int.parse(requiredHireCountController.text));
+
+    await JobApi.updateJob(jobPayload.toJson());
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'Alert!',
+      desc: 'Successfully updated your job posting!',
+      btnOkOnPress: () {
+        Navigator.pop(context);
       },
     )..show();
   }
@@ -160,278 +225,367 @@ class _JobPostingManagementScreenState extends State<JobPostingManagementScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-                toolbarHeight: 80,
-                bottomOpacity: 0.0,
-                elevation: 0.0,
-                iconTheme: IconThemeData( color: Colors. black, ), title: Text("Create Job Posting", style: GoogleFonts.poppins(color:Color(0xff0D0D26), fontSize: 22,fontWeight: FontWeight.w600),),centerTitle: true,backgroundColor: Colors.transparent),
-                  body: SingleChildScrollView(
-                      child: Padding(
-                            padding: EdgeInsets.only(left:30,right:30),
-                            child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height:30),
-                          Text('Job Title',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: jobTitleController,
-                            hintText: 'Enter job title',
-                            obscureText: false,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Number of people to hire',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: requiredHireCountController,
-                            hintText: 'Enter number of people',
-                            obscureText: false,
-                            textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-                            textInputType: TextInputType.number,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Job Category',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          StreamBuilder<QuerySnapshot>(
-                            stream: JobCategoryApi.getJobCategories(),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData)
-                                return const Text("Loading.....");
-                              else {
-                                List<String> jobCategoriesList = [];
-                                for (int i = 0; i < snapshot.data!.docs.length; i++) {
-                                  DocumentSnapshot snap = snapshot.data!.docs[i];
-                                  jobCategoriesList.add(snap.get("name"));
-                                }
-                                return FormField<String>(
-                                  builder: (FormFieldState<String> state) {
-                                    return InputDecorator(
-                                      decoration: InputDecoration(
-                                          labelStyle: GoogleFonts.poppins(),
-                                          errorStyle: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 16.0),
-                                          hintText: 'Please select job category',
-                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-                                      isEmpty: selectedJobCategory == '',
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton<String>(
-                                          value: selectedJobCategory,
-                                          isDense: true,
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              selectedJobCategory = newValue!;
-                                              state.didChange(newValue);
-                                            });
-                                          },
-                                          items: jobCategoriesList.map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    );
-                                  },
+        appBar: AppBar(
+            actions: [
+              if (widget.job != null)
+                GestureDetector(
+                    onTap: () {
+                      JobApi.deleteJobById(widget.job!.jobId);
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.success,
+                        animType: AnimType.rightSlide,
+                        title: 'Alert!',
+                        desc: 'Successfully deleted this job',
+                        btnOkOnPress: () {
+                          Navigator.pop(context);
+                        },
+                      )..show();
+                    },
+                    child: Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: Icon(Icons.delete)))
+            ],
+            toolbarHeight: 80,
+            bottomOpacity: 0.0,
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            title: Text(
+              "${action} Job Posting",
+              style: GoogleFonts.poppins(
+                  color: Color(0xff0D0D26),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.transparent),
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.only(left: 30, right: 30),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 30),
+                    Text(
+                      'Job Title',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: jobTitleController,
+                      hintText: 'Enter job title',
+                      obscureText: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Number of people to hire',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: requiredHireCountController,
+                      hintText: 'Enter number of people',
+                      obscureText: false,
+                      textInputFormatter: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      textInputType: TextInputType.number,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Category',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    StreamBuilder<QuerySnapshot>(
+                        stream: JobCategoryApi.getJobCategories(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return const Text("Loading.....");
+                          else {
+                            List<String> jobCategoriesList = [];
+                            for (int i = 0;
+                                i < snapshot.data!.docs.length;
+                                i++) {
+                              DocumentSnapshot snap = snapshot.data!.docs[i];
+                              jobCategoriesList.add(snap.get("name"));
+                            }
+                            return FormField<String>(
+                              builder: (FormFieldState<String> state) {
+                                return InputDecorator(
+                                  decoration: InputDecoration(
+                                      labelStyle: GoogleFonts.poppins(),
+                                      errorStyle: GoogleFonts.poppins(
+                                          color: Colors.redAccent,
+                                          fontSize: 16.0),
+                                      hintText: 'Please select job category',
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0))),
+                                  isEmpty: selectedJobCategory == '',
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: selectedJobCategory,
+                                      isDense: true,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          selectedJobCategory = newValue!;
+                                          state.didChange(newValue);
+                                        });
+                                      },
+                                      items:
+                                          jobCategoriesList.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
                                 );
-                              }
-                          }),
-                          SizedBox(height: 20),
-                          Text('Job Type',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          FormField<String>(
-                            builder: (FormFieldState<String> state) {
-                              return InputDecorator(
-                                decoration: InputDecoration(
-                                    labelStyle: GoogleFonts.poppins(),
-                                    errorStyle: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 16.0),
-                                    hintText: 'Please select job type',
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-                                isEmpty: selectedJobType == '',
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    value: selectedJobType,
-                                    isDense: true,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        selectedJobType = newValue!;
-                                        state.didChange(newValue);
-                                      });
-                                    },
-                                    items: JOB_TYPES.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          Text('Job Level',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          FormField<String>(
-                            builder: (FormFieldState<String> state) {
-                              return InputDecorator(
-                                decoration: InputDecoration(
-                                    labelStyle: GoogleFonts.poppins(),
-                                    errorStyle: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 16.0),
-                                    hintText: 'Please select job level',
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-                                isEmpty: selectedJobLevel == '',
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    value: selectedJobLevel,
-                                    isDense: true,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        selectedJobLevel = newValue!;
-                                        state.didChange(newValue);
-                                      });
-                                    },
-                                    items: JOB_LEVELS.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          Text('Schedule',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          FormField<String>(
-                            builder: (FormFieldState<String> state) {
-                              return InputDecorator(
-                                decoration: InputDecoration(
-                                    labelStyle: GoogleFonts.poppins(),
-                                    errorStyle: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 16.0),
-                                    hintText: 'Please select schedule',
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-                                isEmpty: selectedJobSchedule == '',
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    value: selectedJobSchedule,
-                                    isDense: true,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        selectedJobSchedule = newValue!;
-                                        state.didChange(newValue);
-                                      });
-                                    },
-                                    items: JOB_SCHEDULES.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          Text('Salary',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: salaryController,
-                            hintText: 'Enter salary per month',
-                            obscureText: false,
-                            textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-                            textInputType: TextInputType.number,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Job City Location',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: jobCityController,
-                            hintText: 'Enter city location',
-                            obscureText: false,
-                          ),
-                          SizedBox(height: 20),
-                           Text('Job State Location',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: jobStateController,
-                            hintText: 'Enter state location',
-                            obscureText: false,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Job Description',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: jobDescriptionController,
-                            hintText: 'Enter job description',
-                            maxLines: 6,
-                            obscureText: false,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Job Responsibilities',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: jobResponsbilitiesList.length,
-                              itemBuilder: (context, index) => Row(
-                                children: [
-                                  Expanded(child: DynamicTextField(
-                                      key: UniqueKey(),
-                                      hintText: "Enter a job responsibility",
-                                      initialValue: jobResponsbilitiesList[index],
-                                      onChanged: (v) => jobResponsbilitiesList[index] = v,
-                                    )),
-                                  
-                                  const SizedBox(width: 20),
-                                  _addJobResponsibilityField(index),
-                                ],
-                              ),
-                              separatorBuilder: (context, index) {
-                                return SizedBox(height:20);
                               },
-                            ),
-                          
-                          SizedBox(height: 20),
-                          Text('Job Requirements',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: jobRequirementsList.length,
-                              itemBuilder: (context, index) => Row(
-                                children: [
-                                  Expanded(child: DynamicTextField(
-                                      key: UniqueKey(),
-                                      hintText: "Enter a job requirement",
-                                      initialValue: jobRequirementsList[index],
-                                      onChanged: (v) => jobRequirementsList[index] = v,
-                                    )),
-                                  
-                                  const SizedBox(width: 20),
-                                  _addJobRequirementsField(index),
-                                ],
-                              ),
-                              separatorBuilder: (context, index) {
-                                return SizedBox(height:20);
+                            );
+                          }
+                        }),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Type',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    FormField<String>(
+                      builder: (FormFieldState<String> state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                              labelStyle: GoogleFonts.poppins(),
+                              errorStyle: GoogleFonts.poppins(
+                                  color: Colors.redAccent, fontSize: 16.0),
+                              hintText: 'Please select job type',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0))),
+                          isEmpty: selectedJobType == '',
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedJobType,
+                              isDense: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedJobType = newValue!;
+                                  state.didChange(newValue);
+                                });
                               },
+                              items: JOB_TYPES.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
-                          
-                          SizedBox(height: 30),
-                          CustomButton(
-                            text: "Post job",
-                            onTap: () {
-                              postJob();
-                            },
                           ),
-                          SizedBox(height: 50),
-                         
-                        ]
-                      )),
-                  )
-    );
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Level',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    FormField<String>(
+                      builder: (FormFieldState<String> state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                              labelStyle: GoogleFonts.poppins(),
+                              errorStyle: GoogleFonts.poppins(
+                                  color: Colors.redAccent, fontSize: 16.0),
+                              hintText: 'Please select job level',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0))),
+                          isEmpty: selectedJobLevel == '',
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedJobLevel,
+                              isDense: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedJobLevel = newValue!;
+                                  state.didChange(newValue);
+                                });
+                              },
+                              items: JOB_LEVELS.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Salary',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: salaryController,
+                      hintText: 'Enter salary per month',
+                      obscureText: false,
+                      textInputFormatter: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      textInputType: TextInputType.number,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job City Location',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: jobCityController,
+                      hintText: 'Enter city location',
+                      obscureText: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job State Location',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: jobStateController,
+                      hintText: 'Enter state location',
+                      obscureText: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Description',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: jobDescriptionController,
+                      hintText: 'Enter job description',
+                      maxLines: 6,
+                      obscureText: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Responsibilities',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: jobResponsbilitiesList.length,
+                      itemBuilder: (context, index) => Row(
+                        children: [
+                          Expanded(
+                              child: DynamicTextField(
+                            key: UniqueKey(),
+                            hintText: "Enter a job responsibility",
+                            initialValue: jobResponsbilitiesList[index],
+                            onChanged: (v) => jobResponsbilitiesList[index] = v,
+                          )),
+                          const SizedBox(width: 20),
+                          _addJobResponsibilityField(index),
+                        ],
+                      ),
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 20);
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Requirements',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: jobRequirementsList.length,
+                      itemBuilder: (context, index) => Row(
+                        children: [
+                          Expanded(
+                              child: DynamicTextField(
+                            key: UniqueKey(),
+                            hintText: "Enter a job requirement",
+                            initialValue: jobRequirementsList[index],
+                            onChanged: (v) => jobRequirementsList[index] = v,
+                          )),
+                          const SizedBox(width: 20),
+                          _addJobRequirementsField(index),
+                        ],
+                      ),
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 20);
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    CustomButton(
+                      text: "$buttonAction job",
+                      onTap: () async {
+                        if (widget.job != null) {
+                          await updateJob();
+                        } else {
+                          postJob();
+                        }
+                      },
+                    ),
+                    SizedBox(height: 50),
+                  ])),
+        ));
   }
 }

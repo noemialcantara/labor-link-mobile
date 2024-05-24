@@ -1,17 +1,19 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:labor_link_mobile/apis/JobApi.dart';
 
 class SearchAppBar extends StatefulWidget {
-  final TextEditingController controller;
-  const SearchAppBar({Key? key, required this.controller}) : super(key: key);
+  TextEditingController controller;
+  SearchAppBar({Key? key, required this.controller}) : super(key: key);
 
   @override
   _SearchAppBarState createState() => _SearchAppBarState();
 }
 
 class _SearchAppBarState extends State<SearchAppBar> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,30 +39,27 @@ class _SearchAppBarState extends State<SearchAppBar> {
           SizedBox(width: 10),
           Expanded(
             child: TextField(
-             cursorColor: Color(0xff000000),
+              cursorColor: Color(0xff000000),
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.done,
               controller: widget.controller,
               decoration: InputDecoration(
-               fillColor: Color(0xffF2F2F3),
+                fillColor: Color(0xffF2F2F3),
                 filled: true,
                 contentPadding:
-                EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     borderSide: BorderSide.none),
                 hintText: 'Search a job or position',
-                 hintStyle: GoogleFonts.poppins(fontSize: 15.0, color: Color(0xff95969D)),
+                hintStyle: GoogleFonts.poppins(
+                    fontSize: 15.0, color: Color(0xff95969D)),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                       color: Color(0xffF2F2F3),
-                      width: 1.0),
+                  borderSide: BorderSide(color: Color(0xffF2F2F3), width: 1.0),
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                     color: Color(0xffF2F2F3),
-                      width: 2.0),
+                  borderSide: BorderSide(color: Color(0xffF2F2F3), width: 2.0),
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 ),
                 prefixIcon: Container(
