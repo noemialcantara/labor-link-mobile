@@ -150,10 +150,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(height: 10),
             Padding(
               child: Text(
-                'Registration',
+                '${widget.isApplicantFirstMode ? 'Applicant' : 'Employer'} Registration',
                 style: GoogleFonts.poppins(
                     color: Color(0xff000000),
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.w600),
               ),
               padding: EdgeInsets.only(left: 10, right: 10),
