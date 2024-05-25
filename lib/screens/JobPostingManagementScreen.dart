@@ -23,7 +23,6 @@ import 'package:labor_link_mobile/constants/JobScheduleConstants.dart';
 import 'package:labor_link_mobile/constants/JobTypeConstants.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
-import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:labor_link_mobile/screens/widgets/DynamicTextField.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';

@@ -20,7 +20,6 @@ import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
 import 'package:labor_link_mobile/models/Subscriber.dart';
 import 'package:labor_link_mobile/screens/EmployerSubscriptionScreen.dart';
-import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
 import 'package:labor_link_mobile/screens/JobPostingManagementScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';

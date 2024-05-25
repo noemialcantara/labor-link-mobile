@@ -24,7 +24,6 @@ import 'package:labor_link_mobile/constants/JobTypeConstants.dart';
 import 'package:labor_link_mobile/models/Applicant.dart';
 import 'package:labor_link_mobile/models/Job.dart';
 import 'package:labor_link_mobile/models/Resume.dart';
-import 'package:labor_link_mobile/screens/JobApplicationTrackingScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:labor_link_mobile/screens/widgets/DynamicTextField.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
@@ -34,10 +33,12 @@ import 'package:uuid/uuid.dart';
 
 class UserProfileUpdateScreen extends StatefulWidget {
   final Applicant? applicantData;
-  UserProfileUpdateScreen({Key? key, required this.applicantData}) : super(key: key);
+  UserProfileUpdateScreen({Key? key, required this.applicantData})
+      : super(key: key);
 
   @override
-  State<UserProfileUpdateScreen> createState() => _UserProfileUpdateScreenState();
+  State<UserProfileUpdateScreen> createState() =>
+      _UserProfileUpdateScreenState();
 }
 
 class _UserProfileUpdateScreenState extends State<UserProfileUpdateScreen> {
@@ -54,28 +55,30 @@ class _UserProfileUpdateScreenState extends State<UserProfileUpdateScreen> {
     _getProfileData();
   }
 
-  _getProfileData(){
+  _getProfileData() {
     setState(() {
       fullNameController.text = widget.applicantData!.fullName.toString();
       addressController.text = widget.applicantData!.address.toString();
       jobPositionController.text = widget.applicantData!.jobRole.toString();
-      minimumExpectedSalary.text = widget.applicantData!.minimumExpectedSalary.toString();
-      maximumExpectedSalary.text = widget.applicantData!.maximumExpectedSalary.toString();
-      yearsOfExperienceController.text = widget.applicantData!.yearsOfExperience.toString();
+      minimumExpectedSalary.text =
+          widget.applicantData!.minimumExpectedSalary.toString();
+      maximumExpectedSalary.text =
+          widget.applicantData!.maximumExpectedSalary.toString();
+      yearsOfExperienceController.text =
+          widget.applicantData!.yearsOfExperience.toString();
     });
   }
 
-  void updateProfile(){
+  void updateProfile() {
     Applicant applicantPayload = Applicant(
-      fullNameController.text,
-      addressController.text,
-      widget.applicantData!.emailAddress,
-      jobPositionController.text,
-      widget.applicantData!.profileUrl,
-      minimumExpectedSalary.text,
-      maximumExpectedSalary.text,
-      yearsOfExperienceController.text
-    );
+        fullNameController.text,
+        addressController.text,
+        widget.applicantData!.emailAddress,
+        jobPositionController.text,
+        widget.applicantData!.profileUrl,
+        minimumExpectedSalary.text,
+        maximumExpectedSalary.text,
+        yearsOfExperienceController.text);
 
     UsersApi.updateUserProfile(applicantPayload.toJson());
     AwesomeDialog(
@@ -85,7 +88,7 @@ class _UserProfileUpdateScreenState extends State<UserProfileUpdateScreen> {
       title: 'Alert!',
       desc: 'Successfully updated your profile',
       btnOkOnPress: () {
-          Navigator.pop(context);
+        Navigator.pop(context);
       },
     )..show();
   }
@@ -93,84 +96,135 @@ class _UserProfileUpdateScreenState extends State<UserProfileUpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-                toolbarHeight: 80,
-                bottomOpacity: 0.0,
-                elevation: 0.0,
-                iconTheme: IconThemeData( color: Colors. black, ), title: Text("Update User Profile", style: GoogleFonts.poppins(color:Color(0xff0D0D26), fontSize: 22,fontWeight: FontWeight.w600),),centerTitle: true,backgroundColor: Colors.transparent),
-                  body: SingleChildScrollView(
-                      child: Padding(
-                            padding: EdgeInsets.only(left:30,right:30),
-                            child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height:30),
-                          Text('Full Name',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: fullNameController,
-                            hintText: 'Enter full name',
-                            obscureText: false,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Address',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: addressController,
-                            hintText: 'Enter complete address',
-                            obscureText: false
-                          ),
-                          SizedBox(height: 20),
-                          Text('Job Position',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: jobPositionController,
-                            hintText: 'Enter job position',
-                            obscureText: false
-                          ),
-                          SizedBox(height: 20),
-                          Text('Minimum Expected Salary',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: minimumExpectedSalary,
-                            hintText: 'Enter minimum expected salary per month',
-                            obscureText: false,
-                            textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-                            textInputType: TextInputType.number,
-                          ),
-                          SizedBox(height: 20),
-                          Text('Maximum Expected Salary',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: maximumExpectedSalary,
-                            hintText: 'Enter maximum expected salary per month',
-                            obscureText: false,
-                            textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-                            textInputType: TextInputType.number,
-                          ),
-                          SizedBox(height: 20),
-                           Text('Years of Experience',textAlign: TextAlign.left, style: GoogleFonts.poppins(color: Color(0xff0D0D26),fontSize: 18, fontWeight: FontWeight.w600),),
-                          SizedBox(height: 10),
-                          CustomTextField(
-                            controller: yearsOfExperienceController,
-                            hintText: 'Enter years of experience',
-                            obscureText: false,
-                          ),
-                          SizedBox(height: 20),
-                          
-                          SizedBox(height: 30),
-                          CustomButton(
-                            text: "Update",
-                            onTap: () {
-                              updateProfile();
-                            },
-                          ),
-                          SizedBox(height: 50),
-                         
-                        ]
-                      )),
-                  )
-    );
+        appBar: AppBar(
+            toolbarHeight: 80,
+            bottomOpacity: 0.0,
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            title: Text(
+              "Update User Profile",
+              style: GoogleFonts.poppins(
+                  color: Color(0xff0D0D26),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.transparent),
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.only(left: 30, right: 30),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 30),
+                    Text(
+                      'Full Name',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: fullNameController,
+                      hintText: 'Enter full name',
+                      obscureText: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Address',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                        controller: addressController,
+                        hintText: 'Enter complete address',
+                        obscureText: false),
+                    SizedBox(height: 20),
+                    Text(
+                      'Job Position',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                        controller: jobPositionController,
+                        hintText: 'Enter job position',
+                        obscureText: false),
+                    SizedBox(height: 20),
+                    Text(
+                      'Minimum Expected Salary',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: minimumExpectedSalary,
+                      hintText: 'Enter minimum expected salary per month',
+                      obscureText: false,
+                      textInputFormatter: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      textInputType: TextInputType.number,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Maximum Expected Salary',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: maximumExpectedSalary,
+                      hintText: 'Enter maximum expected salary per month',
+                      obscureText: false,
+                      textInputFormatter: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      textInputType: TextInputType.number,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Years of Experience',
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff0D0D26),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextField(
+                      controller: yearsOfExperienceController,
+                      hintText: 'Enter years of experience',
+                      obscureText: false,
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(height: 30),
+                    CustomButton(
+                      text: "Update",
+                      onTap: () {
+                        updateProfile();
+                      },
+                    ),
+                    SizedBox(height: 50),
+                  ])),
+        ));
   }
 }

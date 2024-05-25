@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/CertificationApi.dart';
 import 'package:labor_link_mobile/apis/ExperiencesApi.dart';
+import 'package:labor_link_mobile/apis/FeedbackApis.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/apis/SkillsApi.dart';
@@ -177,6 +178,127 @@ class _EmployerApplicantProfileScreenState
         Navigator.pop(context);
       },
     )..show();
+  }
+
+  _getApplicantFeedbacks() {
+    return StreamBuilder(
+        stream: FeedbacksApi.getApplicantFeedbackByEmployer(widget.email),
+        builder: (context, snapshot) {
+          var streamDataLength = snapshot.data?.docs.length ?? 0;
+
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (streamDataLength > 0)
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (ctx, index) => Container(
+                    margin: EdgeInsets.only(left: 30, right: 30, bottom: 15),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            offset: Offset(0, 1),
+                            blurRadius: 3,
+                            spreadRadius: 2,
+                          )
+                        ]),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              StreamBuilder(
+                                  stream: UsersApi.streamEmployerDataByEmail(
+                                      snapshot.data?.docs[index]
+                                          .get("employer_email_address")),
+                                  builder: (context, employerSnapshot) {
+                                    var streamDataLength =
+                                        employerSnapshot.data?.docs.length ?? 0;
+
+                                    switch (employerSnapshot.connectionState) {
+                                      case ConnectionState.waiting:
+                                      case ConnectionState.none:
+                                      case ConnectionState.active:
+                                      case ConnectionState.done:
+                                        if (streamDataLength > 0)
+                                          return Text(
+                                            employerSnapshot.data?.docs[index]
+                                                .get("employer_name"),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700),
+                                          );
+                                        return Text(
+                                          snapshot.data?.docs[index]
+                                              .get("employer_email_address"),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700),
+                                        );
+                                    }
+                                  }),
+                              SizedBox(height: 10),
+                              Row(children: [
+                                Text(
+                                  "Rating:",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "${snapshot.data?.docs[index].get("rating")}",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black),
+                                ),
+                              ]),
+                              SizedBox(height: 10),
+                              Text(
+                                "Comments:",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "${snapshot.data?.docs[index].get("comments")}",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                );
+
+              return Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    "There are no ratings and comments yet to this applicant",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                        color: Color(0xff95969D), fontSize: 16),
+                  ));
+          }
+        });
   }
 
   @override
@@ -687,6 +809,21 @@ class _EmployerApplicantProfileScreenState
                             )
                           : Container(),
                     ])),
+                SizedBox(height: 30),
+                Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Row(children: [
+                      Text(
+                        'Ratings & Reviews',
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                            color: Color(0xff0D0D26),
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ])),
+                SizedBox(height: 30),
+                _getApplicantFeedbacks(),
                 SizedBox(
                   height: 60,
                 )
