@@ -49,32 +49,58 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
           children: [
             SizedBox(height: 50),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Welcome $fullName",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                            color: Color(0xff95969D))),
-                    SizedBox(height: 5),
-                    Text("Discover Jobs",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold, fontSize: 25)),
-                  ],
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      Icons.menu,
+                      size: 30,
+                      color: Color(0xff356899),
+                    ),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
                 ),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UserProfileScreen(
-                            email: user!.email.toString(),
-                          ))),
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(
-                        "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae"),
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                      margin: EdgeInsets.only(left: 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Welcome $fullName",
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  color: Color(0xff95969D))),
+                          SizedBox(height: 5),
+                          Text("Discover Jobs",
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold, fontSize: 25)),
+                        ],
+                      )),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => UserProfileScreen(
+                                email: user!.email.toString(),
+                              ))),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(
+                            "https://firebasestorage.googleapis.com/v0/b/labor-link-f9424.appspot.com/o/app_image_assets%2Fpngwing.com.png?alt=media&token=ab84abf3-f915-4422-a711-00314197b9ae"),
+                      ),
+                    ),
                   ),
                 ),
               ],

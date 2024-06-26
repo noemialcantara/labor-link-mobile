@@ -7,9 +7,9 @@ import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:labor_link_mobile/firebase_options.dart';
 import 'package:labor_link_mobile/screens/SplashScreen.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -45,9 +45,12 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 11, 70, 197)),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 11, 70, 197)),
         useMaterial3: false,
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {TargetPlatform.android: CupertinoPageTransitionsBuilder(),}),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        }),
       ),
       home: const SplashScreen(),
     );
