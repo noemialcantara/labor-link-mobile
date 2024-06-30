@@ -43,7 +43,6 @@ class _ApplicantEmployerProfileScreenState
   }
 
   _fetchUserData() async {
-    print("FETCH SHIT ${widget.email}");
     UsersApi.getCompanyNameByEmail(widget.email)
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.length > 0) {

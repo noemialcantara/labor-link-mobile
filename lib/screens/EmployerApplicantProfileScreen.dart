@@ -1,11 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/CertificationApi.dart';
 import 'package:labor_link_mobile/apis/ExperiencesApi.dart';
 import 'package:labor_link_mobile/apis/FeedbackApis.dart';
+import 'package:labor_link_mobile/apis/FirebaseChatApi.dart';
 import 'package:labor_link_mobile/apis/JobApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
@@ -14,7 +16,9 @@ import 'package:labor_link_mobile/apis/UsersApi.dart';
 import 'package:labor_link_mobile/components/CustomButton.dart';
 import 'package:labor_link_mobile/helper/NotificationHelper.dart';
 import 'package:labor_link_mobile/models/Applicant.dart';
+import 'package:labor_link_mobile/models/Message.dart';
 import 'package:labor_link_mobile/screens/AddWorkExperienceScreen.dart';
+import 'package:labor_link_mobile/screens/ChatScreen.dart';
 import 'package:labor_link_mobile/screens/JobApplicantFeedbackScreen.dart';
 import 'package:labor_link_mobile/screens/MainNavigationHandler.dart';
 import 'package:labor_link_mobile/screens/UserProfileUpdateScreen.dart';
@@ -53,6 +57,8 @@ class _EmployerApplicantProfileScreenState
   String resumeName = "";
   int requiredEmployeeCount = 0;
 
+  String employerEmailAddress = "";
+
   @override
   void initState() {
     _fetchUserData();
@@ -79,13 +85,21 @@ class _EmployerApplicantProfileScreenState
         });
       }
     });
+
+    UsersApi.getEmployerDataByName(widget.companyName)
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.length > 0) {
+        setState(() {
+          employerEmailAddress = querySnapshot.docs.first.get("email_address");
+        });
+      }
+    });
   }
 
   _fetchJobDescription() async {
     setState(() async {
       requiredEmployeeCount =
           await JobApi.getRequiredApplicantCountByJobId(widget.jobId ?? "");
-      print("EMPLOYEE COUNT: $requiredEmployeeCount");
     });
   }
 
@@ -203,6 +217,16 @@ class _EmployerApplicantProfileScreenState
                 emailAddressListToOptOut[j] ?? "",
                 "New Activity",
                 "The ${widget.companyName} has already proceeded with the other applicant who is the better fit for this job. Thank you for taking your time in applying to us!");
+
+            FirebaseChatApi.addChatUserWithFrom(
+                    employerEmailAddress, emailAddressListToOptOut[j])
+                .then((value) {
+              FirebaseChatApi.sendFirstMessageCustom(
+                  value["from_id"],
+                  value["to_id"],
+                  "The ${widget.companyName} has already proceeded with the other applicant who is the better fit for this job. Thank you for taking your time in applying to us!",
+                  Type.text);
+            });
           }
         }
       }
