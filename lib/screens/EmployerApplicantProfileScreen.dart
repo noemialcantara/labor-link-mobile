@@ -199,7 +199,9 @@ class _EmployerApplicantProfileScreenState
           for (int j = 0; j < emailAddressListToOptOut.length; j++) {
             JobApplicationApi.updateApplicantStatus(
                 widget.jobId, emailAddressListToOptOut[j], "Rejected");
-            createNotification(applicant?.emailAddress ?? "", "New Activity",
+            createNotification(
+                emailAddressListToOptOut[j] ?? "",
+                "New Activity",
                 "The ${widget.companyName} has already proceeded with the other applicant who is the better fit for this job. Thank you for taking your time in applying to us!");
           }
         }
