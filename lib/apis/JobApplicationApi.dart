@@ -1,19 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class JobApplicationApi {
-
   // for accessing cloud firestore database
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  static submitApplication(Map<String, dynamic>  jobApplication) {
-
-    firestore
-        .collection('job_applications')
-        .add(jobApplication);
+  static submitApplication(Map<String, dynamic> jobApplication) {
+    firestore.collection('job_applications').add(jobApplication);
   }
 
-  static checkIfUserAlreadyApplied(String  jobId, String emailAddress){
-
+  static checkIfUserAlreadyApplied(String jobId, String emailAddress) {
     return firestore
         .collection('job_applications')
         .where("job_id", isEqualTo: jobId)
@@ -21,16 +16,25 @@ class JobApplicationApi {
         .get();
   }
 
-   static updateApplicantStatus(String  jobId, String applicantEmail, String status){
-    firestore.collection('job_applications').where("applicant_email", isEqualTo: applicantEmail).where("job_id", isEqualTo: jobId).snapshots().first.then((value) {
+  static updateApplicantStatus(
+      String jobId, String applicantEmail, String status) {
+    firestore
+        .collection('job_applications')
+        .where("applicant_email", isEqualTo: applicantEmail)
+        .where("job_id", isEqualTo: jobId)
+        .snapshots()
+        .first
+        .then((value) {
       String id = value.docs.first.id.toString();
       firestore
-          .collection('job_applications').doc(id).update({"status": status});
+          .collection('job_applications')
+          .doc(id)
+          .update({"status": status});
     });
   }
 
-   static Future<QuerySnapshot> getQueryJobListByEmployerWithStatus(String companyName, String status) {
-
+  static Future<QuerySnapshot> getQueryJobListByEmployerWithStatus(
+      String companyName, String status) {
     return firestore
         .collection('job_applications')
         .where("company_name", isEqualTo: companyName)
@@ -38,36 +42,44 @@ class JobApplicationApi {
         .get();
   }
 
-
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getJobDetailsByApplicantId(String emailAddress) {
-    
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getJobDetailsByApplicantId(
+      String emailAddress) {
     return firestore
-      .collection('job_applications')
-      .where("applicant_email", isEqualTo: emailAddress)
-      .snapshots();
+        .collection('job_applications')
+        .where("applicant_email", isEqualTo: emailAddress)
+        .snapshots();
   }
 
-  static Future<QuerySnapshot> getApplicationCount(String emailAddress){
+  static Future<QuerySnapshot> getApplicationCount(String emailAddress) {
     return firestore
-      .collection('job_applications')
-      .where("applicant_email", isEqualTo: emailAddress)
-      .get();
+        .collection('job_applications')
+        .where("applicant_email", isEqualTo: emailAddress)
+        .get();
   }
 
-  static Future<QuerySnapshot> getHiredCountByCompanyName(String companyName){
+  static Future<QuerySnapshot> getHiredCountByCompanyName(String companyName) {
     return firestore
-      .collection('job_applications')
-      .where("company_name", isEqualTo: companyName)
-      .where("status", isEqualTo: "Hired")
-      .get();
+        .collection('job_applications')
+        .where("company_name", isEqualTo: companyName)
+        .where("status", isEqualTo: "Hired")
+        .get();
   }
 
-  static Future<QuerySnapshot> getRejectedCountByCompanyName(String companyName){
+  static Future<QuerySnapshot> getRejectedCountByCompanyName(
+      String companyName) {
     return firestore
-      .collection('job_applications')
-      .where("company_name", isEqualTo: companyName)
-      .where("status", isEqualTo: "Rejected")
-      .get();
+        .collection('job_applications')
+        .where("company_name", isEqualTo: companyName)
+        .where("status", isEqualTo: "Rejected")
+        .get();
   }
 
+  static Future<QuerySnapshot> getApplicationsByJobId(
+      String jobId, String hiredException) {
+    return firestore
+        .collection('job_applications')
+        .where("job_id", isEqualTo: jobId)
+        .where("applicant_email", isNotEqualTo: hiredException)
+        .get();
+  }
 }

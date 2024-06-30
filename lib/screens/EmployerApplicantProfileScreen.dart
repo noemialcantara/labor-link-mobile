@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:labor_link_mobile/apis/CertificationApi.dart';
 import 'package:labor_link_mobile/apis/ExperiencesApi.dart';
 import 'package:labor_link_mobile/apis/FeedbackApis.dart';
+import 'package:labor_link_mobile/apis/JobApi.dart';
 import 'package:labor_link_mobile/apis/JobApplicationApi.dart';
 import 'package:labor_link_mobile/apis/ResumeApi.dart';
 import 'package:labor_link_mobile/apis/SkillsApi.dart';
@@ -50,6 +51,7 @@ class _EmployerApplicantProfileScreenState
   String certificationCount = "0";
   String resumeLink = "";
   String resumeName = "";
+  int requiredEmployeeCount = 0;
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _EmployerApplicantProfileScreenState
     _fetchSkillsCount();
     _fetchCertificationsCount();
     _fetchResumeLink();
+    _fetchJobDescription();
     super.initState();
   }
 
@@ -75,6 +78,14 @@ class _EmployerApplicantProfileScreenState
               querySnapshot.docs.first.get("years_of_experience"));
         });
       }
+    });
+  }
+
+  _fetchJobDescription() async {
+    setState(() async {
+      requiredEmployeeCount =
+          await JobApi.getRequiredApplicantCountByJobId(widget.jobId ?? "");
+      print("EMPLOYEE COUNT: $requiredEmployeeCount");
     });
   }
 
@@ -149,6 +160,7 @@ class _EmployerApplicantProfileScreenState
           widget.jobId, applicant?.emailAddress ?? "", "Hired");
       createNotification(applicant?.emailAddress ?? "", "New Activity",
           "Congratulations! You are now hired by the ${widget.companyName}!");
+      checkOtherApplications();
     }
 
     AwesomeDialog(
@@ -161,6 +173,38 @@ class _EmployerApplicantProfileScreenState
         Navigator.pop(context);
       },
     )..show();
+  }
+
+  checkOtherApplications() {
+    int numberOfHired = 1;
+    var emailAddressListToOptOut = [];
+
+    JobApplicationApi.getApplicationsByJobId(
+            widget.jobId, applicant?.emailAddress ?? "")
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.length > 0) {
+        for (int i = 0; i < querySnapshot.docs.length; i++) {
+          if (querySnapshot.docs[i].get("status") == "Hired") {
+            numberOfHired++;
+          } else {
+            print("GET APPLICANT EMAIL: " +
+                querySnapshot.docs[i].get("applicant_email"));
+            emailAddressListToOptOut
+                .add(querySnapshot.docs[i].get("applicant_email"));
+          }
+        }
+
+        if (requiredEmployeeCount == numberOfHired) {
+          print("THIS FUCKING WORKS HERE MAN WHAT A JOB WELL DONE!");
+          for (int j = 0; j < emailAddressListToOptOut.length; j++) {
+            JobApplicationApi.updateApplicantStatus(
+                widget.jobId, emailAddressListToOptOut[j], "Rejected");
+            createNotification(applicant?.emailAddress ?? "", "New Activity",
+                "The ${widget.companyName} has already proceeded with the other applicant who is the better fit for this job. Thank you for taking your time in applying to us!");
+          }
+        }
+      }
+    });
   }
 
   _rejectApplicant() {

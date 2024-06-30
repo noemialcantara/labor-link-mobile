@@ -52,6 +52,14 @@ class JobApi {
         .snapshots();
   }
 
+  static Future<int> getRequiredApplicantCountByJobId(String jobId) async {
+    final data = await firestore
+        .collection('jobs')
+        .where('job_id', isEqualTo: jobId)
+        .get();
+    return data.docs.first.data()["required_applicant_count"];
+  }
+
   static Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       searchJobByKeyword(String searchKeyword) {
     return firestore.collection('jobs').snapshots().map((querySnapshot) {
